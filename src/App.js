@@ -36,6 +36,19 @@ async function fund(amount) {
   }
 }
 
+async function withdraw() {
+  console.log("Withdraw...");
+  const provider = new ethers.providers.Web3Provider(ethereum);
+  const signer = provider.getSigner();
+  const contract = new ethers.Contract(FUND_ME.address, FUND_ME.abi, signer);
+  try {
+    const transactionResponse = await contract.withdraw();
+    await listenForTransactionMine(transactionResponse, provider);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 function FundMe({ account }) {
   const [amount, setAmount] = useState(0.01);
 
@@ -47,6 +60,10 @@ function FundMe({ account }) {
     const fundEth = parseFloat(amount);
     console.log("fundEth:", fundEth);
     fund(fundEth.toString());
+  }
+  function submitWithdraw(event) {
+    event.preventDefault();
+    withdraw();
   }
 
   return (
@@ -72,6 +89,13 @@ function FundMe({ account }) {
         <div className="col-auto">
           <button type="submit" className="btn btn-primary mb-3">
             Fund
+          </button>
+        </div>
+      </form>
+      <form className="row g-3" onSubmit={submitWithdraw}>
+        <div className="col-auto">
+          <button type="submit" className="btn btn-primary mb-3">
+            Withdraw
           </button>
         </div>
       </form>

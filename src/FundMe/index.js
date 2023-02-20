@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { FUND_ME } from "../service/contracts";
+improt withBackHome from "../enhancers/withBackHome";
 
 const { ethereum } = window;
 const { ethers } = window;
@@ -131,13 +132,7 @@ const FundMe = React.memo((props)=> {
 
     return (
         <div>
-             <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => props.goBack()}
-        >
-          Go back
-        </button>
+            
              <h1 className="display-1">Fund Me</h1>
       {isConnectedWallet ? (
         <FundMeComponent account={account} />
@@ -154,4 +149,4 @@ const FundMe = React.memo((props)=> {
     )
 });
 
-export default FundMe;
+export default withBackHome(FundMe);

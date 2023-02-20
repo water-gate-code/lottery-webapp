@@ -110,7 +110,7 @@ function FundMeComponent({ account }) {
     );
   }
 
-const FundMe = React.memo(()=> {
+const FundMe = React.memo((props)=> {
     const [isConnectedWallet, setIsConnectedWallet] = useState(false);
   const [account, setAccount] = useState(null);
   async function updateConnectionStatus() {
@@ -131,6 +131,13 @@ const FundMe = React.memo(()=> {
 
     return (
         <div>
+             <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => props.goBack()}
+        >
+          Go back
+        </button>
              <h1 className="display-1">Fund Me</h1>
       {isConnectedWallet ? (
         <FundMeComponent account={account} />

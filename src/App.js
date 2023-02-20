@@ -1,5 +1,6 @@
 import FundMe from './FundMe';
 import Dice from './Dice';
+import Button from "./components/Button"
 
 import "./App.css";
 
@@ -16,20 +17,8 @@ function App() {
     <div className="App container">
       {showAllGameEntry ? (
         <div>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => setCurrentGame('FUND_ME'))}
-        >
-          Play FundMe
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => setCurrentGame('DICE'))}
-        >
-          Play Dice
-        </button>
+          <Button text={'Play FundMe'} onClick={() => setCurrentGame('FUND_ME')}/>  
+          <Button text={'Play Dice'} onClick={() => setCurrentGame('DICE')}/>  
         </div>
       )}
      {currentGame === 'FUND_ME' && (<FundMe goBack={backHomeView} />)}

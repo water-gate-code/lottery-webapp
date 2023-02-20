@@ -1,7 +1,8 @@
 
 import { useState } from "react";
 import { FUND_ME } from "../service/contracts";
-improt withBackHome from "../enhancers/withBackHome";
+import withBackHome from "../enhancers/withBackHome";
+import Button from "../components/Button";
 
 const { ethereum } = window;
 const { ethers } = window;
@@ -136,13 +137,7 @@ const FundMe = React.memo((props)=> {
             {isConnectedWallet ? (
                 <FundMeComponent account={account} />
                 ) : (
-                <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={connectWallet}
-                >
-                    Connect Wallet
-                </button>
+                <Button onClick={connectWallet} text={'Connect Wallet'}/>
                 )
             }
         </div>

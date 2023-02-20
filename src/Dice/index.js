@@ -25,17 +25,13 @@
 improt withBackHome from "../enhancers/withBackHome";
 import Button from "../components/Button";
 import Loading from "../components/Loading";
+import useCreateGame from "./hooks/useCreateGame";
 import './index.css';
 
 const Dice = React.memo(()=> {
     const [loading, setLoading] = useState(false);
-    const createRoom = useCallback(() => {
-        console.log('createRoom');
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-    }, []);
+    const {creatGameAndPay, createLoading} = useCreateGame();
+    
     const refreshRoom = useCallback(() => {
         console.log('refreshRoom');
         setLoading(true);
@@ -43,14 +39,16 @@ const Dice = React.memo(()=> {
             setLoading(false);
         }, 1000);
     }, []);
+
     const joinRoom = useCallback((roomId) => {
         console.log('joinRoom');
     }, []);
 
+    const showLoading = useMemo(() => createLoading; [createLoading]);
    return (
     <div className="dice-container">
-        { loading && (<Loading />) }
-        <Button onClick={createRoom} text={'Create Room'}/>
+        { showLoading && (<Loading />) }
+        <Button onClick={creatGameAndPay} text={'Create Room'}/>
         <Button onClick={refreshRoom} text={'Refresh Room'}/>
         <Button onClick={joinRoom} text={'Join Room'}/>
     </div>

@@ -22,10 +22,25 @@
 //      Get Result / Stop Dice and show Result
 //
 improt withBackHome from "../enhancers/withBackHome";
+import Button from "../components/Button";
+import Loading from "../components/Loading";
 
 const Dice = React.memo(()=> {
+    const createRoom = useCallback(() => {
+        console.log('createRoom');
+    }, []);
+    const refreshRoom = useCallback(() => {
+        console.log('refreshRoom');
+    }, []);
+    const joinRoom = useCallback((roomId) => {
+        console.log('joinRoom');
+    }, []);
    return (
-    <div>Dice</div>
+    <div>
+        <Button onClick={createRoom} text={'Create Room'}/>
+        <Button onClick={refreshRoom} text={'Refresh Room'}/>
+        <Button onClick={joinRoom} text={'Join Room'}/>
+    </div>
    )
 });
 

@@ -16,9 +16,9 @@ function App() {
      <button
           type="button"
           className="btn btn-primary"
-          onClick={() => setCurrentGame('FUND_ME')}
+          onClick={() => setCurrentGame('FUND_ME'))}
         >
-          Connect Wallet
+          Play FundMe
         </button>
 
     </div>

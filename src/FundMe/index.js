@@ -113,7 +113,7 @@ function FundMeComponent({ account }) {
 
 const FundMe = React.memo((props)=> {
     const [isConnectedWallet, setIsConnectedWallet] = useState(false);
-  const [account, setAccount] = useState(null);
+    const [account, setAccount] = useState(null);
   async function updateConnectionStatus() {
     const accounts = await ethRequest({ method: "eth_accounts" });
     const isConnected = accounts.length > 0;
@@ -132,19 +132,19 @@ const FundMe = React.memo((props)=> {
 
     return (
         <div>
-            
              <h1 className="display-1">Fund Me</h1>
-      {isConnectedWallet ? (
-        <FundMeComponent account={account} />
-      ) : (
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={connectWallet}
-        >
-          Connect Wallet
-        </button>
-      )}
+            {isConnectedWallet ? (
+                <FundMeComponent account={account} />
+                ) : (
+                <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={connectWallet}
+                >
+                    Connect Wallet
+                </button>
+                )
+            }
         </div>
     )
 });

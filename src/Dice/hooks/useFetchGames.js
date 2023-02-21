@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getCurrentActiveDice } from '../../service/utils';
+import { getCurrentActiveDice } from '../service/utils';
 
 const useFetchGames = () => {
     const [games, setGames] = useState([]);

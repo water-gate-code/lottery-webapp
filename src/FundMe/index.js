@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
-import { FUND_ME } from "../service/contracts";
-import Button from "../components/Button";
+import { FUND_ME } from "../Dice/service/contracts";
+import Button from "../Dice/components/Button";
 
 const { ethereum } = window;
 const { ethers } = window;

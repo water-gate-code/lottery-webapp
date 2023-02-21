@@ -23,8 +23,8 @@
 //
 
 import React, { useCallback, useMemo, useState } from "react";
-import Button from "../components/Button";
-import Loading from "../components/Loading";
+import Button from "./components/Button";
+import Loading from "./components/Loading";
 import useCreateGame from "./hooks/useCreateGame";
 import useFetchGames from "./hooks/useFetchGames";
 import useJoinGame from "./hooks/useJoinGame";
@@ -57,13 +57,14 @@ const DicePlayGround = React.memo((props) => {
                 <div>{gamberLarge ? gamberLarge.name : '等待玩家加入'}</div>
             </div>
             <div className="col-4 center">
-                <div className={`dice ${diceShaking ? 'dice-start' : 'dice-end'} dice-${diceNumber}` }/>
+                <div className={`dice ${diceShaking ? 'dice-start' : 'dice-end'} dice-${diceNumber}`} />
                 <button
+                    disable={diceShaking}
                     type="button"
                     className="btn btn-danger"
                     onClick={clickStart}
                 >
-                    开始
+                    {diceShaking ? '正在摇骰子' : '开始'}
                 </button>
             </div>
             <div className="col-4 center">

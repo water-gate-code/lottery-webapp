@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { play } from '../../service/utils';
+import { play } from '../service/utils';
 
 const usePlayingGame = () => {
     const [diceShaking, setDiceShaking] = useState(false);

@@ -4,7 +4,7 @@
 //      Into Game Room / Done
 
 import { useState, useCallback } from "react";
-import {connectWallet, payMoneyAndCreateGame} from "../../service/utils";
+import {connectWallet, payMoneyAndCreateGame} from "../service/utils";
 
 const useCreateGame = () => {
     const [loading, setLoading] = useState(false);

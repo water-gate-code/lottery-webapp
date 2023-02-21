@@ -1,8 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import FundMe from './FundMe';
 import Dice from './Dice';
-import Button from "./components/Button"
-import DevInfo from "./components/DevInfo"
+import Button from "./Dice/components/Button"
 
 import "./App.css";
 
@@ -17,7 +16,6 @@ function App() {
 
   return (
     <div className="App container">
-      <DevInfo />
       {showAllGameEntry && (
         <div>
           <h1 className="title"> The Greate Water Gate </h1>

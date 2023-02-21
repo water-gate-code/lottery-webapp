@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { joinDice } from '../../service/utils';
+import { joinDice } from '../service/utils';
 
 const useJoinGame = () => {
     const [loading, setLoading] = useState(false);

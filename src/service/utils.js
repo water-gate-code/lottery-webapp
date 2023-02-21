@@ -60,3 +60,28 @@ export const payMoney = async (amount) => {
     console.log(error);
   }
 }
+
+export const getCurrentActiveDice = async () => {
+  // const { contract, provider } = getContractAndProvider(betValue);
+  // const games = await contract.getGames();
+
+  const mockData = [
+    {
+      diceId: 123,
+      gamblerName: '0xadsfasdfasdfasdfwer', 
+      gamblerAdress: '0xadsfasdfasdfasdfwer', 
+      select: 'big',
+    }, {
+      diceId: 234,
+      gamblerName: '0xadsfasdfasdfaasdfasdftre', 
+      gamblerAdress: '0xadsfasdfasdfaasdfasdftre', 
+      select: 'small',
+    }, {
+      diceId: 456,
+      gamblerName: '0xadsfasdfasdfdfdfasdfasdftre',
+      gamblerAddress: '0xadsfasdfasdfdfdfasdfasdftre',
+      select: 'big',
+    },
+  ];
+  return Promise.resolve(mockData);
+}

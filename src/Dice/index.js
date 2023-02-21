@@ -29,32 +29,42 @@ import useCreateGame from "./hooks/useCreateGame";
 import "./index.css";
 
 const Dice = React.memo((props) => {
-  const { goBack } = props;
-  const [loading, setLoading] = useState(false);
-  const { creatGameAndPay, createLoading } = useCreateGame();
+    const { goBack } = props;
+    const [loading, setLoading] = useState(false);
+    const { creatGameAndPay, createLoading } = useCreateGame();
+    const { games, refetchGames, ListLoading } = useFetchGames();
 
-  const refreshRoom = useCallback(() => {
-    console.log("refreshRoom");
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
+    const refreshRoom = useCallback(() => {
+        console.log("refreshRoom");
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 1000);
+    }, []);
 
-  const joinRoom = useCallback((roomId) => {
-    console.log("joinRoom");
-  }, []);
+    const joinRoom = useCallback((roomId) => {
+        console.log("joinRoom");
+    }, []);
 
-  const showLoading = useMemo(() => createLoading, [createLoading]);
-  return (
-    <div className="dice-container">
-      <Button onClick={goBack} text={"Back"} />
-      {showLoading && <Loading />}
-      <Button onClick={creatGameAndPay} text={"Create Room"} />
-      <Button onClick={refreshRoom} text={"Refresh Room"} />
-      <Button onClick={joinRoom} text={"Join Room"} />
-    </div>
-  );
+    const showLoading = useMemo(() => createLoading || ListLoading, [createLoading, ListLoading]);
+    return (
+        <div className="dice-container">
+            {showLoading && (<Loading />)}
+            <Button onClick={creatGameAndPay} text={'Create Room'} />
+            <Button onClick={refetchGames} text={'Refresh Room'} />
+            {
+                games.map((data) => {
+                    const { diceId, gamblerAdress, gamblerName, select } = data;
+                    return (
+                        <div>
+                            <h4>Name: ${gamblerName}</h4>
+                            <Button onClick={() => joinRoom(id)} text={'Join Room'} />
+                        </div>
+                    )
+                })
+            }
+        </div>
+    );
 });
 
 export default Dice;

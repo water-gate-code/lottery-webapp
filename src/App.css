@@ -1,0 +1,10 @@
+.title {
+    padding: 10px;
+    text-align: center;
+}
+
+.game-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

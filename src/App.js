@@ -20,8 +20,11 @@ function App() {
       <DevInfo />
       {showAllGameEntry && (
         <div>
-          <Button text={'Play FundMe'} onClick={() => setCurrentGame('FUND_ME')} />
-          <Button text={'Play Dice'} onClick={() => setCurrentGame('DICE')} />
+          <h1 className="title"> The Greate Water Gate </h1>
+          <div className='game-list'>
+            <Button text={'FundMe'} onClick={() => setCurrentGame('FUND_ME')} />
+            <Button text={'Dice'} onClick={() => setCurrentGame('DICE')} />
+          </div>
         </div>
       )}
       {currentGame === 'FUND_ME' && (<FundMe goBack={() => backHomeView()} />)}

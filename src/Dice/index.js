@@ -9,52 +9,52 @@
 // User Click [Join Button]:
 //      Connect Wallet / Loading
 //      Join Game / Loaing
-//        - Failed by room fulfilled 
+//        - Failed by room fulfilled
 //      Into Game Room / Done
-//      
+//
 //
 // User In Game Room:
 //      Keep Polling room status
-//      One User in the Room, Show Waiting      
+//      One User in the Room, Show Waiting
 //      Two User in the Room, Show Play
 // One of the User Click Play:
 //      Call play / Shaking Dice
 //      Get Result / Stop Dice and show Result
 //
 
-import React, {useMemo, useCallback, useState} from 'react';
-import withBackHome from "../enhancers/withBackHome";
+import React, { useMemo, useCallback, useState } from "react";
 import Button from "../components/Button";
 import Loading from "../components/Loading";
 import useCreateGame from "./hooks/useCreateGame";
-import './index.css';
+import "./index.css";
 
-const Dice = React.memo(
-    () => {
-        const [loading, setLoading] = useState(false);
-        const { creatGameAndPay, createLoading } = useCreateGame();
+const Dice = React.memo((props) => {
+  const { goBack } = props;
+  const [loading, setLoading] = useState(false);
+  const { creatGameAndPay, createLoading } = useCreateGame();
 
-        const refreshRoom = useCallback(() => {
-            console.log('refreshRoom');
-            setLoading(true);
-            setTimeout(() => {
-                setLoading(false);
-            }, 1000);
-        }, []);
+  const refreshRoom = useCallback(() => {
+    console.log("refreshRoom");
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
 
-        const joinRoom = useCallback((roomId) => {
-            console.log('joinRoom');
-        }, []);
+  const joinRoom = useCallback((roomId) => {
+    console.log("joinRoom");
+  }, []);
 
-        const showLoading = useMemo(() => createLoading, [createLoading]);
-        return (
-            <div className="dice-container">
-                {showLoading && (<Loading />)}
-                <Button onClick={creatGameAndPay} text={'Create Room'} />
-                <Button onClick={refreshRoom} text={'Refresh Room'} />
-                <Button onClick={joinRoom} text={'Join Room'} />
-            </div>
-        );
-    });
+  const showLoading = useMemo(() => createLoading, [createLoading]);
+  return (
+    <div className="dice-container">
+      <Button onClick={goBack} text={"Back"} />
+      {showLoading && <Loading />}
+      <Button onClick={creatGameAndPay} text={"Create Room"} />
+      <Button onClick={refreshRoom} text={"Refresh Room"} />
+      <Button onClick={joinRoom} text={"Join Room"} />
+    </div>
+  );
+});
 
-export default withBackHome(Dice);
+export default Dice;

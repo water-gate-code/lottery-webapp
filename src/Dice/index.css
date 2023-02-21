@@ -58,27 +58,27 @@
 /* 骰子动画 */
 
 /* 骰子数字 */
-.dice-one {
+.dice-1 {
     background-position: 60% 100%;
 }
 
-.dice-two {
+.dice-2 {
     background-position: 0% 100%;
 }
 
-.dice-three {
+.dice-3 {
     background-position: 40% 100%;
 }
 
-.dice-four {
+.dice-4 {
     background-position: 100% 100%;
 }
 
-.dice-five {
+.dice-5 {
     background-position: 20% 100%;
 }
 
-.dice-six {
+.dice-6 {
     background-position: 80% 100%;
 }
 /* 骰子数字 */

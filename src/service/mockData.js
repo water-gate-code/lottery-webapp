@@ -47,3 +47,7 @@ export const MOCK_DICE_LIST = [
         }]
     },
 ];
+
+export const MOCK_RESULT = {
+    result: 5
+}

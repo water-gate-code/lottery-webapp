@@ -28,29 +28,27 @@ import Loading from "../components/Loading";
 import useCreateGame from "./hooks/useCreateGame";
 import useFetchGames from "./hooks/useFetchGames";
 import useJoinGame from "./hooks/useJoinGame";
-
+import usePlayingGame from "./hooks/usePlayingGame";
 import "./index.css";
 
 const DicePlayGround = React.memo((props) => {
     //      Keep Polling room status
     //      One User in the Room, Show Waiting
     //      Two User in the Room, Show Play
-    
-    const { dice: {gambers = []}} = props;
 
+    const { dice: { gambers = [] } } = props;
     const gamberLarge = gambers.find(gamber => gamber.select === 'big');
     const gamberSmall = gambers.find(gamber => gamber.select === 'small');
     const disableStart = !(gamberLarge && gamberSmall);
-
-    const [diceShaking, setDiceShaking] = useState(false);
-
+    const { diceShaking, startPlaying, diceNumber } = usePlayingGame();
     const clickStart = useCallback(() => {
-        if(disableStart) {
+        if (disableStart) {
             window.alert("需要两位玩家同时在线才能开始")
         } else {
-            setDiceShaking(shaking => !shaking);
+            startPlaying();
         }
     }, [disableStart]);
+
 
     return (
         <div className="row full-height">
@@ -59,7 +57,7 @@ const DicePlayGround = React.memo((props) => {
                 <div>{gamberLarge ? gamberLarge.name : '等待玩家加入'}</div>
             </div>
             <div className="col-4 center">
-                <div className={`dice ${diceShaking ? 'dice-start': 'dice-end'}`}></div>
+                <div className={`dice ${diceShaking ? 'dice-start' : 'dice-end'} dice-${diceNumber}` }/>
                 <button
                     type="button"
                     className="btn btn-danger"
@@ -78,19 +76,18 @@ const DicePlayGround = React.memo((props) => {
 
 const DiceList = React.memo((props) => {
     const { dice = [], join } = props;
-
     const renderDetail = (data) => {
-        const {diceId, gambers} = data;
+        const { diceId, gambers } = data;
         return (
             <div>
-            {gambers.map((gamber) => (
-                 <div>
-                 <h4>{`Name: ${gamber.name}`}</h4>
-                 <div>{gamber.select}</div>
-                 <Button onClick={() => join(diceId)} text={'Join Room'} />
+                {gambers.map((gamber) => (
+                    <div>
+                        <h4>{`Name: ${gamber.name}`}</h4>
+                        <div>{gamber.select}</div>
+                        <Button onClick={() => join(diceId)} text={'Join Room'} />
+                    </div>
+                ))}
             </div>
-            ))}
-        </div>
         )
     }
     return (
@@ -108,7 +105,6 @@ const Dice = React.memo((props) => {
     const { creatGameAndPay, createLoading, createdGame } = useCreateGame();
     const { games, refetchGames, ListLoading } = useFetchGames();
     const { joinGame, joinLoading, joinedGame } = useJoinGame();
-    
     const showLoading = useMemo(() => createLoading || ListLoading || joinLoading, [createLoading, ListLoading, joinLoading]);
     const showDicePlayground = createdGame || joinedGame;
     const showList = !showDicePlayground;

@@ -1,6 +1,6 @@
 
 import { FUND_ME } from './contracts';
-import { MOCK_JOIN_DICE, MOCK_CREATE_DICE, MOCK_DICE_LIST } from './mockData';
+import { MOCK_JOIN_DICE, MOCK_CREATE_DICE, MOCK_DICE_LIST, MOCK_RESULT } from './mockData';
 
 const { ethereum } = window;
 const { ethers } = window;
@@ -59,6 +59,22 @@ export const connectWallet = async () => {
   return;
 }
 
+const payMoney = async (amount) => {
+  // const betValue = parseFloat(amount).toString();
+  // console.log(`Pay with ${betValue}...`);
+  // const { contract, provider } = getContractAndProvider(betValue);
+  // try {
+  //   const transactionResponse = await contract.fund({
+  //     value: ethers.utils.parseEther(betValue),
+  //   });
+  //   await listenForTransactionMine(transactionResponse, provider);
+  // } catch (error) {
+  //   console.log(error);
+  // }
+  await delay(2000);
+  return Promise.resolve();
+}
+
 export const payMoneyAndCreateGame = async (amount) => {
   // const betValue = parseFloat(amount).toString();
   // console.log(`Pay with ${betValue}...`);
@@ -86,8 +102,17 @@ export const getCurrentActiveDice = async () => {
 
 export const joinDice = async () => {
   // const { contract, provider } = getContractAndProvider(betValue);
-  // const games = await contract.getGames();
+  // const games = await contract.connectWallet();
+  // await payMoney(5);
 
   await delay(2000);
   return Promise.resolve(MOCK_JOIN_DICE);
+}
+
+export const play = async () => {
+  // const { contract, provider } = getContractAndProvider(betValue);
+  // const result = await contract.start();
+
+  await delay(2000);
+  return Promise.resolve(MOCK_RESULT);
 }

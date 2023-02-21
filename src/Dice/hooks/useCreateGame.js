@@ -16,7 +16,7 @@ const useCreateGame = () => {
             // delay(1000)
             await connectWallet();
             // // TODO: create ABI
-            const res = await payMoneyAndCreateGame();
+            const res = await payMoneyAndCreateGame(5);
             setLoading(false);
             setCreateGame(res);
             console.error('creatGameAndPay Succeed: ');

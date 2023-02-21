@@ -4,7 +4,7 @@ const Loading = () => {
     return (
         <div className="loading">
             <div className="spinner-border text-primary" role="status">
-                <span class="sr-only" />
+                <span className="sr-only" />
             </div>
         </div>
     )

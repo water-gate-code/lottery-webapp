@@ -48,10 +48,10 @@ const DicePlayGround = React.memo((props) => {
             <div className="col-3">
                 <div>dice</div>
                 <button
-                    disabled = {!(gamberLarge && gamberSmall)}
+                    disabled={!(gamberLarge && gamberSmall)}
                     type="button"
                     className="btn btn-danger"
-                    onClick={() => {window.alert('TODO')}}
+                    onClick={() => { window.alert('TODO') }}
                 >
                     开始
                 </button>
@@ -63,6 +63,26 @@ const DicePlayGround = React.memo((props) => {
         </div>
     )
 });
+
+const DiceList = React.memo((props) => {
+    const { dice = [], join } = props;
+    return (
+        <div>
+            {
+                dice.map((die) => {
+                    const { diceId, gamblerName } = die;
+                    return (
+                        <div>
+                            <h4>{`Name: ${gamblerName}`}</h4>
+                            <Button onClick={() => join(diceId)} text={'Join Room'} />
+                        </div>
+                    )
+                })
+            }
+        </div>
+    )
+});
+
 
 const Dice = React.memo((props) => {
     const { goBack } = props;
@@ -86,17 +106,7 @@ const Dice = React.memo((props) => {
                 </div>
                 <div className='col-9 playground'>
                     {showDicePlayground && <DicePlayGround />}
-                    {
-                        showList && games.map((data) => {
-                            const { diceId, gamblerName } = data;
-                            return (
-                                <div>
-                                    <h4>{`Name: ${gamblerName}`}</h4>
-                                    <Button onClick={() => joinGame(diceId)} text={'Join Room'} />
-                                </div>
-                            )
-                        })
-                    }
+                    {showList && <DiceList dice={games} join={joinGame} />}
                 </div>
             </div>
         </div>

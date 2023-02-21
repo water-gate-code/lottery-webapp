@@ -3,7 +3,8 @@
 //      Create Game / Loading
 //      Into Game Room / Done
 
-import {connectWallet, payMoney} from "../../serivce/utils";
+import { useState, useCallback } from "react";
+import {connectWallet, payMoney} from "../../service/utils";
 
 const useCreateGame = () => {
     const [loading, setLoading] = useState(false);
@@ -15,7 +16,7 @@ const useCreateGame = () => {
             // TODO: create ABI
             await payMoney();
             setLoading(false);
-            console.error('creatGameAndPay Succeed: ', JSON.stringify(e));
+            console.error('creatGameAndPay Succeed: ');
         } catch (e) {
             setLoading(false);
             console.error('creatGameAndPay Failed: ', JSON.stringify(e));
@@ -24,7 +25,7 @@ const useCreateGame = () => {
 
     return {
         creatGameAndPay,
-        createLoading,
+        createLoading: loading,
     }
 }
 

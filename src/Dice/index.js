@@ -22,37 +22,39 @@
 //      Get Result / Stop Dice and show Result
 //
 
+import React, {useMemo, useCallback, useState} from 'react';
 import withBackHome from "../enhancers/withBackHome";
 import Button from "../components/Button";
 import Loading from "../components/Loading";
 import useCreateGame from "./hooks/useCreateGame";
 import './index.css';
 
-const Dice = React.memo(()=> {
-    const [loading, setLoading] = useState(false);
-    const {creatGameAndPay, createLoading} = useCreateGame();
-    
-    const refreshRoom = useCallback(() => {
-        console.log('refreshRoom');
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-    }, []);
+const Dice = React.memo(
+    () => {
+        const [loading, setLoading] = useState(false);
+        const { creatGameAndPay, createLoading } = useCreateGame();
 
-    const joinRoom = useCallback((roomId) => {
-        console.log('joinRoom');
-    }, []);
+        const refreshRoom = useCallback(() => {
+            console.log('refreshRoom');
+            setLoading(true);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
+        }, []);
 
-    const showLoading = useMemo(() => createLoading; [createLoading]);
-   return (
-    <div className="dice-container">
-        { showLoading && (<Loading />) }
-        <Button onClick={creatGameAndPay} text={'Create Room'}/>
-        <Button onClick={refreshRoom} text={'Refresh Room'}/>
-        <Button onClick={joinRoom} text={'Join Room'}/>
-    </div>
-   )
-});
+        const joinRoom = useCallback((roomId) => {
+            console.log('joinRoom');
+        }, []);
+
+        const showLoading = useMemo(() => createLoading, [createLoading]);
+        return (
+            <div className="dice-container">
+                {showLoading && (<Loading />)}
+                <Button onClick={creatGameAndPay} text={'Create Room'} />
+                <Button onClick={refreshRoom} text={'Refresh Room'} />
+                <Button onClick={joinRoom} text={'Join Room'} />
+            </div>
+        );
+    });
 
 export default withBackHome(Dice);

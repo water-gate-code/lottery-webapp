@@ -22,7 +22,7 @@
 //      Get Result / Stop Dice and show Result
 //
 
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Button from "../components/Button";
 import Loading from "../components/Loading";
 import useCreateGame from "./hooks/useCreateGame";
@@ -35,28 +35,36 @@ const DicePlayGround = React.memo((props) => {
     //      Keep Polling room status
     //      One User in the Room, Show Waiting
     //      Two User in the Room, Show Play
+    const [diceShaking, setDiceShaking] = useState(false);
     const { gambers = [] } = props;
     const gamberLarge = gambers.find(select => select === 'big');
     const gamberSmall = gambers.find(select => select === 'small');
+    const disableStart = false;//!(gamberLarge && gamberSmall);
+    const clickStart = useCallback(() => {
+        if(disableStart) {
+            window.alert("需要两位玩家同时在线才能开始")
+        } else {
+            setDiceShaking(shaking => !shaking);
+        }
+    }, [disableStart]);
 
     return (
         <div className="row">
-            <div className="col-3">
+            <div className="col-4">
                 <h2>大</h2>
                 <div>{gamberLarge ? gamberLarge.name : '等待玩家加入'}</div>
             </div>
-            <div className="col-3">
-                <div>dice</div>
+            <div className="col-4">
+                <div className={`dice ${diceShaking ? 'dice-start': 'dice-end'}`}></div>
                 <button
-                    disabled={!(gamberLarge && gamberSmall)}
                     type="button"
                     className="btn btn-danger"
-                    onClick={() => { window.alert('TODO') }}
+                    onClick={clickStart}
                 >
                     开始
                 </button>
             </div>
-            <div className="col-3">
+            <div className="col-4">
                 <h2>小</h2>
                 <div>{gamberSmall ? gamberSmall.name : '等待玩家加入'}</div>
             </div>
@@ -99,7 +107,7 @@ const Dice = React.memo((props) => {
     const { joinGame, joinLoading, joinedGame } = useJoinGame();
     
     const showLoading = useMemo(() => createLoading || ListLoading || joinLoading, [createLoading, ListLoading, joinLoading]);
-    const showDicePlayground = createdGame || joinedGame;
+    const showDicePlayground = true;//createdGame || joinedGame;
     const showList = !showDicePlayground;
 
     return (

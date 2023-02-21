@@ -9,7 +9,7 @@ import "./App.css";
 
 function App() {
 
-  const [currentGame, setCurrentGame] = useState('');
+  const [currentGame, setCurrentGame] = useState('DICE');
   const showAllGameEntry = useMemo(() => currentGame === '', [currentGame]);
   const backHomeView = useCallback(() => {
     setCurrentGame('');

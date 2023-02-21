@@ -34,31 +34,45 @@ const getContractAndProvider = (ethereum) => {
   return { contract, provider };
 }
 
+const delay = (number) => {
+  return new Promise((resolve) => {
+      setTimeout(() => {
+          resolve();
+      }, number)
+  })
+}
+
 export const connectWallet = async () => {
-  try {
-    await ethRequest({ method: "eth_requestAccounts" });
-    const accounts = await ethRequest({ method: "eth_accounts" });
-    const isConnected = accounts.length > 0;
-    console.log(`connectWallet Succeed:`);
-    return isConnected;
-  } catch (e) {
-    console.log(`connectWallet failed:`, JSON.stringlify(e));
-    return Promise.resolve(false);
-  }
+  // try {
+  //   await ethRequest({ method: "eth_requestAccounts" });
+  //   const accounts = await ethRequest({ method: "eth_accounts" });
+  //   const isConnected = accounts.length > 0;
+  //   console.log(`connectWallet Succeed:`);
+  //   return isConnected;
+  // } catch (e) {
+  //   console.log(`connectWallet failed:`, JSON.stringlify(e));
+  //   return Promise.resolve(false);
+  // }
+
+  await delay(2000);
+  return;
 }
 
 export const payMoney = async (amount) => {
-  const betValue = parseFloat(amount).toString();
-  console.log(`Pay with ${betValue}...`);
-  const { contract, provider } = getContractAndProvider(betValue);
-  try {
-    const transactionResponse = await contract.fund({
-      value: ethers.utils.parseEther(betValue),
-    });
-    await listenForTransactionMine(transactionResponse, provider);
-  } catch (error) {
-    console.log(error);
-  }
+  // const betValue = parseFloat(amount).toString();
+  // console.log(`Pay with ${betValue}...`);
+  // const { contract, provider } = getContractAndProvider(betValue);
+  // try {
+  //   const transactionResponse = await contract.fund({
+  //     value: ethers.utils.parseEther(betValue),
+  //   });
+  //   await listenForTransactionMine(transactionResponse, provider);
+  // } catch (error) {
+  //   console.log(error);
+  // }
+
+  await delay(2000);
+  return;
 }
 
 export const getCurrentActiveDice = async () => {
@@ -83,5 +97,15 @@ export const getCurrentActiveDice = async () => {
       select: 'big',
     },
   ];
+
+  await delay(2000);
   return Promise.resolve(mockData);
+}
+
+export const joinDice = async () => {
+  // const { contract, provider } = getContractAndProvider(betValue);
+  // const games = await contract.getGames();
+
+  await delay(2000);
+  return;
 }

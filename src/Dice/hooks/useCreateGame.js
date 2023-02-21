@@ -6,23 +6,16 @@
 import { useState, useCallback } from "react";
 import {connectWallet, payMoney} from "../../service/utils";
 
-const delay = (number) => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve();
-        }, number)
-    })
-}
 const useCreateGame = () => {
     const [loading, setLoading] = useState(false);
 
     const creatGameAndPay = useCallback(async () => {
         setLoading(true);
         try {
-            delay(1000)
-            // await connectWallet();
+            // delay(1000)
+            await connectWallet();
             // // TODO: create ABI
-            // await payMoney();
+            await payMoney();
             setLoading(false);
             console.error('creatGameAndPay Succeed: ');
         } catch (e) {

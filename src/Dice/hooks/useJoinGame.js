@@ -3,11 +3,13 @@ import { joinDice } from '../../service/utils';
 
 const useJoinGame = () => {
     const [loading, setLoading] = useState(false);
+    const [joinedGame, setJoinedGame] = useState(null);
 
     const joinGame = useCallback((diceId) => {
         setLoading(true);
         joinDice(diceId)
-            .then(() => {
+            .then((res) => {
+                setJoinedGame(res);
                 setLoading(false);
             })
             .catch((err) => {
@@ -19,6 +21,7 @@ const useJoinGame = () => {
     return {
         joinGame,
         joinLoading: loading,
+        joinedGame,
     }
 }
 

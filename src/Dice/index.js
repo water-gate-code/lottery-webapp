@@ -70,11 +70,19 @@ const DiceList = React.memo((props) => {
         <div>
             {
                 dice.map((die) => {
-                    const { diceId, gamblerName } = die;
+                    const { diceId, gambers } = die;
                     return (
                         <div>
-                            <h4>{`Name: ${gamblerName}`}</h4>
-                            <Button onClick={() => join(diceId)} text={'Join Room'} />
+                            {gambers.map((gamber) => {
+                               return (
+                                <div>
+                                     <h4>{`Name: ${gamber.Name}`}</h4>
+                                     <div>{gamber.select}</div>
+                                     <Button onClick={() => join(diceId)} text={'Join Room'} />
+                                </div>
+                               )
+  
+                            })}
                         </div>
                     )
                 })
@@ -86,13 +94,13 @@ const DiceList = React.memo((props) => {
 
 const Dice = React.memo((props) => {
     const { goBack } = props;
-    const { creatGameAndPay, createLoading } = useCreateGame();
+    const { creatGameAndPay, createLoading, createdGame } = useCreateGame();
     const { games, refetchGames, ListLoading } = useFetchGames();
-    const { joinGame, joinLoading } = useJoinGame();
-
+    const { joinGame, joinLoading, joinedGame } = useJoinGame();
+    
     const showLoading = useMemo(() => createLoading || ListLoading || joinLoading, [createLoading, ListLoading, joinLoading]);
-    const showList = false;
-    const showDicePlayground = true;
+    const showDicePlayground = createdGame || joinedGame;
+    const showList = !showDicePlayground;
 
     return (
         <div className="dice-container container">

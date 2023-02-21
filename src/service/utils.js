@@ -1,5 +1,6 @@
 
 import { FUND_ME } from './contracts';
+import { MOCK_JOIN_DICE, MOCK_CREATE_DICE, MOCK_DICE_LIST } from './mockData';
 
 const { ethereum } = window;
 const { ethers } = window;
@@ -36,9 +37,9 @@ const getContractAndProvider = (ethereum) => {
 
 const delay = (number) => {
   return new Promise((resolve) => {
-      setTimeout(() => {
-          resolve();
-      }, number)
+    setTimeout(() => {
+      resolve();
+    }, number)
   })
 }
 
@@ -58,7 +59,7 @@ export const connectWallet = async () => {
   return;
 }
 
-export const payMoney = async (amount) => {
+export const payMoneyAndCreateGame = async (amount) => {
   // const betValue = parseFloat(amount).toString();
   // console.log(`Pay with ${betValue}...`);
   // const { contract, provider } = getContractAndProvider(betValue);
@@ -72,34 +73,15 @@ export const payMoney = async (amount) => {
   // }
 
   await delay(2000);
-  return;
+  return Promise.resolve(MOCK_CREATE_DICE);
 }
 
 export const getCurrentActiveDice = async () => {
   // const { contract, provider } = getContractAndProvider(betValue);
   // const games = await contract.getGames();
 
-  const mockData = [
-    {
-      diceId: 123,
-      gamblerName: '0xadsfasdfasdfasdfwer', 
-      gamblerAdress: '0xadsfasdfasdfasdfwer', 
-      select: 'big',
-    }, {
-      diceId: 234,
-      gamblerName: '0xadsfasdfasdfaasdfasdftre', 
-      gamblerAdress: '0xadsfasdfasdfaasdfasdftre', 
-      select: 'small',
-    }, {
-      diceId: 456,
-      gamblerName: '0xadsfasdfasdfdfdfasdfasdftre',
-      gamblerAddress: '0xadsfasdfasdfdfdfasdfasdftre',
-      select: 'big',
-    },
-  ];
-
   await delay(2000);
-  return Promise.resolve(mockData);
+  return Promise.resolve(MOCK_DICE_LIST);
 }
 
 export const joinDice = async () => {
@@ -107,5 +89,5 @@ export const joinDice = async () => {
   // const games = await contract.getGames();
 
   await delay(2000);
-  return;
+  return Promise.resolve(MOCK_JOIN_DICE);
 }

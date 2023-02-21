@@ -4,10 +4,11 @@
 //      Into Game Room / Done
 
 import { useState, useCallback } from "react";
-import {connectWallet, payMoney} from "../../service/utils";
+import {connectWallet, payMoneyAndCreateGame} from "../../service/utils";
 
 const useCreateGame = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState({loading: false});
+    const [createdGame, setCreateGame] = useState(null);
 
     const creatGameAndPay = useCallback(async () => {
         setLoading(true);
@@ -15,18 +16,21 @@ const useCreateGame = () => {
             // delay(1000)
             await connectWallet();
             // // TODO: create ABI
-            await payMoney();
+            const res = await payMoneyAndCreateGame();
             setLoading(false);
+            setCreateGame(res);
             console.error('creatGameAndPay Succeed: ');
         } catch (e) {
+            setCreateGame(null);
             setLoading(false);
             console.error('creatGameAndPay Failed: ', JSON.stringify(e));
         }
-    }, [])
+    }, []);
 
     return {
         creatGameAndPay,
         createLoading: loading,
+        createdGame,
     }
 }
 

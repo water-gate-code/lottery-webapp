@@ -59,62 +59,62 @@ async function ethRequest(args) {
 }
 
 function FundMeComponent({ account }) {
-    const [amount, setAmount] = useState(0.01);
-  
-    function changeAmount(event) {
-      setAmount(event.target.value);
-    }
-    function submitFund(event) {
-      event.preventDefault();
-      const fundEth = parseFloat(amount);
-      console.log("fundEth:", fundEth);
-      fund(fundEth.toString());
-    }
-    function submitWithdraw(event) {
-      event.preventDefault();
-      withdraw();
-    }
-  
-    return (
-      <div>
-        <p>
-          <strong>Account: {account}</strong>
-        </p>
-        <form className="row g-3" onSubmit={submitFund}>
-          <div className="col-auto">
-            <label htmlFor="inputAmount" className="visually-hidden">
-              Amount
-            </label>
-            <input
-              type="number"
-              step="any"
-              value={amount}
-              onChange={changeAmount}
-              className="form-control"
-              id="inputAmount"
-              placeholder="Amount"
-            />
-          </div>
-          <div className="col-auto">
-            <button type="submit" className="btn btn-primary mb-3">
-              Fund
-            </button>
-          </div>
-        </form>
-        <form className="row g-3" onSubmit={submitWithdraw}>
-          <div className="col-auto">
-            <button type="submit" className="btn btn-primary mb-3">
-              Withdraw
-            </button>
-          </div>
-        </form>
-      </div>
-    );
+  const [amount, setAmount] = useState(0.01);
+
+  function changeAmount(event) {
+    setAmount(event.target.value);
+  }
+  function submitFund(event) {
+    event.preventDefault();
+    const fundEth = parseFloat(amount);
+    console.log("fundEth:", fundEth);
+    fund(fundEth.toString());
+  }
+  function submitWithdraw(event) {
+    event.preventDefault();
+    withdraw();
   }
 
-const FundMe = React.memo((props)=> {
-    const [isConnectedWallet, setIsConnectedWallet] = useState(false);
-    const [account, setAccount] = useState(null);
+  return (
+    <div>
+      <p>
+        <strong>Account: {account}</strong>
+      </p>
+      <form className="row g-3" onSubmit={submitFund}>
+        <div className="col-auto">
+          <label htmlFor="inputAmount" className="visually-hidden">
+            Amount
+          </label>
+          <input
+            type="number"
+            step="any"
+            value={amount}
+            onChange={changeAmount}
+            className="form-control"
+            id="inputAmount"
+            placeholder="Amount"
+          />
+        </div>
+        <div className="col-auto">
+          <button type="submit" className="btn btn-primary mb-3">
+            Fund
+          </button>
+        </div>
+      </form>
+      <form className="row g-3" onSubmit={submitWithdraw}>
+        <div className="col-auto">
+          <button type="submit" className="btn btn-primary mb-3">
+            Withdraw
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+const FundMe = React.memo((props) => {
+  const [isConnectedWallet, setIsConnectedWallet] = useState(false);
+  const [account, setAccount] = useState(null);
   async function updateConnectionStatus() {
     const accounts = await ethRequest({ method: "eth_accounts" });
     const isConnected = accounts.length > 0;
@@ -131,17 +131,17 @@ const FundMe = React.memo((props)=> {
     updateConnectionStatus();
   }
 
-    return (
-        <div>
-             <h1 className="display-1">Fund Me</h1>
-            {isConnectedWallet ? (
-                <FundMeComponent account={account} />
-                ) : (
-                <Button onClick={connectWallet} text={'Connect Wallet'}/>
-                )
-            }
-        </div>
-    )
+  return (
+    <div>
+      <h1 className="display-1">Fund Me</h1>
+      {isConnectedWallet ? (
+        <FundMeComponent account={account} />
+      ) : (
+        <Button onClick={connectWallet} text={'Connect Wallet'} />
+      )
+      }
+    </div>
+  )
 });
 
 export default withBackHome(FundMe);

@@ -22,7 +22,7 @@
 //      Get Result / Stop Dice and show Result
 //
 
-improt withBackHome from "../enhancers/withBackHome";
+import withBackHome from "../enhancers/withBackHome";
 import Button from "../components/Button";
 import Loading from "../components/Loading";
 import useCreateGame from "./hooks/useCreateGame";

@@ -1,3 +1,5 @@
+import Button from "../components/Button";
+
 const withBackHome = (Component) => {
     return (props) => {
         const goBackFunc = useCallback(() => {
@@ -7,13 +9,7 @@ const withBackHome = (Component) => {
         }, [props.goBack]);
         return (
             <div>
-                 <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={goBackFunc}
-                >
-                    Go back
-                </button>
+                <Button onClick={goBackFunc} text={"Go back"}/>
                 <Component {...props}/>
             </div>
         )

@@ -22,26 +22,6 @@ const useCreateGame = () => {
         }
     }, [])
 
-    // useEffect(() => {
-    //     let didCancel = false;
-    //     creatGameAndPay()
-    //     .then(() => {
-    //         if(didCancel) {
-    //             return;
-    //         }
-    //     })
-    //     .catch(() => {
-    //         if(didCancel) {
-    //             return;
-    //         }
-
-    //     })
-        
-    // }, [])
-
-    // return () => {
-    //     didCancel = true;
-    // }
     return {
         creatGameAndPay,
         createLoading,

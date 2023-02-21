@@ -1,5 +1,5 @@
 
-import { FUND_ME } from './contracts';
+import { DICE } from './contracts';
 import { MOCK_JOIN_DICE, MOCK_CREATE_DICE, MOCK_DICE_LIST, MOCK_RESULT } from './mockData';
 
 const { ethereum } = window;
@@ -31,7 +31,7 @@ const getContractAndProvider = (ethereum) => {
   const provider = new ethers.providers.Web3Provider(ethereum);
   const signer = provider.getSigner();
   // TODO: DICE Contract
-  const contract = new ethers.Contract(FUND_ME.address, FUND_ME.abi, signer);
+  const contract = new ethers.Contract(DICE.address, DICE.abi, signer);
   return { contract, provider };
 }
 

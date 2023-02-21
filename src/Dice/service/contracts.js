@@ -1,4 +1,4 @@
-export const FUND_ME = {
+export const DICE = {
   address: "0xF0eFA90068bcca7dE8E4bC1220Ca14e23c438203",
   abi: [
     {

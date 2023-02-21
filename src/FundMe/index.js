@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
 import { FUND_ME } from "../service/contracts";
-import withBackHome from "../enhancers/withBackHome";
 import Button from "../components/Button";
 
 const { ethereum } = window;
@@ -144,4 +143,4 @@ const FundMe = React.memo((props) => {
   )
 });
 
-export default withBackHome(FundMe);
+export default FundMe;

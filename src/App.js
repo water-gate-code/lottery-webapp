@@ -11,7 +11,6 @@ function App() {
   const [currentGame, setCurrentGame] = useState('');
   const showAllGameEntry = useMemo(() => currentGame === '', [currentGame]);
   const backHomeView = useCallback(() => {
-    window.alert('backHomeView');
     setCurrentGame('');
   }, [setCurrentGame]);
 

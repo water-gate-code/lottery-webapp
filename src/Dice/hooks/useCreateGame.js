@@ -18,18 +18,15 @@ const useCreateGame = () => {
 
     const creatGameAndPay = useCallback(async () => {
         setLoading(true);
-        window.alert('creatGameAndPay Loading')
         try {
             delay(1000)
             // await connectWallet();
             // // TODO: create ABI
             // await payMoney();
             setLoading(false);
-            window.alert('creatGameAndPay Succeed')
             console.error('creatGameAndPay Succeed: ');
         } catch (e) {
             setLoading(false);
-            window.alert('creatGameAndPay Failed')
             console.error('creatGameAndPay Failed: ', JSON.stringify(e));
         }
     }, [])

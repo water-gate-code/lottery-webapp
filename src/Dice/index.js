@@ -41,12 +41,17 @@ const Dice = React.memo((props) => {
     const showLoading = useMemo(() => createLoading || ListLoading || joinLoading, [createLoading, ListLoading, joinLoading]);
 
     return (
-        <div className="dice-container">
+        <div className="dice-container container">
             {showLoading && (<Loading />)}
-            <Button onClick={goBack} text={'Go Back'} />
-            <Button onClick={creatGameAndPay} text={'Create Room'} />
-            <Button onClick={refetchGames} text={'Refresh Room'} />
-            {
+            <h1 className="title">Dice</h1>
+            <div className='row dice-content'>
+                <div className='col-3 navigation'>
+                <Button onClick={goBack} text={'Go Back'} />
+                <Button onClick={creatGameAndPay} text={'Create Room'} />
+                <Button onClick={refetchGames} text={'Refresh Room'} />
+                </div>
+                <div className='col-9 playground'>
+                {
                 games.map((data) => {
                     const { diceId, gamblerName } = data;
                     return (
@@ -56,7 +61,9 @@ const Dice = React.memo((props) => {
                         </div>
                     )
                 })
-            }
+                }
+                </div>
+            </div>
         </div>
     );
 });

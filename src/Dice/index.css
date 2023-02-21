@@ -1,3 +1,22 @@
 .dice-container {
-    position: relative;
+    height: 100vh;
+}
+
+.dice-content {
+    height: 100%;
+}
+
+.title {
+    text-align: center;
+    padding: 10px;
+}
+
+.navigation {
+    background-color: aliceblue;
+    display: flex;
+    flex-direction: column;
+}
+
+.playground {
+    background-color: floralwhite;
 }

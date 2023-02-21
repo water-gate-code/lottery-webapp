@@ -36,11 +36,12 @@ const DicePlayGround = React.memo((props) => {
     //      One User in the Room, Show Waiting
     //      Two User in the Room, Show Play
     
-    const { gambers = [] } = props;
-    const gamberLarge = gambers.find(select => select === 'big');
-    const gamberSmall = gambers.find(select => select === 'small');
+    const { dice: {gambers = []}} = props;
+
+    const gamberLarge = gambers.find(gamber => gamber.select === 'big');
+    const gamberSmall = gambers.find(gamber => gamber.select === 'small');
     const disableStart = !(gamberLarge && gamberSmall);
-    
+
     const [diceShaking, setDiceShaking] = useState(false);
 
     const clickStart = useCallback(() => {
@@ -77,26 +78,25 @@ const DicePlayGround = React.memo((props) => {
 
 const DiceList = React.memo((props) => {
     const { dice = [], join } = props;
+
+    const renderDetail = (data) => {
+        const {diceId, gambers} = data;
+        return (
+            <div>
+            {gambers.map((gamber) => (
+                 <div>
+                 <h4>{`Name: ${gamber.name}`}</h4>
+                 <div>{gamber.select}</div>
+                 <Button onClick={() => join(diceId)} text={'Join Room'} />
+            </div>
+            ))}
+        </div>
+        )
+    }
     return (
         <div className={"full-height"}>
             {
-                dice.map((die) => {
-                    const { diceId, gambers } = die;
-                    return (
-                        <div>
-                            {gambers.map((gamber) => {
-                               return (
-                                <div>
-                                     <h4>{`Name: ${gamber.Name}`}</h4>
-                                     <div>{gamber.select}</div>
-                                     <Button onClick={() => join(diceId)} text={'Join Room'} />
-                                </div>
-                               )
-  
-                            })}
-                        </div>
-                    )
-                })
+                dice.map((die) => renderDetail(die))
             }
         </div>
     )

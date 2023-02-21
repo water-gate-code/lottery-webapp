@@ -15,7 +15,7 @@ const useFetchGames = () => {
             if(didCancel){
                 return;
             }
-            setGames(data);
+            setGames(res);
         } catch(err) {
             setLoading(false);
         }

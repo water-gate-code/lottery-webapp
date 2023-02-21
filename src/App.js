@@ -9,8 +9,9 @@ import "./App.css";
 function App() {
 
   const [currentGame, setCurrentGame] = useState('');
-  const showAllGameEntry = useMemo(() => currentGame === '', currentGame);
+  const showAllGameEntry = useMemo(() => currentGame === '', [currentGame]);
   const backHomeView = useCallback(() => {
+    window.alert('backHomeView');
     setCurrentGame('');
   }, [setCurrentGame]);
 
@@ -22,8 +23,8 @@ function App() {
           <Button text={'Play Dice'} onClick={() => setCurrentGame('DICE')} />
         </div>
       )}
-      {currentGame === 'FUND_ME' && (<FundMe goBack={backHomeView} />)}
-      {currentGame === 'DICE' && (<Dice goBack={backHomeView} />)}
+      {currentGame === 'FUND_ME' && (<FundMe goBack={() => backHomeView()} />)}
+      {currentGame === 'DICE' && (<Dice goBack={() => backHomeView()} />)}
     </div>
   );
 }

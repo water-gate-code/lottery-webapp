@@ -7,7 +7,7 @@ import { useState, useCallback } from "react";
 import {connectWallet, payMoneyAndCreateGame} from "../../service/utils";
 
 const useCreateGame = () => {
-    const [loading, setLoading] = useState({loading: false});
+    const [loading, setLoading] = useState(false);
     const [createdGame, setCreateGame] = useState(null);
 
     const creatGameAndPay = useCallback(async () => {

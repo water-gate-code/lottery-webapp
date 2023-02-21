@@ -42,12 +42,19 @@ const DicePlayGround = React.memo((props) => {
     const disableStart = !(gamberLarge && gamberSmall);
     const { diceShaking, startPlaying, diceNumber } = usePlayingGame();
     const clickStart = useCallback(() => {
-        if (disableStart) {
-            window.alert("需要两位玩家同时在线才能开始")
-        } else {
-            startPlaying();
+        if (diceShaking) {
+            return;
         }
-    }, [disableStart]);
+        if (disableStart) {
+            window.alert("需要两位玩家同时在线才能开始");
+            return;
+        }
+        if (diceNumber > 0) {
+            window.alert("已经结束，请重开一局");
+            return;
+        }
+        startPlaying();
+    }, [disableStart, diceNumber, diceShaking]);
 
 
     return (
@@ -59,12 +66,12 @@ const DicePlayGround = React.memo((props) => {
             <div className="col-4 center">
                 <div className={`dice ${diceShaking ? 'dice-start' : 'dice-end'} dice-${diceNumber}`} />
                 <button
-                    disable={diceShaking}
+                    disable={diceShaking || diceNumber > 0}
                     type="button"
                     className="btn btn-danger"
                     onClick={clickStart}
                 >
-                    {diceShaking ? '正在摇骰子' : '开始'}
+                    {diceShaking ? '正在摇骰子' : diceNumber > 0 ? '结束' : '开始'}
                 </button>
             </div>
             <div className="col-4 center">

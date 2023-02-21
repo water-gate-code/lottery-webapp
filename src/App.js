@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import FundMe from './FundMe';
 import Dice from './Dice';
 import Button from "./components/Button"
+import DevInfo from "./components/DevInfo"
 
 import "./App.css";
 
@@ -16,6 +17,7 @@ function App() {
 
   return (
     <div className="App container">
+      <DevInfo />
       {showAllGameEntry && (
         <div>
           <Button text={'Play FundMe'} onClick={() => setCurrentGame('FUND_ME')} />

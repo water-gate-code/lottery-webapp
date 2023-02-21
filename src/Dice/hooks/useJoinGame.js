@@ -5,16 +5,16 @@ const useJoinGame = () => {
     const [loading, setLoading] = useState(false);
     const [joinedGame, setJoinedGame] = useState(null);
 
-    const joinGame = useCallback((diceId) => {
+    const joinGame = useCallback(async (diceId) => {
         setLoading(true);
-        joinDice(diceId)
-            .then((res) => {
-                setJoinedGame(res);
-                setLoading(false);
-            })
-            .catch((err) => {
-                setLoading(false);
-            })
+        try{
+            const res = await joinDice(diceId);
+            setJoinedGame(res);
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+            setJoinedGame(null);
+        }
     }, [])
 
 

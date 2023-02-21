@@ -6,21 +6,19 @@ const useFetchGames = () => {
     const [loading, setLoading] = useState(false);
     const [fetchTimes, setFetchTimes] = useState(0);
 
-    useEffect(() => {
+    useEffect(async () => {
         let didCancel = false;
         setLoading(true);
-        getCurrentActiveDice()
-        .then((data) => {
+        try {
+            const res = await getCurrentActiveDice()
             setLoading(false);
             if(didCancel){
                 return;
             }
             setGames(data);
-        })
-        .catch((error) => {
+        } catch(err) {
             setLoading(false);
-            console.log('getCurrentActiveDice err: ',JSON.stringify(error));
-        });
+        }
 
         return () => {
             didCancel = true;

@@ -36,11 +36,11 @@ const DicePlayGround = React.memo((props) => {
     //      One User in the Room, Show Waiting
     //      Two User in the Room, Show Play
 
-    const { dice: { gambers = [] } } = props;
+    const { dice: { gambers = [] }, diceId } = props;
     const gamberLarge = gambers.find(gamber => gamber.select === 'big');
     const gamberSmall = gambers.find(gamber => gamber.select === 'small');
     const disableStart = !(gamberLarge && gamberSmall);
-    const { diceShaking, startPlaying, diceNumber } = usePlayingGame();
+    const { diceShaking, startPlaying, diceNumber } = usePlayingGame(diceId);
     const clickStart = useCallback(() => {
         if (diceShaking) {
             return;

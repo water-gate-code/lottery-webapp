@@ -109,7 +109,7 @@ export const joinDice = async () => {
   return Promise.resolve(MOCK_JOIN_DICE);
 }
 
-export const play = async () => {
+export const play = async (diceId) => {
   // const { contract, provider } = getContractAndProvider(betValue);
   // const result = await contract.start();
 

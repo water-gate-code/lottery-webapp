@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { play } from '../service/utils';
 
-const usePlayingGame = () => {
+const usePlayingGame = (diceId) => {
     const [diceShaking, setDiceShaking] = useState(false);
     const [diceNumber, setDiceNumber] = useState(0);
 
     const startPlaying = () => {
         setDiceShaking(true);
-        play()
+        play(diceId)
             .then((res) => {
                 setDiceShaking(false);
                 setDiceNumber(res.result);

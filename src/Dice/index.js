@@ -22,25 +22,18 @@
 //      Get Result / Stop Dice and show Result
 //
 
-import React, { useMemo, useCallback, useState } from "react";
+import React, { useMemo, useCallback } from "react";
 import Button from "../components/Button";
 import Loading from "../components/Loading";
 import useCreateGame from "./hooks/useCreateGame";
+import useFetchGames from "./hooks/useFetchGames";
 import "./index.css";
+
 
 const Dice = React.memo((props) => {
     const { goBack } = props;
-    const [loading, setLoading] = useState(false);
     const { creatGameAndPay, createLoading } = useCreateGame();
     const { games, refetchGames, ListLoading } = useFetchGames();
-
-    const refreshRoom = useCallback(() => {
-        console.log("refreshRoom");
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-    }, []);
 
     const joinRoom = useCallback((roomId) => {
         console.log("joinRoom");
@@ -50,15 +43,16 @@ const Dice = React.memo((props) => {
     return (
         <div className="dice-container">
             {showLoading && (<Loading />)}
+            <Button onClick={goBack} text={'Go Back'} />
             <Button onClick={creatGameAndPay} text={'Create Room'} />
             <Button onClick={refetchGames} text={'Refresh Room'} />
             {
                 games.map((data) => {
-                    const { diceId, gamblerAdress, gamblerName, select } = data;
+                    const { diceId, gamblerName } = data;
                     return (
                         <div>
-                            <h4>Name: ${gamblerName}</h4>
-                            <Button onClick={() => joinRoom(id)} text={'Join Room'} />
+                            <h4>{`Name: ${gamblerName}`}</h4>
+                            <Button onClick={() => joinRoom(diceId)} text={'Join Room'} />
                         </div>
                     )
                 })

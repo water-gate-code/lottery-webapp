@@ -1,10 +1,11 @@
 import './index.css';
 
-const Loading = (props) => {
-    const { text = ' Loading' } = props;
+const Loading = () => {
     return (
         <div className="loading">
-            {text}
+            <div className="spinner-border text-primary" role="status">
+                <span class="sr-only" />
+            </div>
         </div>
     )
 }

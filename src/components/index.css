@@ -1,8 +1,14 @@
 .loading {
-    position: absolute;
+    position: fixed;
+    left: 0px;
     z-index: 100;
-    background-color: black;
-    opacity: 0.1;
+    background-color: rgba(0,0,0,0.1);
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .devInfo {

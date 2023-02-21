@@ -13,7 +13,7 @@ const useJoinGame = () => {
             .catch((err) => {
                 setLoading(false);
             })
-    })
+    }, [])
 
 
     return {

@@ -1,22 +1,29 @@
 import { useState } from "react";
-import { play } from '../service/utils';
+import { payMoneyAndPlay } from '../service/utils';
 
 const usePlayingGame = (diceId) => {
     const [diceShaking, setDiceShaking] = useState(false);
     const [diceNumber, setDiceNumber] = useState(0);
 
-    const startPlaying = () => {
+    const startPlaying = async (selection) => {
         setDiceShaking(true);
-        play(diceId)
-            .then((res) => {
-                setDiceShaking(false);
-                setDiceNumber(res.result);
-            })
-            .catch((err) => {
-                // setDiceNumber(res.result);
-                setDiceShaking(false);
-            });
+        const isConnect = await connectWallet();
+        if (!isConnect) {
+            setDiceShaking(false);
+            window.alert('请连接 metaMask');
+            return;
+        }
+
+        try {
+            const res = await payMoneyAndPlay(diceId, selection);
+            setDiceShaking(false);
+            setDiceNumber(res.result);
+        } catch (err) {
+            window.alert('TODO: Play失败，请重试');
+            setDiceShaking(false);
+        }
     }
+
     return {
         diceShaking,
         startPlaying,

@@ -11,8 +11,30 @@ const ethRequest = async (args) => {
   return response;
 }
 
+// metaMask 链接钱包，本地接口很快
+export const connectWallet = async () => {
+  try {
+    const accounts = await ethRequest({ method: "eth_accounts" });
+    if (accounts.length > 1) {
+      return true;
+    }
+    await ethRequest({ method: "eth_requestAccounts" });
+    return true;
+  } catch (e) {
+    console.log(`connectWallet failed:`, JSON.stringlify(e));
+    return Promise.resolve(false);
+  }
+}
+
+const getContractAndProvider = () => {
+  const provider = new ethers.providers.Web3Provider(ethereum);
+  const signer = provider.getSigner();
+  // TODO: DICE Contract
+  const contract = new ethers.Contract(DICE.address, DICE.abi, signer);
+  return { contract, provider };
+}
+
 const listenForTransactionMine = (transactionResponse, provider) => {
-  console.log(`Mining ${transactionResponse.hash}`);
   return new Promise((resolve, reject) => {
     try {
       provider.once(transactionResponse.hash, (transactionReceipt) => {
@@ -27,12 +49,40 @@ const listenForTransactionMine = (transactionResponse, provider) => {
   });
 }
 
-const getContractAndProvider = (ethereum) => {
-  const provider = new ethers.providers.Web3Provider(ethereum);
-  const signer = provider.getSigner();
-  // TODO: DICE Contract
-  const contract = new ethers.Contract(DICE.address, DICE.abi, signer);
-  return { contract, provider };
+export const payMoneyAndCreateGame = async (amount, selection) => {
+  const { contract } = getContractAndProvider();
+  const betNumber = selection === 'big' ? 6 : 1;
+
+  try {
+    // TODO: 这里还没有太搞明白给合约传参数怎么处理
+    const transactionResponse = await contract.createGame({
+      value: ethers.utils.parseEther(amount),
+      betNumber,
+    });
+    await listenForTransactionMine(transactionResponse, provider);
+    return;
+  } catch (err) {
+    return Promise.reject(false);
+  }
+}
+
+
+export const payMoneyAndPlay = async (diceId) => {
+  const betNumber = selection === 'big' ? 6 : 1;
+
+  const { contract, provider } = getContractAndProvider(betValue);
+  try {
+    const result = await contract.play({
+      diceId: diceId,
+      betNumber: betNumber,
+    });
+    console.log('Play Succeed, result is: ', JSON.stringify(result));
+    // 无真实的结果，先这么写吧
+    return Promise.resolve(MOCK_RESULT);
+  } catch(err) {
+    console.log('Play Failed, err is: ', JSON.stringify(err));
+    return Promise.reject();
+  }
 }
 
 export const delay = (number) => {
@@ -41,55 +91,6 @@ export const delay = (number) => {
       resolve();
     }, number)
   })
-}
-
-export const connectWallet = async () => {
-  // try {
-  //   await ethRequest({ method: "eth_requestAccounts" });
-  //   const accounts = await ethRequest({ method: "eth_accounts" });
-  //   const isConnected = accounts.length > 0;
-  //   console.log(`connectWallet Succeed:`);
-  //   return isConnected;
-  // } catch (e) {
-  //   console.log(`connectWallet failed:`, JSON.stringlify(e));
-  //   return Promise.resolve(false);
-  // }
-
-  await delay(2000);
-  return;
-}
-
-const payMoney = async (amount) => {
-  // const betValue = parseFloat(amount).toString();
-  // console.log(`Pay with ${betValue}...`);
-  // const { contract, provider } = getContractAndProvider(betValue);
-  // try {
-  //   const transactionResponse = await contract.fund({
-  //     value: ethers.utils.parseEther(betValue),
-  //   });
-  //   await listenForTransactionMine(transactionResponse, provider);
-  // } catch (error) {
-  //   console.log(error);
-  // }
-  await delay(2000);
-  return Promise.resolve();
-}
-
-export const payMoneyAndCreateGame = async (amount) => {
-  // const betValue = parseFloat(amount).toString();
-  // console.log(`Pay with ${betValue}...`);
-  // const { contract, provider } = getContractAndProvider(betValue);
-  // try {
-  //   const transactionResponse = await contract.fund({
-  //     value: ethers.utils.parseEther(betValue),
-  //   });
-  //   await listenForTransactionMine(transactionResponse, provider);
-  // } catch (error) {
-  //   console.log(error);
-  // }
-
-  await delay(2000);
-  return Promise.resolve(MOCK_CREATE_DICE);
 }
 
 export const getCurrentActiveDice = async () => {
@@ -109,13 +110,6 @@ export const joinDice = async () => {
   return Promise.resolve(MOCK_JOIN_DICE);
 }
 
-export const play = async (diceId) => {
-  // const { contract, provider } = getContractAndProvider(betValue);
-  // const result = await contract.start();
-
-  await delay(2000);
-  return Promise.resolve(MOCK_RESULT);
-}
 
 export const getDiceStatus = async (diceId) => {
   // const { contract, provider } = getContractAndProvider(betValue);

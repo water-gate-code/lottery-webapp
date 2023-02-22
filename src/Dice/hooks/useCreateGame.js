@@ -4,28 +4,32 @@
 //      Into Game Room / Done
 
 import { useState, useCallback } from "react";
-import {connectWallet, payMoneyAndCreateGame} from "../service/utils";
+import { payMoneyAndCreateGame } from "../service/utils";
 
 const useCreateGame = () => {
     const [loading, setLoading] = useState(false);
     const [createdGame, setCreateGame] = useState(null);
 
-    const creatGameAndPay = useCallback(async () => {
+    const creatGameAndPay = async (wagger, selection) => {
         setLoading(true);
+        const isConnect = await connectWallet();
+        if (!isConnect) {
+            setDiceShaking(false);
+            window.alert('请连接 metaMask');
+            return;
+        }
         try {
-            // delay(1000)
-            await connectWallet();
-            // // TODO: create ABI
-            const res = await payMoneyAndCreateGame(5);
+            const res = await payMoneyAndCreateGame(wagger, selection);
             setLoading(false);
             setCreateGame(res);
             console.error('creatGameAndPay Succeed: ');
         } catch (e) {
             setCreateGame(null);
             setLoading(false);
+            window.alert('TODO: 创建游戏失败，请重试');
             console.error('creatGameAndPay Failed: ', JSON.stringify(e));
         }
-    }, []);
+    };
 
     return {
         creatGameAndPay,

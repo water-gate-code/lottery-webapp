@@ -1,100 +1,88 @@
 export const DICE = {
-  address: "0xF0eFA90068bcca7dE8E4bC1220Ca14e23c438203",
+  address: "0xcb55426d3087279028B512Af3414980a8680354B",
   abi: [
     {
-      inputs: [],
-      stateMutability: "nonpayable",
-      type: "constructor",
+     "inputs": [],
+     "stateMutability":"nonpayable",
+     "type":"constructor",
     },
     {
-      inputs: [],
-      name: "FundMe__NotOwner",
-      type: "error",
+     "inputs": [],
+     "name":"FundMe__NotOwner",
+     "type":"error",
     },
     {
-      inputs: [],
-      name: "MINIMUM_USD",
-      outputs: [
+     "inputs": [
         {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
+         "internalType":"uint256",
+         "name":"_betNumber",
+         "type":"uint256"
+        }
       ],
-      stateMutability: "view",
-      type: "function",
+     "name":"createGame",
+     "outputs": [],
+     "stateMutability":"payable",
+     "type":"function"
     },
     {
-      inputs: [],
-      name: "cheaperWithdraw",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "fund",
-      outputs: [],
-      stateMutability: "payable",
-      type: "function",
-    },
-    {
-      inputs: [
+     "inputs": [],
+     "name":"getGames",
+     "outputs": [
         {
-          internalType: "address",
-          name: "fundingAddress",
-          type: "address",
-        },
+         "components": [
+            {
+             "internalType":"uint256",
+             "name":"id",
+             "type":"uint256"
+            },
+            {
+             "internalType":"address",
+             "name":"player",
+             "type":"address"
+            },
+            {
+             "internalType":"uint256",
+             "name":"value",
+             "type":"uint256"
+            },
+            {
+             "internalType":"uint256",
+             "name":"betNumber",
+             "type":"uint256"
+            }
+          ],
+         "internalType":"struct Dice.Game[]",
+         "name":"",
+         "type":"tuple[]",
+        }
       ],
-      name: "getAddressToAmountFunded",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
+     "stateMutability":"view",
+     "type":"function",
     },
     {
-      inputs: [
+     "inputs": [
         {
-          internalType: "uint256",
-          name: "index",
-          type: "uint256",
+         "internalType":"uint256",
+         "name":"gameId",
+         "type":"uint256"
         },
-      ],
-      name: "getFunder",
-      outputs: [
         {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
+         "internalType":"uint256",
+         "name":"_betNumber",
+         "type":"uint256"
+        }
       ],
-      stateMutability: "view",
-      type: "function",
+     "name":"play",
+     "outputs": [],
+     "stateMutability":"payable",
+     "type":"function"
     },
     {
-      inputs: [],
-      name: "getOwner",
-      outputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "withdraw",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
+     "inputs": [],
+     "name":"withdraw",
+     "outputs": [],
+     "stateMutability":"nonpayable",
+     "type":"function"
+    }
   ],
 };

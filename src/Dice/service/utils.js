@@ -1,6 +1,6 @@
 
 import { DICE } from './contracts';
-import { MOCK_JOIN_DICE, MOCK_DICE_LIST, MOCK_RESULT, MOCK_DICE_STATUS } from './mockData';
+import { MOCK_JOIN_DICE, MOCK_RESULT, MOCK_DICE_STATUS } from './mockData';
 
 const { ethereum } = window;
 const { ethers } = window;
@@ -62,11 +62,42 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
   }
 }
 
+const gameToDice = (game) => {
+  const [id, address, value, betNumber] = game;
+  const realBetNumber = betNumber.toString();
+  const realValue = value.toString();
+  const displayName = address.slice(0, 8);
+  
+  const gambers = realBetNumber > '3' ? [
+    { name: displayName, address: address, select: 'big', value: realValue, betNumber: realBetNumber },
+    { name: '', address: '', select: 'small', value: '', betNumber: '' }
+  ] : [
+    { name: '', address: '', select: 'big', value: '', betNumber: '' },
+    { name: displayName, address: address, select: 'small', value: realValue, betNumber: realBetNumber }
+  ]
+  const dice = {
+    diceId: id.toString(),
+    gambers: gambers,
+  };
+
+  return dice;
+}
+
+export const getCurrentActiveDice = async () => {
+  const { contract } = getContractAndProvider();
+  const games = await contract.getGames();
+  const diceList = [];
+  for (let i = 0; i < games.length; i++) {    
+    diceList.push(gameToDice(games[i]));
+  }
+ 
+  return Promise.resolve(diceList);
+}
 
 export const payMoneyAndShoot = async (diceId, selection) => {
   const betNumber = selection === 'big' ? 6 : 1;
 
-  const { contract } = getContractAndProvider(betNumber);
+  const { contract } = getContractAndProvider();
   try {
     const result = await contract.play({
       diceId: diceId,
@@ -75,11 +106,12 @@ export const payMoneyAndShoot = async (diceId, selection) => {
     console.log('Play Succeed, result is: ', JSON.stringify(result));
     // 无真实的结果，先这么写吧
     return Promise.resolve(MOCK_RESULT);
-  } catch(err) {
+  } catch (err) {
     console.log('Play Failed, err is: ', JSON.stringify(err));
     return Promise.reject();
   }
 }
+
 
 export const delay = (number) => {
   return new Promise((resolve) => {
@@ -87,14 +119,6 @@ export const delay = (number) => {
       resolve();
     }, number)
   })
-}
-
-export const getCurrentActiveDice = async () => {
-  // const { contract, provider } = getContractAndProvider(betValue);
-  // const games = await contract.getGames();
-
-  await delay(2000);
-  return Promise.resolve(MOCK_DICE_LIST);
 }
 
 export const joinDice = async () => {

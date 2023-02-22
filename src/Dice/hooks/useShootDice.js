@@ -31,4 +31,4 @@ const useShootDice = (diceId) => {
     }
 };
 
-export default usePlayingGame;
+export default useShootDice;

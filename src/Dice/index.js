@@ -41,7 +41,7 @@ const DicePlayGround = React.memo((props) => {
     //      Two User in the Room, Show Play
 
     const { dice: { diceId }, selection } = props;
-    
+
     const [currentDice, setCurrentDice] = useState(undefined);
     const { gambers = [] } = currentDice || {};
     const gamberLarge = gambers.find(gamber => gamber.select === 'big');
@@ -92,17 +92,17 @@ const DicePlayGround = React.memo((props) => {
                         </button>
                     )
                 }
-                 {
+                {
                     isEnd && (
                         <>
-                        <button
-                            disabled
-                            type="button"
-                            className="btn btn-danger"
-                        >
-                            结束
-                        </button>
-                        {/* <button
+                            <button
+                                disabled
+                                type="button"
+                                className="btn btn-danger"
+                            >
+                                结束
+                            </button>
+                            {/* <button
                             type="button"
                             className="btn btn-danger"
                             onClick={clickStart}
@@ -201,16 +201,24 @@ const DiceList = React.memo((props) => {
 });
 
 
+const GameList = React.memo((props) => {
+    const { joinGame, setSelection, games } = props;
+    return (
+        <div className='game-list-container'>
+            <DiceList dice={games} join={joinGame} setSelection={setSelection} />
+        </div>
+    )
+});
+
 const Dice = React.memo((props) => {
     // const { goBack } = props;
     const [showNewGame, setShowNewGame] = useState(true);
-    
     // 避免多次调用合约，selection 需要先存储下来，后续在开始掷骰子的时候一并调用合约的 play 方法
     const [selection, setSelection] = useState(undefined);
     const { creatGameAndPay, createLoading, createdGame } = useCreateGame();
-    const { games, refetchGames, ListLoading } = useFetchGames();
+    const { games, refetchGames, listLoading } = useFetchGames();
     const { joinGame, joinLoading, joinedGame } = useJoinGame();
-    const showLoading = useMemo(() => createLoading || ListLoading || joinLoading, [createLoading, ListLoading, joinLoading]);
+    const showLoading = useMemo(() => createLoading || joinLoading || listLoading, [createLoading, listLoading, joinLoading]);
 
     useEffect(() => {
         const selectedGame = createdGame || joinedGame;
@@ -233,9 +241,7 @@ const Dice = React.memo((props) => {
                 <div className='col-3 navigation'>
                     <Button onClick={clickNewGame} text={'新游戏'} />
                     <Button onClick={refetchGames} text={'刷新游戏列表'} />
-                    <div className='game-list-container'>
-                        <DiceList dice={games} join={joinGame} setSelection={setSelection} />
-                    </div>
+                    <GameList joinGame={joinGame} setSelection={setSelection} games={games} />
                 </div>
                 <div className='col-9 playground full-height'>
                     {

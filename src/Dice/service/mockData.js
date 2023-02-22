@@ -26,11 +26,20 @@ export const MOCK_DICE_LIST = [
         gambers: [{
             name: '张小敬',
             address: '0xadsfasdfasdfasdfwer',
-            select: 'big'
+            select: 'big',
+        },{
+            name: '',
+            address: '',
+            select: 'small',
         }],
     }, {
         diceId: 234,
         gambers: [
+            {
+                name: '',
+                address: '',
+                select: 'big',
+            },
             {
                 name: '李必',
                 address: '0xadsfasdfasdfaasdfasdftre',
@@ -44,6 +53,10 @@ export const MOCK_DICE_LIST = [
             name: '檀棋',
             address: '0xadsfasdfasdfdfdfasdfasdftre',
             select: 'big',
+        },{
+            name: '',
+            address: '',
+            select: 'small',
         }]
     },
 ];

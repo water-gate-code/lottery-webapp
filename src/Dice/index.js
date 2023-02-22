@@ -122,12 +122,27 @@ const DiceList = React.memo((props) => {
     const renderDetail = (data) => {
         const { diceId, gambers } = data;
         return (
-            <div>
+            <div className="dice-item">
                 {gambers.map((gamber) => (
-                    <div>
-                        <h4>{`Name: ${gamber.name}`}</h4>
-                        <div>{gamber.select}</div>
-                        <Button onClick={() => join(diceId)} text={'Join Room'} />
+                    <div className="dice-gamber">
+                        <h4>
+                            {gamber.select === 'big' ? '大' : '小'}
+                        </h4>
+                        {
+                            gamber.address ? (
+                                <div className="dice-gamber-name">{gamber.name}</div>
+                            ) : (
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-danger"
+                                    onClick={() => join(diceId, gamber.select)}
+                                >
+                                    选择
+                                </button>
+                                // <Button onClick={() => join(diceId, gamber.select)} text={'选择'} />
+                            )
+                        }
+
                     </div>
                 ))}
             </div>

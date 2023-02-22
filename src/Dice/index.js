@@ -41,12 +41,12 @@ const DicePlayGround = React.memo((props) => {
     //      Two User in the Room, Show Play
 
     const { dice: { diceId }, selection } = props;
+    
     const [currentDice, setCurrentDice] = useState(undefined);
     const { gambers = [] } = currentDice || {};
-
     const gamberLarge = gambers.find(gamber => gamber.select === 'big');
     const gamberSmall = gambers.find(gamber => gamber.select === 'small');
-    const disableStart = !(gamberLarge && gamberSmall);
+
     const { diceShaking, shootDice, diceNumber } = useShootDice(diceId);
     useGetDiceInfoInPolling(diceId, setCurrentDice);
 
@@ -56,7 +56,7 @@ const DicePlayGround = React.memo((props) => {
 
     const oShootDice = useCallback(() => {
         shootDice(selection);
-    }, [disableStart, diceNumber, diceShaking, selection]);
+    }, [shootDice, selection]);
 
 
     const isEnd = !diceShaking && diceNumber > 0;
@@ -162,7 +162,7 @@ const DiceList = React.memo((props) => {
         const { diceId, gambers } = data;
         const onSelectGame = (selection) => {
             setSelection(selection);
-            join(diceId, gamber.select);
+            join(diceId, selection);
         }
 
         return (

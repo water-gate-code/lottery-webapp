@@ -1,6 +1,6 @@
 
 import { DICE } from './contracts';
-import { MOCK_JOIN_DICE, MOCK_CREATE_DICE, MOCK_DICE_LIST, MOCK_RESULT, MOCK_DICE_STATUS } from './mockData';
+import { MOCK_JOIN_DICE, MOCK_DICE_LIST, MOCK_RESULT, MOCK_DICE_STATUS } from './mockData';
 
 const { ethereum } = window;
 const { ethers } = window;
@@ -50,7 +50,7 @@ const listenForTransactionMine = (transactionResponse, provider) => {
 }
 
 export const payMoneyAndCreateGame = async (amount, selection) => {
-  const { contract } = getContractAndProvider();
+  const { contract, provider } = getContractAndProvider();
   const betNumber = selection === 'big' ? 6 : 1;
 
   try {
@@ -67,10 +67,10 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
 }
 
 
-export const payMoneyAndShoot = async (diceId) => {
+export const payMoneyAndShoot = async (diceId, selection) => {
   const betNumber = selection === 'big' ? 6 : 1;
 
-  const { contract } = getContractAndProvider(betValue);
+  const { contract } = getContractAndProvider(betNumber);
   try {
     const result = await contract.play({
       diceId: diceId,

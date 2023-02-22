@@ -14,7 +14,7 @@ const useCreateGame = () => {
         setLoading(true);
         const isConnect = await connectWallet();
         if (!isConnect) {
-            setDiceShaking(false);
+            setLoading(false);
             window.alert('请连接 metaMask');
             return;
         }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { payMoneyAndShoot } from '../service/utils';
+import { payMoneyAndShoot, connectWallet } from '../service/utils';
 
 const useShootDice = (diceId) => {
     const [diceShaking, setDiceShaking] = useState(false);

@@ -22,13 +22,15 @@
 //      Get Result / Stop Dice and show Result
 //
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState, useLayoutEffect } from "react";
 import Button from "./components/Button";
 import Loading from "./components/Loading";
 import useCreateGame from "./hooks/useCreateGame";
 import useFetchGames from "./hooks/useFetchGames";
 import useJoinGame from "./hooks/useJoinGame";
 import usePlayingGame from "./hooks/usePlayingGame";
+import useGetDiceInfoInPolling from "./hooks/useGetDiceInfoInPolling";
+
 import "./index.css";
 
 const DicePlayGround = React.memo((props) => {
@@ -36,11 +38,21 @@ const DicePlayGround = React.memo((props) => {
     //      One User in the Room, Show Waiting
     //      Two User in the Room, Show Play
 
-    const { dice: { gambers = [] }, diceId } = props;
+    const { dice: { diceId } } = props;
+    const [currentDice, setCurrentDice] = useState(undefined);
+    const { gambers = [] } = currentDice || {};
+
     const gamberLarge = gambers.find(gamber => gamber.select === 'big');
     const gamberSmall = gambers.find(gamber => gamber.select === 'small');
     const disableStart = !(gamberLarge && gamberSmall);
     const { diceShaking, startPlaying, diceNumber } = usePlayingGame(diceId);
+    useGetDiceInfoInPolling(diceId, setCurrentDice);
+
+    useLayoutEffect(() => {
+        setCurrentDice(props.dice);
+    }, [props.dice]);
+
+
     const clickStart = useCallback(() => {
         if (diceShaking) {
             return;
@@ -66,7 +78,7 @@ const DicePlayGround = React.memo((props) => {
             <div className="col-4 center">
                 <div className={`dice ${diceShaking ? 'dice-start' : 'dice-end'} dice-${diceNumber}`} />
                 <button
-                    disable={diceShaking || diceNumber > 0}
+                    disabled={diceShaking || diceNumber > 0}
                     type="button"
                     className="btn btn-danger"
                     onClick={clickStart}

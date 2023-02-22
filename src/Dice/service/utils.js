@@ -1,6 +1,6 @@
 
 import { DICE } from './contracts';
-import { MOCK_JOIN_DICE, MOCK_CREATE_DICE, MOCK_DICE_LIST, MOCK_RESULT } from './mockData';
+import { MOCK_JOIN_DICE, MOCK_CREATE_DICE, MOCK_DICE_LIST, MOCK_RESULT, MOCK_DICE_STATUS } from './mockData';
 
 const { ethereum } = window;
 const { ethers } = window;
@@ -35,7 +35,7 @@ const getContractAndProvider = (ethereum) => {
   return { contract, provider };
 }
 
-const delay = (number) => {
+export const delay = (number) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve();
@@ -115,4 +115,11 @@ export const play = async (diceId) => {
 
   await delay(2000);
   return Promise.resolve(MOCK_RESULT);
+}
+
+export const getDiceStatus = async (diceId) => {
+  // const { contract, provider } = getContractAndProvider(betValue);
+  // const result = await contract.start();
+  await delay(2000);
+  return `${diceId}` === '456' ? Promise.resolve(MOCK_DICE_STATUS) : Promise.resolve(undefined);
 }

@@ -52,22 +52,13 @@ const DicePlayGround = React.memo((props) => {
         setCurrentDice(props.dice);
     }, [props.dice]);
 
-
     const clickStart = useCallback(() => {
-        if (diceShaking) {
-            return;
-        }
-        if (disableStart) {
-            window.alert("需要两位玩家同时在线才能开始");
-            return;
-        }
-        if (diceNumber > 0) {
-            window.alert("已经结束，请重开一局");
-            return;
-        }
         startPlaying();
     }, [disableStart, diceNumber, diceShaking]);
 
+
+    const isEnd = !diceShaking && diceNumber > 0;
+    const isStart = !diceShaking && diceNumber === 0;
 
     return (
         <div className="row full-height">
@@ -77,14 +68,48 @@ const DicePlayGround = React.memo((props) => {
             </div>
             <div className="col-4 center">
                 <div className={`dice ${diceShaking ? 'dice-start' : 'dice-end'} dice-${diceNumber}`} />
-                <button
-                    disabled={diceShaking || diceNumber > 0}
-                    type="button"
-                    className="btn btn-danger"
-                    onClick={clickStart}
-                >
-                    {diceShaking ? '正在摇骰子' : diceNumber > 0 ? '结束' : '开始'}
-                </button>
+                {
+                    diceShaking && (
+                        <button
+                            disabled
+                            type="button"
+                            className="btn btn-danger"
+                        >
+                            正在摇骰子
+                        </button>
+                    )
+                }
+                {
+                    isStart && (
+                        <button
+                            type="button"
+                            className="btn btn-danger"
+                            onClick={clickStart}
+                        >
+                            开始
+                        </button>
+                    )
+                }
+                 {
+                    isEnd && (
+                        <>
+                        <button
+                            disabled
+                            type="button"
+                            className="btn btn-danger"
+                        >
+                            结束
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-danger"
+                            onClick={clickStart}
+                        >
+                            再来一局
+                        </button>
+                        </>
+                    )
+                }
             </div>
             <div className="col-4 center">
                 <h2>小</h2>

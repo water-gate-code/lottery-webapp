@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { FUND_ME } from "../Dice/service/contracts";
+import { FUND_ME } from "./contracts";
 import Button from "../Dice/components/Button";
 
 const { ethereum } = window;

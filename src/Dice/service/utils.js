@@ -54,14 +54,11 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
   const betNumber = selection === 'big' ? 6 : 1;
 
   try {
-    // TODO: 这里还没有太搞明白给合约传参数怎么处理
-    const transactionResponse = await contract.createGame({
-      value: ethers.utils.parseEther(amount),
-    }, betNumber);
+    const transactionResponse = await contract.createGame(betNumber);
     await listenForTransactionMine(transactionResponse, provider);
     return;
   } catch (err) {
-    return Promise.reject(false);
+    return Promise.reject(err);
   }
 }
 

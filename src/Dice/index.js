@@ -33,7 +33,7 @@ import useGetDiceInfoInPolling from "./hooks/useGetDiceInfoInPolling";
 
 import "./index.css";
 
-const DICE_WAGER = 5;
+const DICE_WAGER = '5';
 
 const DicePlayGround = React.memo((props) => {
     //      Keep Polling room status

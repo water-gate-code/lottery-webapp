@@ -22,7 +22,7 @@ const useCreateGame = () => {
             const res = await payMoneyAndCreateGame(wagger, selection);
             setLoading(false);
             setCreateGame(res);
-            console.error('creatGameAndPay Succeed: ');
+            console.log('creatGameAndPay Succeed.');
         } catch (e) {
             setCreateGame(null);
             setLoading(false);

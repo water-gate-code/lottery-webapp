@@ -67,10 +67,10 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
 }
 
 
-export const payMoneyAndPlay = async (diceId) => {
+export const payMoneyAndShoot = async (diceId) => {
   const betNumber = selection === 'big' ? 6 : 1;
 
-  const { contract, provider } = getContractAndProvider(betValue);
+  const { contract } = getContractAndProvider(betValue);
   try {
     const result = await contract.play({
       diceId: diceId,

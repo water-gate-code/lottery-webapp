@@ -28,7 +28,7 @@ import Loading from "./components/Loading";
 import useCreateGame from "./hooks/useCreateGame";
 import useFetchGames from "./hooks/useFetchGames";
 import useJoinGame from "./hooks/useJoinGame";
-import usePlayingGame from "./hooks/usePlayingGame";
+import useShootDice from "./hooks/useShootDice";
 import useGetDiceInfoInPolling from "./hooks/useGetDiceInfoInPolling";
 
 import "./index.css";
@@ -47,15 +47,15 @@ const DicePlayGround = React.memo((props) => {
     const gamberLarge = gambers.find(gamber => gamber.select === 'big');
     const gamberSmall = gambers.find(gamber => gamber.select === 'small');
     const disableStart = !(gamberLarge && gamberSmall);
-    const { diceShaking, startPlaying, diceNumber } = usePlayingGame(diceId);
+    const { diceShaking, shootDice, diceNumber } = useShootDice(diceId);
     useGetDiceInfoInPolling(diceId, setCurrentDice);
 
     useLayoutEffect(() => {
         setCurrentDice(props.dice);
     }, [props.dice]);
 
-    const clickStart = useCallback(() => {
-        startPlaying(selection);
+    const oShootDice = useCallback(() => {
+        shootDice(selection);
     }, [disableStart, diceNumber, diceShaking, selection]);
 
 
@@ -86,9 +86,9 @@ const DicePlayGround = React.memo((props) => {
                         <button
                             type="button"
                             className="btn btn-danger"
-                            onClick={clickStart}
+                            onClick={oShootDice}
                         >
-                            开始
+                            掷骰子
                         </button>
                     )
                 }

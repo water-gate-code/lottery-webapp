@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { payMoneyAndPlay } from '../service/utils';
+import { payMoneyAndShoot } from '../service/utils';
 
-const usePlayingGame = (diceId) => {
+const useShootDice = (diceId) => {
     const [diceShaking, setDiceShaking] = useState(false);
     const [diceNumber, setDiceNumber] = useState(0);
 
-    const startPlaying = async (selection) => {
+    const shotDice = async (selection) => {
         setDiceShaking(true);
         const isConnect = await connectWallet();
         if (!isConnect) {
@@ -15,7 +15,7 @@ const usePlayingGame = (diceId) => {
         }
 
         try {
-            const res = await payMoneyAndPlay(diceId, selection);
+            const res = await payMoneyAndShoot(diceId, selection);
             setDiceShaking(false);
             setDiceNumber(res.result);
         } catch (err) {
@@ -26,7 +26,7 @@ const usePlayingGame = (diceId) => {
 
     return {
         diceShaking,
-        startPlaying,
+        shotDice,
         diceNumber,
     }
 };

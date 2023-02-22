@@ -22,7 +22,7 @@
 //      Get Result / Stop Dice and show Result
 //
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Button from "./components/Button";
 import Loading from "./components/Loading";
 import useCreateGame from "./hooks/useCreateGame";
@@ -82,6 +82,41 @@ const DicePlayGround = React.memo((props) => {
     )
 });
 
+const DiceCreate = React.memo((props) => {
+    const { creatGameAndPay } = props;
+    const clickStart = useCallback((selection) => {
+        creatGameAndPay(selection);
+    }, [creatGameAndPay]);
+
+    return (
+        <div className="row full-height">
+            <div className="col-4 center">
+                <h2>大</h2>
+                <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => clickStart('big')}
+                >
+                    选择
+                </button>
+            </div>
+            <div className="col-4 center">
+                <div className={'dice'} />
+            </div>
+            <div className="col-4 center">
+                <h2>小</h2>
+                <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => clickStart('small')}
+                >
+                    选择
+                </button>
+            </div>
+        </div>
+    )
+});
+
 const DiceList = React.memo((props) => {
     const { dice = [], join } = props;
     const renderDetail = (data) => {
@@ -109,27 +144,42 @@ const DiceList = React.memo((props) => {
 
 
 const Dice = React.memo((props) => {
-    const { goBack } = props;
+    // const { goBack } = props;
+    const [showNewGame, setShowNewGame] = useState(true);
     const { creatGameAndPay, createLoading, createdGame } = useCreateGame();
     const { games, refetchGames, ListLoading } = useFetchGames();
     const { joinGame, joinLoading, joinedGame } = useJoinGame();
     const showLoading = useMemo(() => createLoading || ListLoading || joinLoading, [createLoading, ListLoading, joinLoading]);
-    const showDicePlayground = createdGame || joinedGame;
-    const showList = !showDicePlayground;
+
+    useEffect(() => {
+        const selectedGame = createdGame || joinedGame;
+
+        if (selectedGame) {
+            setShowNewGame(false)
+        }
+    }, [createdGame, joinedGame])
 
     return (
         <div className="dice-container container">
             {showLoading && (<Loading />)}
             <h1 className="title">掷骰子</h1>
+            {/* <Button onClick={goBack} text={'返回'} /> */}
             <div className='row dice-content'>
                 <div className='col-3 navigation'>
-                    <Button onClick={goBack} text={'返回'} />
-                    <Button onClick={creatGameAndPay} text={'创建游戏'} />
+                    <Button onClick={() => setShowNewGame(true)} text={'新游戏'} />
                     <Button onClick={refetchGames} text={'刷新游戏列表'} />
+                    <div className='game-list-container'>
+                        <DiceList dice={games} join={joinGame} />
+                    </div>
                 </div>
                 <div className='col-9 playground full-height'>
-                    {showDicePlayground && <DicePlayGround dice={createdGame || joinedGame} />}
-                    {showList && <DiceList dice={games} join={joinGame} />}
+                    {
+                        showNewGame ? (
+                            <DiceCreate creatGameAndPay={creatGameAndPay} />
+                        ) : (
+                            <DicePlayGround dice={createdGame || joinedGame} />
+                        )
+                    }
                 </div>
             </div>
         </div>

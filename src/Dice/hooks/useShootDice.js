@@ -5,7 +5,7 @@ const useShootDice = (diceId) => {
     const [diceShaking, setDiceShaking] = useState(false);
     const [diceNumber, setDiceNumber] = useState(0);
 
-    const shotDice = async (selection) => {
+    const shootDice = async (selection) => {
         setDiceShaking(true);
         const isConnect = await connectWallet();
         if (!isConnect) {
@@ -26,7 +26,7 @@ const useShootDice = (diceId) => {
 
     return {
         diceShaking,
-        shotDice,
+        shootDice,
         diceNumber,
     }
 };

@@ -57,8 +57,7 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
     // TODO: 这里还没有太搞明白给合约传参数怎么处理
     const transactionResponse = await contract.createGame({
       value: ethers.utils.parseEther(amount),
-      betNumber,
-    });
+    }, betNumber);
     await listenForTransactionMine(transactionResponse, provider);
     return;
   } catch (err) {

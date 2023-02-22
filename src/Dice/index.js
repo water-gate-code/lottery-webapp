@@ -100,13 +100,13 @@ const DicePlayGround = React.memo((props) => {
                         >
                             结束
                         </button>
-                        <button
+                        {/* <button
                             type="button"
                             className="btn btn-danger"
                             onClick={clickStart}
                         >
                             再来一局
-                        </button>
+                        </button> */}
                         </>
                     )
                 }

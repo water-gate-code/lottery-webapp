@@ -64,6 +64,11 @@ const gameAddressToDice = (address) => {
         address: address,
         select: "big",
       },
+      {
+        name: "",
+        address: "",
+        select: "small",
+      },
     ],
   };
 };
@@ -106,42 +111,6 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
   }
 };
 
-const gameToDice = (game) => {
-  const [id, address, value, betNumber] = game;
-  const realBetNumber = betNumber.toString();
-  const realValue = value.toString();
-  const displayName = address.slice(0, 8);
-
-  const gambers =
-    realBetNumber > "3"
-      ? [
-          {
-            name: displayName,
-            address: address,
-            select: "big",
-            value: realValue,
-            betNumber: realBetNumber,
-          },
-          { name: "", address: "", select: "small", value: "", betNumber: "" },
-        ]
-      : [
-          { name: "", address: "", select: "big", value: "", betNumber: "" },
-          {
-            name: displayName,
-            address: address,
-            select: "small",
-            value: realValue,
-            betNumber: realBetNumber,
-          },
-        ];
-  const dice = {
-    diceId: id.toString(),
-    gambers: gambers,
-  };
-
-  return dice;
-};
-
 export const getCurrentActiveDice = async () => {
   const { contract } = getContractAndProvider();
   const games = await contract.getGames();
@@ -158,18 +127,42 @@ export const getCurrentActiveDice = async () => {
   return Promise.resolve(diceList);
 };
 
-export const payMoneyAndShoot = async (diceId, selection) => {
+export const payMoneyAndShoot = async (amount, diceId, selection) => {
   const betNumber = selection === "big" ? 6 : 1;
 
   const { contract } = getContractAndProvider();
   try {
-    const result = await contract.play({
-      diceId: diceId,
-      betNumber: betNumber,
+    const transactionResponse = await contract.play(diceId, betNumber, {
+      value: ethers.utils.parseEther(amount),
     });
-    console.log("contract.play Succeed, res is: ", JSON.stringify(result));
+
+    const transactionReceipt = await transactionResponse.wait(0);
+
+    const playGameEventList =
+      (transactionReceipt && transactionReceipt.events) || [];
+    let roolDiceResult;
+
+    playGameEventList.forEach((event) => {
+      if (event.event === "PlayGame") {
+        roolDiceResult = event.args[0];
+      }
+    });
+
+    if (!roolDiceResult) {
+      return Promise.reject(new Error("no roll result generate"));
+    }
+
+    console.log(
+      "payMoneyAndShoot Succeed, roolDiceResult is: ",
+      roolDiceResult
+    );
+
+    // const result = await contract.play(diceId, betNumber, {
+    //   value: ethers.utils.parseEther(amount),
+    // });
+    // console.log("contract.play Succeed, res is: ", JSON.stringify(result));
     // 无真实的结果，先这么写吧
-    return Promise.resolve(MOCK_RESULT);
+    return Promise.resolve({ result: roolDiceResult });
   } catch (err) {
     console.log("contract.play Failed, err is: ", JSON.stringify(err));
     return Promise.reject();

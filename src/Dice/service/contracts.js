@@ -1,69 +1,74 @@
 export const DICE = {
-  address: "0x8453e76c1875DBc48B7f9ced3d9F2c84F0b59a0a",
+  address: "0xA62c32cb896A936Dd372F4Ca0d3A6Fb76cB99b6F",
   abi: [
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "bool",
-          "name": "isBig",
-          "type": "bool"
-        }
+          internalType: "uint256",
+          name: "betNumber",
+          type: "uint256",
+        },
       ],
-      "name": "createGame",
-      "outputs": [
+      name: "createGame",
+      outputs: [
         {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
       ],
-      "stateMutability": "payable",
-      "type": "function"
+      stateMutability: "payable",
+      type: "function",
     },
     {
-      "inputs": [],
-      "name": "getGameCount",
-      "outputs": [
+      inputs: [],
+      name: "getGameCount",
+      outputs: [
         {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
       ],
-      "stateMutability": "view",
-      "type": "function"
+      stateMutability: "view",
+      type: "function",
     },
     {
-      "inputs": [],
-      "name": "getGames",
-      "outputs": [
+      inputs: [],
+      name: "getGames",
+      outputs: [
         {
-          "internalType": "contract DiceGame[]",
-          "name": "",
-          "type": "address[]"
-        }
+          internalType: "contract DiceGame[]",
+          name: "",
+          type: "address[]",
+        },
       ],
-      "stateMutability": "view",
-      "type": "function"
+      stateMutability: "view",
+      type: "function",
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "address",
-          "name": "gameAddress",
-          "type": "address"
-        }
-      ],
-      "name": "play",
-      "outputs": [
+          internalType: "address",
+          name: "gameAddress",
+          type: "address",
+        },
         {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
+          internalType: "uint256",
+          name: "betNumber",
+          type: "uint256",
+        },
       ],
-      "stateMutability": "payable",
-      "type": "function"
-    }
+      name: "play",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "payable",
+      type: "function",
+    },
   ],
 };

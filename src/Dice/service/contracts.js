@@ -1,6 +1,19 @@
 export const DICE = {
-  address: "0xA62c32cb896A936Dd372F4Ca0d3A6Fb76cB99b6F",
+  address: "0x06f50279462718f1b0af1F7e4eC4516Bf7687D99",
   abi: [
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "address",
+          name: "_gameAddress",
+          type: "address",
+        },
+      ],
+      name: "CreateGame",
+      type: "event",
+    },
     {
       inputs: [
         {
@@ -10,13 +23,7 @@ export const DICE = {
         },
       ],
       name: "createGame",
-      outputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
-      ],
+      outputs: [],
       stateMutability: "payable",
       type: "function",
     },

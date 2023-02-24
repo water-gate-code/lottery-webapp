@@ -1,6 +1,6 @@
 
 import { DICE } from './contracts';
-import { MOCK_JOIN_DICE, MOCK_RESULT, MOCK_DICE_STATUS } from './mockData';
+import { MOCK_JOIN_DICE, MOCK_RESULT, MOCK_DICE_STATUS, MOCK_CREATE_DICE } from './mockData';
 
 const { ethereum } = window;
 const { ethers } = window;
@@ -68,11 +68,11 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
 
   try {
     const transactionResponse = await Promise.resolve(MOCK_CREATE_DICE);
-    // await contract.createGame(betNumber, {
-    //   value: ethers.utils.parseEther(amount)
-    // });
+    const dice = await contract.createGame(betNumber, {
+      value: ethers.utils.parseEther(amount)
+    });
     console.log('payMoneyAndCreateGame Succeed, transactionResponse is: ', JSON.stringify(transactionResponse));
-    const dice = gameAddressToDice(transactionResponse[0]);
+    // const dice = gameAddressToDice(transactionResponse[0]);
 
     const transaction = await listenForTransactionMine(transactionResponse, provider);
     console.log('payMoneyAndCreateGame Succeed, listenForTransactionMine is: ', JSON.stringify(transaction));

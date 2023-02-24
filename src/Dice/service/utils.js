@@ -54,8 +54,14 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
   const betNumber = selection === 'big' ? 6 : 1;
 
   try {
-    const transactionResponse = await contract.createGame(betNumber);
-    await listenForTransactionMine(transactionResponse, provider);
+    const transactionResponse = await contract.createGame(betNumber, {
+      value: ethers.utils.parseEther(amount)
+    });
+    console.log('payMoneyAndCreateGame Succeed, transactionResponse is: ', JSON.stringify(transactionResponse));
+
+    const transaction = await listenForTransactionMine(transactionResponse, provider);
+    console.log('payMoneyAndCreateGame Succeed, listenForTransactionMine is: ', JSON.stringify(transaction));
+
     return;
   } catch (err) {
     return Promise.reject(err);
@@ -86,11 +92,13 @@ const gameToDice = (game) => {
 export const getCurrentActiveDice = async () => {
   const { contract } = getContractAndProvider();
   const games = await contract.getGames();
+  console.log('contract.getGames Succeed, res is: ', JSON.stringify(games));
+
   const diceList = [];
   for (let i = 0; i < games.length; i++) {    
     diceList.push(gameToDice(games[i]));
   }
- 
+  console.log('getCurrentActiveDice Succeed, diceList is: ', JSON.stringify(diceList));
   return Promise.resolve(diceList);
 }
 
@@ -103,11 +111,11 @@ export const payMoneyAndShoot = async (diceId, selection) => {
       diceId: diceId,
       betNumber: betNumber,
     });
-    console.log('Play Succeed, result is: ', JSON.stringify(result));
+    console.log('contract.play Succeed, res is: ', JSON.stringify(result));
     // 无真实的结果，先这么写吧
     return Promise.resolve(MOCK_RESULT);
   } catch (err) {
-    console.log('Play Failed, err is: ', JSON.stringify(err));
+    console.log('contract.play Failed, err is: ', JSON.stringify(err));
     return Promise.reject();
   }
 }

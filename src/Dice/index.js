@@ -33,7 +33,7 @@ import useGetDiceInfoInPolling from "./hooks/useGetDiceInfoInPolling";
 
 import "./index.css";
 
-const DICE_WAGER = '5';
+const DICE_WAGER = '0.007';
 
 const DicePlayGround = React.memo((props) => {
     //      Keep Polling room status
@@ -122,10 +122,17 @@ const DicePlayGround = React.memo((props) => {
 });
 
 const DiceCreate = React.memo((props) => {
-    const { creatGameAndPay } = props;
-    const createGame = useCallback((selection) => {
-        creatGameAndPay(DICE_WAGER, selection);
-    }, [creatGameAndPay]);
+    const { creatGameAndPay, refetchGames } = props;
+    const createGame = useCallback( async (selection) => {
+        try{
+            await creatGameAndPay(DICE_WAGER, selection);
+            refetchGames();
+        } catch(err) {
+            refetchGames();
+            // TODO
+        }
+     
+    }, [creatGameAndPay, refetchGames]);
 
     return (
         <div className="row full-height">
@@ -247,7 +254,7 @@ const Dice = React.memo((props) => {
                 <div className='col-9 playground full-height'>
                     {
                         showNewGame ? (
-                            <DiceCreate creatGameAndPay={creatGameAndPay} setSelection={setSelection} />
+                            <DiceCreate creatGameAndPay={creatGameAndPay} setSelection={setSelection} refetchGames={refetchGames} />
                         ) : (
                             <DicePlayGround dice={createdGame || joinedGame} selection={selection} />
                         )

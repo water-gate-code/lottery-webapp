@@ -49,20 +49,35 @@ const listenForTransactionMine = (transactionResponse, provider) => {
   });
 }
 
+const gameAddressToDice = (address) => {
+  const displayName = address.slice(0, 8);
+
+  return ({
+    diceId: address,
+    gambers: [{
+      name: displayName,
+      address: address,
+      select: 'big',
+    }],
+  })
+}
+
 export const payMoneyAndCreateGame = async (amount, selection) => {
   const { contract, provider } = getContractAndProvider();
   const betNumber = selection === 'big' ? 6 : 1;
 
   try {
-    const transactionResponse = await contract.createGame(betNumber, {
-      value: ethers.utils.parseEther(amount)
-    });
+    const transactionResponse = await Promise.resolve(MOCK_CREATE_DICE);
+    // await contract.createGame(betNumber, {
+    //   value: ethers.utils.parseEther(amount)
+    // });
     console.log('payMoneyAndCreateGame Succeed, transactionResponse is: ', JSON.stringify(transactionResponse));
+    const dice = gameAddressToDice(transactionResponse[0]);
 
     const transaction = await listenForTransactionMine(transactionResponse, provider);
     console.log('payMoneyAndCreateGame Succeed, listenForTransactionMine is: ', JSON.stringify(transaction));
 
-    return;
+    return dice;
   } catch (err) {
     return Promise.reject(err);
   }
@@ -73,7 +88,7 @@ const gameToDice = (game) => {
   const realBetNumber = betNumber.toString();
   const realValue = value.toString();
   const displayName = address.slice(0, 8);
-  
+
   const gambers = realBetNumber > '3' ? [
     { name: displayName, address: address, select: 'big', value: realValue, betNumber: realBetNumber },
     { name: '', address: '', select: 'small', value: '', betNumber: '' }
@@ -95,8 +110,8 @@ export const getCurrentActiveDice = async () => {
   console.log('contract.getGames Succeed, res is: ', JSON.stringify(games));
 
   const diceList = [];
-  for (let i = 0; i < games.length; i++) {    
-    diceList.push(gameToDice(games[i]));
+  for (let i = 0; i < games.length; i++) {
+    diceList.push(gameAddressToDice(games[i]));
   }
   console.log('getCurrentActiveDice Succeed, diceList is: ', JSON.stringify(diceList));
   return Promise.resolve(diceList);

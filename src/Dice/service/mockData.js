@@ -1,11 +1,12 @@
-export const MOCK_CREATE_DICE = {
-    gambers: [{
-        name: '张小敬',
-        address: '0xadsfasdfasdfdfdfasdfasdftre',
-        select: 'big',
-    }],
-    diceId: 456,
-};
+export const MOCK_CREATE_DICE = ['0xadsfasdfasdfdfdfasdfasdftre'];
+//  {
+//     gambers: [{
+//         name: '张小敬',
+//         address: '0xadsfasdfasdfdfdfasdfasdftre',
+//         select: 'big',
+//     }],
+//     diceId: 456,
+// };
 
 export const MOCK_JOIN_DICE = {
     gambers: [{

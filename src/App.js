@@ -7,7 +7,7 @@ import "./App.css";
 
 
 function App() {
-
+  document.title = 'The Greate Water Gate';
   const [currentGame, setCurrentGame] = useState('');
   const showAllGameEntry = useMemo(() => currentGame === '', [currentGame]);
   const backHomeView = useCallback(() => {

@@ -211,6 +211,7 @@ const GameList = React.memo((props) => {
 });
 
 const Dice = React.memo((props) => {
+    document.title = 'Dice';
     // const { goBack } = props;
     const [showNewGame, setShowNewGame] = useState(true);
     // 避免多次调用合约，selection 需要先存储下来，后续在开始掷骰子的时候一并调用合约的 play 方法

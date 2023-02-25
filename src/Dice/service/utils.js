@@ -1,10 +1,5 @@
 import { DICE } from "./contracts";
-import {
-  MOCK_JOIN_DICE,
-  MOCK_RESULT,
-  MOCK_DICE_STATUS,
-  MOCK_CREATE_DICE,
-} from "./mockData";
+import { MOCK_JOIN_DICE, MOCK_DICE_STATUS } from "./mockData";
 
 const { ethereum } = window;
 const { ethers } = window;

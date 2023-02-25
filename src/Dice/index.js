@@ -33,7 +33,7 @@ import Button from "./components/Button";
 import Loading from "./components/Loading";
 import useCreateGame from "./hooks/useCreateGame";
 import useFetchGames from "./hooks/useFetchGames";
-import useJoinGame from "./hooks/useJoinGame";
+// import useJoinGame from "./hooks/useJoinGame";
 import useShootDice from "./hooks/useShootDice";
 // import useGetDiceInfoInPolling from "./hooks/useGetDiceInfoInPolling";
 

@@ -1,5 +1,5 @@
 export const DICE = {
-  address: "0x06f50279462718f1b0af1F7e4eC4516Bf7687D99",
+  address: "0xCCd9e7970761b6AeC113FacAcd72e9e575a69C99",
   abi: [
     {
       anonymous: false,
@@ -12,6 +12,19 @@ export const DICE = {
         },
       ],
       name: "CreateGame",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "_rollNumber",
+          type: "uint256",
+        },
+      ],
+      name: "PlayGame",
       type: "event",
     },
     {
@@ -67,13 +80,7 @@ export const DICE = {
         },
       ],
       name: "play",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
+      outputs: [],
       stateMutability: "payable",
       type: "function",
     },

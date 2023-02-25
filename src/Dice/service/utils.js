@@ -1,5 +1,4 @@
 import { DICE } from "./contracts";
-import { MOCK_JOIN_DICE, MOCK_DICE_STATUS } from "./mockData";
 
 const { ethereum } = window;
 const { ethers } = window;
@@ -28,7 +27,6 @@ export const connectWallet = async () => {
 const getContractAndProvider = () => {
   const provider = new ethers.providers.Web3Provider(ethereum);
   const signer = provider.getSigner();
-  // TODO: DICE Contract
   const contract = new ethers.Contract(DICE.address, DICE.abi, signer);
   return { contract, provider };
 };
@@ -152,11 +150,6 @@ export const payMoneyAndShoot = async (amount, diceId, selection) => {
       roolDiceResult
     );
 
-    // const result = await contract.play(diceId, betNumber, {
-    //   value: ethers.utils.parseEther(amount),
-    // });
-    // console.log("contract.play Succeed, res is: ", JSON.stringify(result));
-    // 无真实的结果，先这么写吧
     return Promise.resolve({ result: roolDiceResult });
   } catch (err) {
     console.log("contract.play Failed, err is: ", JSON.stringify(err));
@@ -170,22 +163,4 @@ export const delay = (number) => {
       resolve();
     }, number);
   });
-};
-
-export const joinDice = async () => {
-  // const { contract, provider } = getContractAndProvider(betValue);
-  // const games = await contract.connectWallet();
-  // await payMoney(5);
-
-  await delay(2000);
-  return Promise.resolve(MOCK_JOIN_DICE);
-};
-
-export const getDiceStatus = async (diceId) => {
-  // const { contract, provider } = getContractAndProvider(betValue);
-  // const result = await contract.start();
-  await delay(2000);
-  return `${diceId}` === "456"
-    ? Promise.resolve(MOCK_DICE_STATUS)
-    : Promise.resolve(undefined);
 };

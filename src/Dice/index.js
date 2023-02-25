@@ -33,19 +33,13 @@ import Button from "./components/Button";
 import Loading from "./components/Loading";
 import useCreateGame from "./hooks/useCreateGame";
 import useFetchGames from "./hooks/useFetchGames";
-// import useJoinGame from "./hooks/useJoinGame";
 import useShootDice from "./hooks/useShootDice";
-// import useGetDiceInfoInPolling from "./hooks/useGetDiceInfoInPolling";
 
 import "./index.css";
 
 const DICE_WAGER = "0.007";
 
 const DicePlayGround = React.memo((props) => {
-  //      Keep Polling room status
-  //      One User in the Room, Show Waiting
-  //      Two User in the Room, Show Play
-
   const {
     dice: { diceId },
     selection,
@@ -72,7 +66,6 @@ const DicePlayGround = React.memo((props) => {
     DICE_WAGER,
     diceId
   );
-  // useGetDiceInfoInPolling(diceId, setCurrentDice);
 
   useLayoutEffect(() => {
     setCurrentDice(props.dice);
@@ -115,18 +108,9 @@ const DicePlayGround = React.memo((props) => {
           </button>
         )}
         {isEnd && (
-          <>
-            <button disabled type="button" className="btn btn-danger">
-              结束
-            </button>
-            {/* <button
-                            type="button"
-                            className="btn btn-danger"
-                            onClick={clickStart}
-                        >
-                            再来一局
-                        </button> */}
-          </>
+          <button disabled type="button" className="btn btn-danger">
+            结束
+          </button>
         )}
       </div>
       <div className="col-4 center">
@@ -227,14 +211,12 @@ const GameList = React.memo((props) => {
 
 const Dice = React.memo((props) => {
   document.title = "Dice";
-  // const { goBack } = props;
   const [showNewGame, setShowNewGame] = useState(true);
   const [joinedGame, setJoinedGame] = useState(null);
   // 避免多次调用合约，selection 需要先存储下来，后续在开始掷骰子的时候一并调用合约的 play 方法
   const [selection, setSelection] = useState(undefined);
   const { creatGameAndPay, createLoading, createdGame } = useCreateGame();
   const { games, refetchGames, listLoading } = useFetchGames();
-  //   const { joinGame, joinLoading, joinedGame } = useJoinGame();
 
   const onJoinedGame = (diceId, selection) => {
     games.forEach((game) => {

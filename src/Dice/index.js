@@ -88,6 +88,7 @@ const DicePlayGround = React.memo((props) => {
   return (
     <div className="row full-height">
       <div className="col-4 center">
+        {isEnd && (diceNumber > 3 ? <h4>Winnder</h4> : <h4>Loser</h4>)}
         <h2>大</h2>
         <div>{largeDisplayName}</div>
       </div>
@@ -114,6 +115,7 @@ const DicePlayGround = React.memo((props) => {
         )}
       </div>
       <div className="col-4 center">
+        {isEnd && (diceNumber < 4 ? <h4>Winnder</h4> : <h4>Loser</h4>)}
         <h2>小</h2>
         <div>{smallDisplayName}</div>
       </div>

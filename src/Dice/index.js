@@ -79,7 +79,14 @@ const DicePlayGround = React.memo((props) => {
   }, [props.dice]);
 
   const oShootDice = useCallback(() => {
-    shootDice(selection);
+    const twoPlayerInTheGame = gamberLarge.address && gamberSmall.address;
+    const justJoinedAPlayer =
+      (gamberLarge.address || gamberSmall.address) && selection;
+    if (twoPlayerInTheGame || justJoinedAPlayer) {
+      shootDice(selection);
+    } else {
+      window.alert("Waiting for another player");
+    }
   }, [shootDice, selection]);
 
   const isEnd = !diceShaking && diceNumber > 0;

@@ -104,6 +104,14 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
   }
 };
 
+export const delay = (number) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, number);
+  });
+};
+
 export const getCurrentActiveDice = async () => {
   const { contract } = getContractAndProvider();
   const games = await contract.getGames();
@@ -149,18 +157,10 @@ export const payMoneyAndShoot = async (amount, diceId, selection) => {
       "payMoneyAndShoot Succeed, roolDiceResult is: ",
       roolDiceResult
     );
-
+    // await delay(3000);
     return Promise.resolve({ result: roolDiceResult });
   } catch (err) {
     console.log("contract.play Failed, err is: ", JSON.stringify(err));
     return Promise.reject();
   }
-};
-
-export const delay = (number) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, number);
-  });
 };

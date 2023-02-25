@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { payMoneyAndShoot, connectWallet } from "../service/utils";
 
 const useShootDice = (amount, diceId) => {
   const [diceShaking, setDiceShaking] = useState(false);
   const [diceNumber, setDiceNumber] = useState(0);
 
+  useEffect(() => {
+    if (diceId) {
+      setDiceNumber(0);
+    }
+  }, [diceId]);
   const shootDice = async (selection) => {
     setDiceShaking(true);
     const isConnect = await connectWallet();

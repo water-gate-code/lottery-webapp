@@ -37,7 +37,7 @@ import useShootDice from "./hooks/useShootDice";
 
 import "./index.css";
 
-const DICE_WAGER = "0.007";
+const DICE_WAGER = "1";
 
 const DicePlayGround = React.memo((props) => {
   const {
@@ -177,9 +177,9 @@ const DiceList = React.memo((props) => {
     };
 
     return (
-      <div className="dice-item">
+      <div className="dice-item" key={diceId}>
         {gambers.map((gamber) => (
-          <div className="dice-gamber">
+          <div className="dice-gamber" key={gamber.address}>
             <h4>{gamber.select === "big" ? "大" : "小"}</h4>
             {gamber.address ? (
               <div className="dice-gamber-name">{gamber.name}</div>

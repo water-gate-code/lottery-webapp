@@ -1,32 +1,6 @@
 export const DICE = {
-  address: "0xCCd9e7970761b6AeC113FacAcd72e9e575a69C99",
+  address: "0xA13fd279652d369BF05D0bE1eE93119471e6e32D",
   abi: [
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: false,
-          internalType: "address",
-          name: "_gameAddress",
-          type: "address",
-        },
-      ],
-      name: "CreateGame",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "_rollNumber",
-          type: "uint256",
-        },
-      ],
-      name: "PlayGame",
-      type: "event",
-    },
     {
       inputs: [
         {
@@ -42,25 +16,44 @@ export const DICE = {
     },
     {
       inputs: [],
-      name: "getGameCount",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
       name: "getGames",
       outputs: [
         {
-          internalType: "contract DiceGame[]",
+          components: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "player1",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "player2",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "betAmount",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "player1BetNumber",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "player2BetNumber",
+              type: "uint256",
+            },
+          ],
+          internalType: "struct DiceGameLobby.DiceGame[]",
           name: "",
-          type: "address[]",
+          type: "tuple[]",
         },
       ],
       stateMutability: "view",
@@ -69,9 +62,9 @@ export const DICE = {
     {
       inputs: [
         {
-          internalType: "address",
-          name: "gameAddress",
-          type: "address",
+          internalType: "uint256",
+          name: "id",
+          type: "uint256",
         },
         {
           internalType: "uint256",

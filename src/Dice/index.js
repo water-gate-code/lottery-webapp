@@ -53,14 +53,14 @@ const DicePlayGround = React.memo((props) => {
   const largeDisplayName = gamberLarge?.address
     ? gamberLarge.name
     : selection === "big"
-    ? "Me"
-    : "等待玩家加入";
+      ? "Me"
+      : "等待玩家加入";
 
   const smallDisplayName = gamberSmall?.address
     ? gamberSmall.name
     : selection === "small"
-    ? "Me"
-    : "等待玩家加入";
+      ? "Me"
+      : "等待玩家加入";
 
   const { diceShaking, shootDice, diceNumber } = useShootDice(
     DICE_WAGER,
@@ -88,36 +88,36 @@ const DicePlayGround = React.memo((props) => {
   return (
     <div className="row full-height">
       <div className="col-4 center">
-        {isEnd && (diceNumber > 3 ? <h4>Winnder</h4> : <h4>Loser</h4>)}
+        { isEnd && (diceNumber > 3 ? <h4>Winnder</h4> : <h4>Loser</h4>) }
         <h2>大</h2>
-        <div>{largeDisplayName}</div>
+        <div>{ largeDisplayName }</div>
       </div>
       <div className="col-4 center">
         <div
-          className={`dice ${
+          className={ `dice ${
             diceShaking ? "dice-start" : "dice-end"
-          } dice-${diceNumber}`}
+          } dice-${ diceNumber }` }
         />
-        {diceShaking && (
+        { diceShaking && (
           <button disabled type="button" className="btn btn-danger">
             正在摇骰子
           </button>
-        )}
-        {isStart && (
-          <button type="button" className="btn btn-danger" onClick={oShootDice}>
+        ) }
+        { isStart && (
+          <button type="button" className="btn btn-danger" onClick={ oShootDice }>
             掷骰子
           </button>
-        )}
-        {isEnd && (
+        ) }
+        { isEnd && (
           <button disabled type="button" className="btn btn-danger">
             结束
           </button>
-        )}
+        ) }
       </div>
       <div className="col-4 center">
-        {isEnd && (diceNumber < 4 ? <h4>Winnder</h4> : <h4>Loser</h4>)}
+        { isEnd && (diceNumber < 4 ? <h4>Winnder</h4> : <h4>Loser</h4>) }
         <h2>小</h2>
-        <div>{smallDisplayName}</div>
+        <div>{ smallDisplayName }</div>
       </div>
     </div>
   );
@@ -145,20 +145,20 @@ const DiceCreate = React.memo((props) => {
         <button
           type="button"
           className="btn btn-danger"
-          onClick={() => createGame("big")}
+          onClick={ () => createGame("big") }
         >
           选择
         </button>
       </div>
       <div className="col-4 center">
-        <div className={"dice"} />
+        <div className={ "dice" }/>
       </div>
       <div className="col-4 center">
         <h2>小</h2>
         <button
           type="button"
           className="btn btn-danger"
-          onClick={() => createGame("small")}
+          onClick={ () => createGame("small") }
         >
           选择
         </button>
@@ -177,28 +177,28 @@ const DiceList = React.memo((props) => {
     };
 
     return (
-      <div className="dice-item" key={diceId}>
-        {gambers.map((gamber) => (
-          <div className="dice-gamber" key={gamber.address}>
-            <h4>{gamber.select === "big" ? "大" : "小"}</h4>
-            {gamber.address ? (
-              <div className="dice-gamber-name">{gamber.name}</div>
+      <div className="dice-item" key={ diceId }>
+        { gambers.map((gamber) => (
+          <div className="dice-gamber" key={ gamber.address }>
+            <h4>{ gamber.select === "big" ? "大" : "小" }</h4>
+            { gamber.address ? (
+              <div className="dice-gamber-name">{ gamber.name }</div>
             ) : (
               <button
                 type="button"
                 className="btn btn-outline-danger"
-                onClick={() => onSelectGame(gamber.select)}
+                onClick={ () => onSelectGame(gamber.select) }
               >
                 选择
               </button>
-            )}
+            ) }
           </div>
-        ))}
+        )) }
       </div>
     );
   };
   return (
-    <div className={"full-height"}>{dice.map((die) => renderDetail(die))}</div>
+    <div className={ "full-height" }>{ dice.map((die) => renderDetail(die)) }</div>
   );
 });
 
@@ -206,7 +206,7 @@ const GameList = React.memo((props) => {
   const { joinGame, games } = props;
   return (
     <div className="game-list-container">
-      <DiceList dice={games} join={joinGame} />
+      <DiceList dice={ games } join={ joinGame }/>
     </div>
   );
 });
@@ -248,28 +248,28 @@ const Dice = React.memo((props) => {
 
   return (
     <div className="dice-container container">
-      {showLoading && <Loading />}
+      { showLoading && <Loading/> }
       <h1 className="title">掷骰子</h1>
-      {/* <Button onClick={goBack} text={'返回'} /> */}
+      {/* <Button onClick={goBack} text={'返回'} /> */ }
       <div className="row dice-content">
         <div className="col-3 navigation">
-          <Button onClick={clickNewGame} text={"新游戏"} />
-          <Button onClick={refetchGames} text={"刷新游戏列表"} />
-          <GameList joinGame={onJoinedGame} games={games} />
+          <Button onClick={ clickNewGame } text={ "新游戏" }/>
+          <Button onClick={ refetchGames } text={ "刷新游戏列表" }/>
+          <GameList joinGame={ onJoinedGame } games={ games }/>
         </div>
         <div className="col-9 playground full-height">
-          {showNewGame ? (
+          { showNewGame ? (
             <DiceCreate
-              creatGameAndPay={creatGameAndPay}
-              setSelection={setSelection}
-              refetchGames={refetchGames}
+              creatGameAndPay={ creatGameAndPay }
+              setSelection={ setSelection }
+              refetchGames={ refetchGames }
             />
           ) : (
             <DicePlayGround
-              dice={createdGame || joinedGame}
-              selection={selection}
+              dice={ createdGame || joinedGame }
+              selection={ selection }
             />
-          )}
+          ) }
         </div>
       </div>
     </div>

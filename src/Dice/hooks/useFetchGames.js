@@ -2,38 +2,38 @@ import { useEffect, useState } from "react";
 import { getCurrentActiveDice } from '../service/utils';
 
 const useFetchGames = () => {
-    const [games, setGames] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [fetchTimes, setFetchTimes] = useState(0);
+  const [games, setGames] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [fetchTimes, setFetchTimes] = useState(0);
 
-    useEffect(() => {
-        let didCancel = false;
-        setLoading(true);
-        getCurrentActiveDice()
-            .then((res) => {
-                setLoading(false);
-                if (didCancel) {
-                    return;
-                }
-                setGames(res);
-            })
-            .catch((err) => {
-                if (didCancel) {
-                    return;
-                }
-                setLoading(false);
-            })
-
-        return () => {
-            didCancel = true;
+  useEffect(() => {
+    let didCancel = false;
+    setLoading(true);
+    getCurrentActiveDice()
+      .then((res) => {
+        setLoading(false);
+        if (didCancel) {
+          return;
         }
-    }, [fetchTimes]);
+        setGames(res);
+      })
+      .catch((err) => {
+        if (didCancel) {
+          return;
+        }
+        setLoading(false);
+      })
 
-    return {
-        games,
-        listLoading: loading,
-        refetchGames: () => setFetchTimes(times => times + 1)
+    return () => {
+      didCancel = true;
     }
+  }, [fetchTimes]);
+
+  return {
+    games,
+    listLoading: loading,
+    refetchGames: () => setFetchTimes(times => times + 1)
+  }
 }
 
 export default useFetchGames;

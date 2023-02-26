@@ -19,9 +19,9 @@ const useCreateGame = () => {
       return;
     }
     try {
-      await payMoneyAndCreateGame(wagger, selection);
+      const game = await payMoneyAndCreateGame(wagger, selection);
       setLoading(false);
-      setCreateGame(undefined);
+      setCreateGame(game);
       console.log("creatGameAndPay Succeed.");
     } catch (e) {
       setCreateGame(null);

@@ -129,34 +129,28 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
       JSON.stringify(transactionReceipt)
     );
 
+    let createGame;
     const createGameEventList =
       (transactionReceipt && transactionReceipt.events) || [];
-    let createGameAddress;
-
     console.log(
       "payMoneyAndCreateGame Succeed, createGameEventList is: ",
       JSON.stringify(createGameEventList)
     );
 
-    // createGameEventList.forEach((event) => {
-    //   if (event.event === "CreateGame") {
-    //     createGameAddress = event.args[0];
-    //   }
-    // });
+    createGameEventList.forEach((event) => {
+        if (event.event === "CreateGame") {
+            createGame = gameToDice(event.args[0])
+        }
+    });
 
-    // if (!createGameAddress) {
-    //   return Promise.reject(new Error("no address generate"));
-    // }
+    if (!createGame) {
+        return Promise.reject(new Error("no game created"));
+    }
 
-    console.log(
-      "payMoneyAndCreateGame Succeed, createGameAddress is: ",
-      createGameAddress
-    );
-
+    console.log("payMoneyAndCreateGame Succeed, createGame is: ", createGame);
     await listenForTransactionMine(transactionResponse, provider);
 
-    // const dice = gameToDice(createGameAddress);
-    // return dice;
+    return createGame;
   } catch (err) {
     return Promise.reject(err);
   }
@@ -199,29 +193,34 @@ export const payMoneyAndShoot = async (amount, diceId, selection) => {
     const transactionResponse = await contract.play(diceId, betNumber, {
       value: ethers.utils.parseEther(amount),
     });
-
     const transactionReceipt = await transactionResponse.wait(0);
 
-    // const playGameEventList =
-    //   (transactionReceipt && transactionReceipt.events) || [];
-    // let roolDiceResult;
-
-    // playGameEventList.forEach((event) => {
-    //   if (event.event === "PlayGame") {
-    //     roolDiceResult = event.args[0];
-    //   }
-    // });
-
-    // if (!roolDiceResult) {
-    //   return Promise.reject(new Error("no roll result generate"));
-    // }
-
     console.log(
-      "payMoneyAndShoot Succeed, transactionResponse is: ",
-      JSON.stringify(transactionResponse)
+        "payMoneyAndShoot Succeed, transactionReceipt is: ",
+        JSON.stringify(transactionReceipt)
     );
-    // await delay(3000);
-    return Promise.resolve({ result: 3 });
+
+    const playGameEventList = (transactionReceipt && transactionReceipt.events) || [];
+    console.log(
+        "payMoneyAndShoot Succeed, playGameEventList is: ",
+        JSON.stringify(playGameEventList)
+    );
+
+    let rollDiceResult;
+    playGameEventList.forEach((event) => {
+      if (event.event === "PlayGame") {
+        rollDiceResult = event.args[0];
+      }
+    });
+    if (!rollDiceResult) {
+       return Promise.reject(new Error("no roll result generate"));
+     }
+    console.log(
+        "payMoneyAndShoot Succeed, rollDiceResult is: ",
+        JSON.stringify(rollDiceResult)
+    );
+
+    return Promise.resolve({ result: rollDiceResult });
   } catch (err) {
     console.log("contract.play Failed, err is: ", JSON.stringify(err));
     return Promise.reject();

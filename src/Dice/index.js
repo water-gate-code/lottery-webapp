@@ -37,7 +37,7 @@ import useShootDice from "./hooks/useShootDice";
 
 import "./index.css";
 
-const DICE_WAGER = "1";
+const DICE_WAGER = "0.1";
 
 const DicePlayGround = React.memo((props) => {
   const {

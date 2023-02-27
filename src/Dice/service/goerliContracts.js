@@ -1,5 +1,5 @@
-export const LOCAL_DICE = {
-  address: "0x4a2fD2D2D9186Dc3baeC50B1D95ee14d913B316C",
+export const GOERILI_DICE = {
+  address: "0x2AbB89B6aB76197e05eBAf7E7510E5DaDA35E948",
   abi: [
     {
       "anonymous": false,

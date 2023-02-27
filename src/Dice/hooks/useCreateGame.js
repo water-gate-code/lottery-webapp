@@ -12,12 +12,18 @@ const useCreateGame = () => {
 
   const creatGameAndPay = async (wagger, selection) => {
     setLoading(true);
-    const isConnect = await connectWallet();
-    if (!isConnect) {
+    try {
+      const isConnect = await connectWallet();
+      if (!isConnect) {
+        setLoading(false);
+        window.alert("请连接 metaMask");
+        return;
+      }
+    } catch (e) {
       setLoading(false);
-      window.alert("请连接 metaMask");
-      return;
+      window.alert("MetaMask 链接失败");
     }
+
     try {
       const game = await payMoneyAndCreateGame(wagger, selection);
       setLoading(false);

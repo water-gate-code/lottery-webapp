@@ -26,7 +26,7 @@ export const connectWallet = async () => {
     return true;
   } catch (e) {
     console.log(`connectWallet failed:`, JSON.stringlify(e));
-    return Promise.resolve(false);
+    return false;
   }
 };
 
@@ -126,7 +126,12 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
     const transactionResponse = await contract.createGame(betNumber, {
       value: ethers.utils.parseEther(amount),
     });
-    const transactionReceipt = await transactionResponse.wait(0);
+
+    console.log(
+      "payMoneyAndCreateGame Succeed, transactionResponse is: ",
+      JSON.stringify(transactionResponse)
+    );
+    const transactionReceipt = await transactionResponse.wait();
 
     console.log(
       "payMoneyAndCreateGame Succeed, transactionReceipt is: ",
@@ -156,6 +161,7 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
 
     return createGame;
   } catch (err) {
+    console.log("contract.createGame Failed, err is: ", JSON.stringify(err));
     return Promise.reject(err);
   }
 };
@@ -197,7 +203,13 @@ export const payMoneyAndShoot = async (amount, diceId, selection) => {
     const transactionResponse = await contract.play(diceId, betNumber, {
       value: ethers.utils.parseEther(amount),
     });
-    const transactionReceipt = await transactionResponse.wait(0);
+
+    console.log(
+      "payMoneyAndCreateGame Succeed, transactionResponse is: ",
+      JSON.stringify(transactionResponse)
+    );
+
+    const transactionReceipt = await transactionResponse.wait();
 
     console.log(
       "payMoneyAndShoot Succeed, transactionReceipt is: ",

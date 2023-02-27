@@ -12,11 +12,16 @@ const useShootDice = (amount, diceId) => {
   }, [diceId]);
   const shootDice = async (selection) => {
     setDiceShaking(true);
-    const isConnect = await connectWallet();
-    if (!isConnect) {
+    try {
+      const isConnect = await connectWallet();
+      if (!isConnect) {
+        setDiceShaking(false);
+        window.alert("请连接 metaMask");
+        return;
+      }
+    } catch (e) {
       setDiceShaking(false);
-      window.alert("请连接 metaMask");
-      return;
+      window.alert("MetaMask 链接失败");
     }
 
     try {

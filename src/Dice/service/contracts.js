@@ -1,5 +1,5 @@
 export const LOCAL_DICE = {
-  address: "0x612564Fb460B53961aB32E47d73824f6A120808D",
+  address: "0x89bd04054765029D21CcAe3FF95e19cbE462C638",
   abi: [
     {
       "anonymous": false,

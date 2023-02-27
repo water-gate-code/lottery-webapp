@@ -1,5 +1,5 @@
 export const GOERILI_DICE = {
-  address: "0x2AbB89B6aB76197e05eBAf7E7510E5DaDA35E948",
+  address: "0xB300A91df2c188A1ed37A5BE4D72ce3D9d250e8F",
   abi: [
     {
       "anonymous": false,

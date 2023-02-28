@@ -8,7 +8,7 @@ import './index.css';
  * Minor: 合约更新
  * BuildNumber: 仅UI更新，或存量功能增强
  */
-const UI_VERSION = '0.1.0';
+const UI_VERSION = '0.1.1';
 
 const Version = React.memo(() => {
 

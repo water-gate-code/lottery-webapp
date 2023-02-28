@@ -7,28 +7,13 @@ const DICE = process.env.NODE_ENV === 'development' ? LOCAL_DICE : GOERILI_DICE;
 const { ethereum } = window;
 const { ethers } = window;
 
-const ethRequest = async (args) => {
+export const ethRequest = async (args) => {
   const response = await ethereum.request(args);
   console.log(`${ args.method }:`, response);
   return response;
 };
 
 const FAKE_ADDRESS = "0x0000000000000000000000000000000000000000";
-
-// metaMask 链接钱包，本地接口很快
-export const connectWallet = async () => {
-  try {
-    const accounts = await ethRequest({ method: "eth_accounts" });
-    if (accounts.length > 1) {
-      return true;
-    }
-    await ethRequest({ method: "eth_requestAccounts" });
-    return true;
-  } catch (e) {
-    console.log(`connectWallet failed:`, JSON.stringlify(e));
-    return false;
-  }
-};
 
 const getContractAndProvider = () => {
   const provider = new ethers.providers.Web3Provider(ethereum);
@@ -50,26 +35,6 @@ const listenForTransactionMine = (transactionResponse, provider) => {
       reject(error);
     }
   });
-};
-
-const gameAddressToDice = (address) => {
-  const displayName = address.slice(0, 8);
-
-  return {
-    diceId: address,
-    gambers: [
-      {
-        name: displayName,
-        address: address,
-        select: "big",
-      },
-      {
-        name: "",
-        address: "",
-        select: "small",
-      },
-    ],
-  };
 };
 
 const gameToDice = (game) => {
@@ -131,7 +96,7 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
       "payMoneyAndCreateGame Succeed, transactionResponse is: ",
       JSON.stringify(transactionResponse)
     );
-    const transactionReceipt = await transactionResponse.wait();
+    const transactionReceipt = await transactionResponse.wait(0);
 
     console.log(
       "payMoneyAndCreateGame Succeed, transactionReceipt is: ",

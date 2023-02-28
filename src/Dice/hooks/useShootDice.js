@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { payMoneyAndShoot, connectWallet } from "../service/utils";
+import { payMoneyAndShoot } from "../service/utils";
+import { useAccountContext } from "../context/Account";
 
 const useShootDice = (amount, diceId) => {
   const [diceShaking, setDiceShaking] = useState(false);
   const [diceNumber, setDiceNumber] = useState(0);
+  const { connectWallet, isConnected } = useAccountContext()
 
   useEffect(() => {
     if (diceId) {
@@ -11,18 +13,11 @@ const useShootDice = (amount, diceId) => {
     }
   }, [diceId]);
   const shootDice = async (selection) => {
-    setDiceShaking(true);
-    try {
-      const isConnect = await connectWallet();
-      if (!isConnect) {
-        setDiceShaking(false);
-        window.alert("请连接 metaMask");
-        return;
-      }
-    } catch (e) {
-      setDiceShaking(false);
-      window.alert("MetaMask 链接失败");
+    if (!isConnected) {
+      await connectWallet();
     }
+
+    setDiceShaking(true);
 
     try {
       const res = await payMoneyAndShoot(amount, diceId, selection);

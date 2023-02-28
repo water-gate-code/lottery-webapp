@@ -4,6 +4,7 @@ import Dice from "./Dice";
 import Button from "./Dice/components/Button";
 
 import "./App.css";
+import { AccountProvider } from "./Dice/context/Account";
 
 function App() {
   document.title = "The Greate Water Gate";
@@ -15,17 +16,19 @@ function App() {
 
   return (
     <div className="App container">
-      {showAllGameEntry && (
+      { showAllGameEntry && (
         <div>
           <h1 className="title"> The Greate Water Gate </h1>
           <div className="game-list">
-            <Button text={"FundMe"} onClick={() => setCurrentGame("FUND_ME")} />
-            <Button text={"Dice"} onClick={() => setCurrentGame("DICE")} />
+            <Button text={ "FundMe" } onClick={ () => setCurrentGame("FUND_ME") }/>
+            <Button text={ "Dice" } onClick={ () => setCurrentGame("DICE") }/>
           </div>
         </div>
-      )}
-      {currentGame === "FUND_ME" && <FundMe goBack={() => backHomeView()} />}
-      {currentGame === "DICE" && <Dice goBack={() => backHomeView()} />}
+      ) }
+      { currentGame === "FUND_ME" && <FundMe goBack={ () => backHomeView() }/> }
+      <AccountProvider>
+        { currentGame === "DICE" && <Dice goBack={ () => backHomeView() }/> }
+      </AccountProvider>
     </div>
   );
 }

@@ -4,25 +4,18 @@
 //      Into Game Room / Done
 
 import { useState } from "react";
-import { payMoneyAndCreateGame, connectWallet } from "../service/utils";
+import { payMoneyAndCreateGame } from "../service/utils";
+import { useAccountContext } from "../context/Account";
 
 const useCreateGame = () => {
   const [loading, setLoading] = useState(false);
   const [createdGame, setCreateGame] = useState(null);
-
+  const { connectWallet, isConnected } = useAccountContext()
   const creatGameAndPay = async (wagger, selection) => {
-    setLoading(true);
-    try {
-      const isConnect = await connectWallet();
-      if (!isConnect) {
-        setLoading(false);
-        window.alert("请连接 metaMask");
-        return;
-      }
-    } catch (e) {
-      setLoading(false);
-      window.alert("MetaMask 链接失败");
+    if (!isConnected) {
+      await connectWallet();
     }
+    setLoading(true);
 
     try {
       const game = await payMoneyAndCreateGame(wagger, selection);

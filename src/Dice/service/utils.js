@@ -1,4 +1,5 @@
 import DICE from "./getContract";
+import handleRPCError from "./rpcErrorHandle";
 
 const { ethereum } = window;
 const { ethers } = window;
@@ -122,6 +123,7 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
 
     return createGame;
   } catch (err) {
+    handleRPCError(err);
     console.log("contract.createGame Failed, err is: ", JSON.stringify(err));
     return Promise.reject(err);
   }
@@ -199,6 +201,7 @@ export const payMoneyAndShoot = async (amount, diceId, selection) => {
 
     return Promise.resolve({ result: rollDiceResult });
   } catch (err) {
+    handleRPCError(err);
     console.log("contract.play Failed, err is: ", JSON.stringify(err));
     return Promise.reject();
   }

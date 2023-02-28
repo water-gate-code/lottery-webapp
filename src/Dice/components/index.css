@@ -23,3 +23,12 @@
     justify-content: center;
     flex-direction: column;
 }
+
+.version {
+    position: fixed;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}

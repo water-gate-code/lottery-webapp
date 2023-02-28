@@ -36,6 +36,7 @@ import useFetchGames from "./hooks/useFetchGames";
 import useShootDice from "./hooks/useShootDice";
 
 import "./index.css";
+import Version from "./components/Version";
 
 const DICE_WAGER = "0.1";
 
@@ -248,6 +249,7 @@ const Dice = React.memo((props) => {
 
   return (
     <div className="dice-container container">
+      <Version />
       { showLoading && <Loading/> }
       <h1 className="title">掷骰子</h1>
       {/* <Button onClick={goBack} text={'返回'} /> */ }

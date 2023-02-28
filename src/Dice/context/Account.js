@@ -23,7 +23,7 @@ export const AccountProvider = React.memo((props) => {
     ethereum.on("accountsChanged", updateConnectionStatus);
 
     return () => {
-      ethereum.remove("accountsChanged", updateConnectionStatus);
+      // ethereum.remove("accountsChanged", updateConnectionStatus);
     }
   }, [])
 

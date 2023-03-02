@@ -48,9 +48,12 @@ export const AccountProvider = React.memo((props) => {
       if (provider !== ethereum) {
         window.alert('您是否安装了多个钱包？目前仅支持 MetaMask!');
       }
-      const chainId = await getChainId();
-      if (!isSupportChain(chainId)) {
-        window.alert(`目前不支持${ getChainName(chainId) }链，请手动切换后刷新页面`);
+      const accounts = await ethRequest({ method: "eth_accounts" });
+      if(accounts.length > 0) {
+        const chainId = await getChainId();
+        if (!isSupportChain(chainId)) {
+          window.alert(`目前不支持${ getChainName(chainId) }链，请手动切换后刷新页面`);
+        }
       }
     }
     checkMetaMask();

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getCurrentActiveDice } from '../service/utils';
+import { getCurrentActiveDice } from "../service/utils";
 
 const useFetchGames = () => {
   const [games, setGames] = useState([]);
@@ -22,18 +22,18 @@ const useFetchGames = () => {
           return;
         }
         setLoading(false);
-      })
+      });
 
     return () => {
       didCancel = true;
-    }
+    };
   }, [fetchTimes]);
 
   return {
     games,
     listLoading: loading,
-    refetchGames: () => setFetchTimes(times => times + 1)
-  }
-}
+    refetchGames: () => setFetchTimes((times) => times + 1),
+  };
+};
 
 export default useFetchGames;

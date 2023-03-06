@@ -6,7 +6,7 @@ const { ethers } = window;
 
 export const ethRequest = async (args) => {
   const response = await ethereum.request(args);
-  console.log(`${ args.method }:`, response);
+  console.log(`${args.method}:`, response);
   return response;
 };
 
@@ -24,7 +24,7 @@ const listenForTransactionMine = (transactionResponse, provider) => {
     try {
       provider.once(transactionResponse.hash, (transactionReceipt) => {
         console.log(
-          `Completed with ${ transactionReceipt.confirmations } confirmations. `
+          `Completed with ${transactionReceipt.confirmations} confirmations. `
         );
         resolve();
       });
@@ -45,33 +45,33 @@ const gameToDice = (game) => {
   const gambers =
     player1Bet > "3"
       ? [
-        {
-          name: player1Name,
-          address: player1 === FAKE_ADDRESS ? undefined : player1,
-          select: "big",
-          betNumber: player1Bet,
-        },
-        {
-          name: player2Name,
-          address: player2 === FAKE_ADDRESS ? undefined : player2,
-          select: "small",
-          betNumber: player2Bet,
-        },
-      ]
+          {
+            name: player1Name,
+            address: player1 === FAKE_ADDRESS ? undefined : player1,
+            select: "big",
+            betNumber: player1Bet,
+          },
+          {
+            name: player2Name,
+            address: player2 === FAKE_ADDRESS ? undefined : player2,
+            select: "small",
+            betNumber: player2Bet,
+          },
+        ]
       : [
-        {
-          name: player2Name,
-          address: player2 === FAKE_ADDRESS ? undefined : player2,
-          select: "big",
-          betNumber: player2Bet,
-        },
-        {
-          name: player1Name,
-          address: player1 === FAKE_ADDRESS ? undefined : player1,
-          select: "small",
-          betNumber: player1Bet,
-        },
-      ];
+          {
+            name: player2Name,
+            address: player2 === FAKE_ADDRESS ? undefined : player2,
+            select: "big",
+            betNumber: player2Bet,
+          },
+          {
+            name: player1Name,
+            address: player1 === FAKE_ADDRESS ? undefined : player1,
+            select: "small",
+            betNumber: player1Bet,
+          },
+        ];
   const dice = {
     diceId: id.toString(),
     gambers: gambers,
@@ -110,7 +110,7 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
 
     createGameEventList.forEach((event) => {
       if (event.event === "CreateGame") {
-        createGame = gameToDice(event.args[0])
+        createGame = gameToDice(event.args[0]);
       }
     });
 
@@ -142,15 +142,9 @@ export const getCurrentActiveDice = async () => {
   const games = await contract.getGames();
   console.log("contract.getGames Succeed, res is: ", JSON.stringify(games));
 
-  const diceList = [];
-  for (let i = 0; i < games.length; i++) {
-    const game = games[i];
-    const gameAbleToPlay = game.slice(1, 3).includes(FAKE_ADDRESS);
+  const isActiveGame = (game) => game.slice(1, 3).includes(FAKE_ADDRESS);
+  const diceList = games.filter(isActiveGame).map(gameToDice);
 
-    if (gameAbleToPlay) {
-      diceList.push(gameToDice(game));
-    }
-  }
   console.log(
     "getCurrentActiveDice Succeed, diceList is: ",
     JSON.stringify(diceList)
@@ -179,7 +173,8 @@ export const payMoneyAndShoot = async (amount, diceId, selection) => {
       JSON.stringify(transactionReceipt)
     );
 
-    const playGameEventList = (transactionReceipt && transactionReceipt.events) || [];
+    const playGameEventList =
+      (transactionReceipt && transactionReceipt.events) || [];
     console.log(
       "payMoneyAndShoot Succeed, playGameEventList is: ",
       JSON.stringify(playGameEventList)

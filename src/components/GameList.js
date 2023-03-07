@@ -2,11 +2,19 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { getGames } from "../utils";
+import { eventEmitter, Events } from "../event";
 
 export function GameList() {
   const [games, setGames] = useState([]);
-  useEffect(() => {
+  function updateGames() {
     getGames().then((games) => setGames(games));
+  }
+  useEffect(() => {
+    updateGames();
+    eventEmitter.subscribe(Events.CREATE_GAME, updateGames);
+    return () => {
+      eventEmitter.unsubscribe(Events.CREATE_GAME, updateGames);
+    };
   }, []);
 
   const gameItems = games.map((game) => (

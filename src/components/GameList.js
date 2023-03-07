@@ -23,7 +23,7 @@ export function GameList() {
       className="list-group-item list-group-item-action"
       to={`games/${game.id}`}
     >
-      Game {game.id}
+      {game.betAmount} ETH on {game.player1BetNumber < 6 ? "small" : "big"}
     </Link>
   ));
 

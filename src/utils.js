@@ -63,7 +63,7 @@ const gameToDice = (game) => {
     id: id.toString(),
     player1: player1.toString(),
     player2: player2.toString(),
-    betAmount: betAmount.toString(),
+    betAmount: ethers.utils.formatEther(betAmount),
     player1BetNumber: player1BetNumber.toString(),
     player2BetNumber: player2BetNumber.toString(),
   };

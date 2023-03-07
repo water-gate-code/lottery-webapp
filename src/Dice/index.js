@@ -22,21 +22,15 @@
 //      Get Result / Stop Dice and show Result
 //
 
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  useLayoutEffect,
-} from "react";
-import Button from "./components/Button";
-import Loading from "./components/Loading";
-import useCreateGame from "./hooks/useCreateGame";
-import useFetchGames from "./hooks/useFetchGames";
+import React, { useCallback, useState, useLayoutEffect } from "react";
+// import Button from "./components/Button";
+// import Loading from "./components/Loading";
+// import useCreateGame from "./hooks/useCreateGame";
+// import useFetchGames from "./hooks/useFetchGames";
 import useShootDice from "./hooks/useShootDice";
 
 import "./index.css";
-import Version from "./components/Version";
+// import Version from "./components/Version";
 
 const DICE_WAGER = "0.1";
 
@@ -124,46 +118,158 @@ export const DicePlayGround = React.memo((props) => {
   );
 });
 
-const DiceCreate = React.memo((props) => {
-  const { creatGameAndPay, refetchGames } = props;
-  const createGame = useCallback(
-    async (selection) => {
-      try {
-        await creatGameAndPay(DICE_WAGER, selection);
-        refetchGames();
-      } catch (err) {
-        refetchGames();
-        // TODO
-      }
-    },
-    [creatGameAndPay, refetchGames]
-  );
+// const DiceCreate = React.memo((props) => {
+//   const { creatGameAndPay, refetchGames } = props;
+//   const createGame = useCallback(
+//     async (selection) => {
+//       try {
+//         await creatGameAndPay(DICE_WAGER, selection);
+//         refetchGames();
+//       } catch (err) {
+//         refetchGames();
+//         // TODO
+//       }
+//     },
+//     [creatGameAndPay, refetchGames]
+//   );
 
-  return (
-    <div className="row full-height">
-      <div className="col-4 center">
-        <h2>大</h2>
-        <button
-          type="button"
-          className="btn btn-danger"
-          onClick={() => createGame("big")}
-        >
-          选择
-        </button>
-      </div>
-      <div className="col-4 center">
-        <div className={"dice"} />
-      </div>
-      <div className="col-4 center">
-        <h2>小</h2>
-        <button
-          type="button"
-          className="btn btn-danger"
-          onClick={() => createGame("small")}
-        >
-          选择
-        </button>
-      </div>
-    </div>
-  );
-});
+//   return (
+//     <div className="row full-height">
+//       <div className="col-4 center">
+//         <h2>大</h2>
+//         <button
+//           type="button"
+//           className="btn btn-danger"
+//           onClick={ () => createGame("big") }
+//         >
+//           选择
+//         </button>
+//       </div>
+//       <div className="col-4 center">
+//         <div className={ "dice" }/>
+//       </div>
+//       <div className="col-4 center">
+//         <h2>小</h2>
+//         <button
+//           type="button"
+//           className="btn btn-danger"
+//           onClick={ () => createGame("small") }
+//         >
+//           选择
+//         </button>
+//       </div>
+//     </div>
+//   );
+// });
+
+// const DiceList = React.memo((props) => {
+//   const { dice = [], join } = props;
+//   const renderDetail = (data) => {
+//     const { diceId, gambers } = data;
+//     const onSelectGame = (selection) => {
+//       //   setSelection(selection);
+//       join(diceId, selection);
+//     };
+
+//     return (
+//       <div className="dice-item" key={ diceId }>
+//         { gambers.map((gamber) => (
+//           <div className="dice-gamber" key={ gamber.address }>
+//             <h4>{ gamber.select === "big" ? "大" : "小" }</h4>
+//             { gamber.address ? (
+//               <div className="dice-gamber-name">{ gamber.name }</div>
+//             ) : (
+//               <button
+//                 type="button"
+//                 className="btn btn-outline-danger"
+//                 onClick={ () => onSelectGame(gamber.select) }
+//               >
+//                 选择
+//               </button>
+//             ) }
+//           </div>
+//         )) }
+//       </div>
+//     );
+//   };
+//   return (
+//     <div className={ "full-height" }>{ dice.map((die) => renderDetail(die)) }</div>
+//   );
+// });
+
+// const GameList = React.memo((props) => {
+//   const { joinGame, games } = props;
+//   return (
+//     <div className="game-list-container">
+//       <DiceList dice={ games } join={ joinGame }/>
+//     </div>
+//   );
+// });
+
+// const Dice = React.memo((props) => {
+//   document.title = "Dice";
+//   const [showNewGame, setShowNewGame] = useState(true);
+//   const [joinedGame, setJoinedGame] = useState(null);
+//   // 避免多次调用合约，selection 需要先存储下来，后续在开始掷骰子的时候一并调用合约的 play 方法
+//   const [selection, setSelection] = useState(undefined);
+//   const { creatGameAndPay, createLoading, createdGame } = useCreateGame();
+//   const { games, refetchGames, listLoading } = useFetchGames();
+
+//   const onJoinedGame = (diceId, selection) => {
+//     games.forEach((game) => {
+//       if (game.diceId === diceId) {
+//         setJoinedGame(game);
+//       }
+//     });
+//     setSelection(selection);
+//   };
+
+//   const showLoading = useMemo(
+//     () => createLoading || listLoading,
+//     [createLoading, listLoading]
+//   );
+
+//   useEffect(() => {
+//     const selectedGame = createdGame || joinedGame;
+//     if (selectedGame) {
+//       setShowNewGame(false);
+//     }
+//   }, [createdGame, joinedGame]);
+
+//   const clickNewGame = () => {
+//     setShowNewGame(true);
+//     setSelection(undefined);
+//   };
+
+//   return (
+//     <div className="dice-container container">
+//       <Version />
+//       { showLoading && <Loading/> }
+//       <h1 className="title">掷骰子</h1>
+//       {/* <Button onClick={goBack} text={'返回'} /> */ }
+//       <div className="row dice-content">
+//         <div className="col-3 navigation">
+//           <Button onClick={ clickNewGame } text={ "新游戏" }/>
+//           <Button onClick={ refetchGames } text={ "刷新游戏列表" }/>
+//           <GameList joinGame={ onJoinedGame } games={ games }/>
+//         </div>
+//         <div className="col-9 playground full-height">
+//           { showNewGame ? (
+//             <DiceCreate
+//               creatGameAndPay={ creatGameAndPay }
+//               setSelection={ setSelection }
+//               refetchGames={ refetchGames }
+//             />
+//           ) : (
+//             <DicePlayGround
+//               dice={ createdGame || joinedGame }
+//               selection={ selection }
+//             />
+//           ) }
+//         </div>
+//       </div>
+//     </div>
+//   );
+// });
+
+// export default Dice;

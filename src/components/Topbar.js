@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { connectWallet } from "./utils";
-import { WalletContext } from "./WalletContext";
+import { connectWallet } from "../utils";
+import { WalletContext } from "../WalletContext";
 
 export function Topbar() {
   const wallet = useContext(WalletContext);

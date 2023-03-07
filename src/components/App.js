@@ -3,14 +3,14 @@ import { RouterProvider } from "react-router-dom";
 
 import "./App.css";
 
-import { getAccounts, getChainId } from "./utils";
+import { getAccounts, getChainId } from "../utils";
 import {
   WalletContext,
   WalletDispatchContext,
   initialWallet,
   walletReducer,
-} from "./WalletContext";
-import { router } from "./router";
+} from "../WalletContext";
+import { router } from "../router";
 
 const { ethereum } = window;
 

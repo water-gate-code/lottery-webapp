@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { getGames } from "./utils";
+import { getGames } from "../utils";
 
 export function GameList() {
   const [games, setGames] = useState([]);

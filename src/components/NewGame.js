@@ -1,4 +1,4 @@
-import { payMoneyAndCreateGame } from "./utils";
+import { payMoneyAndCreateGame } from "../utils";
 
 export function NewGame() {
   return (

@@ -1,12 +1,8 @@
-import { payMoneyAndCreateGame } from "../utils";
+import { useState, useContext } from "react";
 
+import { payMoneyAndCreateGame, connectWallet } from "../utils";
 import { eventEmitter, Events } from "../event";
-import { useState } from "react";
-
-async function create(amount, selection) {
-  const response = await payMoneyAndCreateGame(amount, selection);
-  eventEmitter.dispatch(Events.CREATE_GAME, response);
-}
+import { WalletContext } from "../WalletContext";
 
 const ALLOW_BET_AMOUNTS = ["0.1", "0.2", "0.5", "0.8", "1"];
 const SELLECTION = ["big", "small"];
@@ -14,6 +10,15 @@ const SELLECTION = ["big", "small"];
 export function NewGame() {
   const [betAmount, setBetAmount] = useState(ALLOW_BET_AMOUNTS[0]);
   const [betSelection, setBetSelection] = useState(SELLECTION[0]);
+  const wallet = useContext(WalletContext);
+
+  async function create() {
+    if (wallet.accounts.length < 1) {
+      await connectWallet();
+    }
+    const response = await payMoneyAndCreateGame(betAmount, betSelection);
+    eventEmitter.dispatch(Events.CREATE_GAME, response);
+  }
 
   function onSubmit(e) {
     e.preventDefault();

@@ -1,17 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 
 import { eventEmitter, Events } from "../event";
-import { getGames, payMoneyAndShoot } from "../utils";
-
-async function play(amount, diceId, selection) {
-  const response = await payMoneyAndShoot(amount, diceId, selection);
-  // eventEmitter.dispatch(Events.CREATE_GAME, response);
-  eventEmitter.dispatch(Events.COMPLETE_GAME, response);
-}
+import { getGames, payMoneyAndShoot, connectWallet } from "../utils";
+import { WalletContext } from "../WalletContext";
 
 export function Game() {
   let { gameId } = useParams();
+  const wallet = useContext(WalletContext);
 
   const [game, setGame] = useState(null);
 
@@ -22,18 +18,26 @@ export function Game() {
   if (!game) {
     return null;
   }
+  async function play() {
+    const amount = game.betAmount.toString();
+    const selection = game.player1BetNumber < 6 ? "big" : "small";
+    if (wallet.accounts.length < 1) {
+      await connectWallet();
+    }
+    const response = await payMoneyAndShoot(amount, game.id, selection);
+    eventEmitter.dispatch(Events.COMPLETE_GAME, response);
+  }
 
   function onSubmit(e) {
     e.preventDefault();
-    play(
-      game.betAmount.toString(),
-      game.id,
-      game.player1BetNumber < 6 ? "big" : "small"
-    );
+    play();
   }
 
   return (
     <div className="container">
+      {/* <div>
+        <pre>{JSON.stringify(wallet, null, " ")}</pre>
+      </div> */}
       <div className="row">
         <div className="col">
           <h1 className="display-1">Play Game: {game.id}</h1>

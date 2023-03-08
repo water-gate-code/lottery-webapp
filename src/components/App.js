@@ -9,6 +9,7 @@ import {
   WalletDispatchContext,
   initialWallet,
   walletReducer,
+  WALLET_ACTION_TYPES,
 } from "../WalletContext";
 import { router } from "../router";
 
@@ -21,7 +22,7 @@ function useInitializeWallet() {
     async function dispatchUpdatedWallet() {
       const chainId = await getChainId();
       const accounts = await getAccounts();
-      const type = "UPDATE_WALLET";
+      const type = WALLET_ACTION_TYPES.UPDATE_WALLET;
       dispatch({ type, wallet: { accounts, chainId, initialized: true } });
     }
 

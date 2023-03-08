@@ -3,6 +3,11 @@ import { createContext } from "react";
 export const WalletContext = createContext(null);
 export const WalletDispatchContext = createContext(null);
 
+export const WALLET_ACTION_TYPES = {
+  UPDATE_WALLET: "UPDATE_WALLET",
+  DISCONNECTED: "DISCONNECTED",
+};
+
 export function walletReducer(wallet, action) {
   switch (action.type) {
     case "UPDATE_WALLET": {

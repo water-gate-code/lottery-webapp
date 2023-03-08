@@ -20,6 +20,18 @@ export async function getChainId() {
   return parseInt(chainId);
 }
 
+function getContractAndProviderByRpc(contractMeta) {
+  const provider = new ethers.providers.JsonRpcProvider(contractMeta.RpcUrl);
+  const signer = provider.getSigner();
+  const contract = new ethers.Contract(
+    contractMeta.address,
+    contractMeta.abi,
+    signer
+  );
+
+  return { contract, provider };
+}
+
 function getContractAndProvider(contractMeta) {
   const provider = new ethers.providers.Web3Provider(ethereum);
   const signer = provider.getSigner();
@@ -31,7 +43,7 @@ function getContractAndProvider(contractMeta) {
   return { contract, provider };
 }
 export async function getGames() {
-  const { contract } = getContractAndProvider(DICE);
+  const { contract } = getContractAndProviderByRpc(DICE);
   const games = await contract.getGames();
   return games.map(gameToDice);
 }

@@ -1,5 +1,5 @@
 export const DICE = {
-  address: "0x52A14236635FEEbedE2506c8458b4Ec3d360e251",
+  address: "0xB300A91df2c188A1ed37A5BE4D72ce3D9d250e8F",
   abi: [
     {
       anonymous: false,

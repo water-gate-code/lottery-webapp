@@ -56,6 +56,27 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
   );
 };
 
+export const payMoneyAndShoot = async (amount, diceId, selection) => {
+  const betNumber = selection === "big" ? 6 : 1;
+
+  const { contract } = getContractAndProvider(DICE);
+  const transactionResponse = await contract.play(diceId, betNumber, {
+    value: ethers.utils.parseEther(amount),
+  });
+
+  console.log(
+    "payMoneyAndCreateGame Succeed, transactionResponse is: ",
+    JSON.stringify(transactionResponse)
+  );
+
+  const transactionReceipt = await transactionResponse.wait();
+
+  console.log(
+    "payMoneyAndShoot Succeed, transactionReceipt is: ",
+    JSON.stringify(transactionReceipt)
+  );
+};
+
 const gameToDice = (game) => {
   const [id, player1, player2, betAmount, player1BetNumber, player2BetNumber] =
     game;

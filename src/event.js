@@ -19,6 +19,6 @@ class EventEmitter {
 
 export const Events = {
   CREATE_GAME: "CREATE_GAME",
-  // use an enum to keep track of events similar to action types set as variables in redux
+  COMPLETE_GAME: "COMPLETE_GAME",
 };
 export const eventEmitter = new EventEmitter();

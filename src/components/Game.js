@@ -5,34 +5,7 @@ import { eventEmitter, Events } from "../event";
 import { getGames, payMoneyAndShoot, connectWallet } from "../utils";
 import { WalletContext } from "../WalletContext";
 
-export function Game() {
-  let { gameId } = useParams();
-  const wallet = useContext(WalletContext);
-
-  const [game, setGame] = useState(null);
-
-  useEffect(() => {
-    getGames().then((games) => setGame(games.find((g) => g.id == gameId)));
-  }, [gameId]);
-
-  if (!game) {
-    return null;
-  }
-  async function play() {
-    const amount = game.betAmount.toString();
-    const selection = game.player1BetNumber < 6 ? "big" : "small";
-    if (wallet.accounts.length < 1) {
-      await connectWallet();
-    }
-    const response = await payMoneyAndShoot(amount, game.id, selection);
-    eventEmitter.dispatch(Events.COMPLETE_GAME, response);
-  }
-
-  function onSubmit(e) {
-    e.preventDefault();
-    play();
-  }
-
+function GameForm({ game, onSubmit }) {
   return (
     <div className="container">
       {/* <div>
@@ -59,4 +32,40 @@ export function Game() {
       </div>
     </div>
   );
+}
+
+export function Game() {
+  let { gameId } = useParams();
+  const wallet = useContext(WalletContext);
+
+  const [game, setGame] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    getGames().then((games) => {
+      setGame(games.find((g) => g.id == gameId));
+      setLoading(false);
+    });
+  }, [gameId]);
+
+  if (!game) {
+    return null;
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  async function onSubmit(e) {
+    e.preventDefault();
+    const amount = game.betAmount.toString();
+    const selection = game.player1BetNumber < 6 ? "big" : "small";
+    if (wallet.accounts.length < 1) {
+      await connectWallet();
+    }
+    const response = await payMoneyAndShoot(amount, game.id, selection);
+    eventEmitter.dispatch(Events.COMPLETE_GAME, response);
+  }
+
+  return <GameForm game={game} onSubmit={onSubmit} />;
 }

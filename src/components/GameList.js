@@ -4,9 +4,6 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { getGames } from "../utils";
 import { eventEmitter, Events } from "../event";
 
-const NULL_PLAYER = "0x0000000000000000000000000000000000000000";
-const isActiveGame = (game) => game.player2.indexOf(NULL_PLAYER) == 0;
-
 function Item({ game, isActive }) {
   return (
     <Link
@@ -20,30 +17,40 @@ function Item({ game, isActive }) {
   );
 }
 
-function List({ games, gameId }) {
-  const gameItems = games
-    .filter(isActiveGame)
-    .map((game) => (
-      <Item key={game.id} game={game} isActive={game.id == gameId} />
-    ));
-
-  return <>{gameItems}</>;
+function List({ games, activeGameId }) {
+  const gameItems = games.map((game) => (
+    <Item key={game.id} game={game} isActive={game.id == activeGameId} />
+  ));
+  const activeClassName = !activeGameId ? " active" : "";
+  return (
+    <div className="list-group">
+      <Link
+        className={"list-group-item list-group-item-action" + activeClassName}
+        to={`/`}
+      >
+        Create
+      </Link>
+      {gameItems}
+    </div>
+  );
 }
 
 export function GameList() {
   let { gameId } = useParams();
   const navigate = useNavigate();
   const [games, setGames] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     function updateGames() {
       getGames().then((games) => {
         if (
           gameId &&
-          !games.filter(isActiveGame).find((game) => game.id == gameId)
+          !games.filter((g) => g.isActive).find((game) => game.id == gameId)
         ) {
           navigate("/");
         }
         setGames(games);
+        setLoading(false);
       });
     }
     updateGames();
@@ -55,17 +62,7 @@ export function GameList() {
     };
   }, [gameId]);
 
-  return (
-    <div className="list-group">
-      <Link
-        className={
-          "list-group-item list-group-item-action" + (!gameId ? " active" : "")
-        }
-        to={`/`}
-      >
-        Create
-      </Link>
-      <List games={games} gameId={gameId} />
-    </div>
-  );
+  if (loading) return <div>Loading...</div>;
+
+  return <List games={games.filter((g) => g.isActive)} activeGameId={gameId} />;
 }

@@ -1,7 +1,14 @@
-import { DICE } from "./contracts";
+import { CASINO } from "./contracts";
 
 const { ethereum } = window;
 const { ethers } = window;
+
+const DICE_GAME_TYPE = 1; // 掷骰子
+const ROCK_PAPER_SCISSORS_GAME_TYPE = 2; // 石头剪刀布
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export const ethRequest = async (args) => {
   const response = await ethereum.request(args);
@@ -43,18 +50,23 @@ function getContractAndProvider(contractMeta) {
   return { contract, provider };
 }
 export async function getGames() {
-  const { contract } = getContractAndProviderByRpc(DICE);
+  await delay(1000);
+  const { contract } = getContractAndProviderByRpc(CASINO);
   const games = await contract.getGames();
   return games.map(gameToDice);
 }
 
 export const payMoneyAndCreateGame = async (amount, selection) => {
-  const { contract } = getContractAndProvider(DICE);
+  const { contract } = getContractAndProvider(CASINO);
   const betNumber = selection === "big" ? 6 : 1;
 
-  const transactionResponse = await contract.createGame(betNumber, {
-    value: ethers.utils.parseEther(amount),
-  });
+  const transactionResponse = await contract.createGame(
+    DICE_GAME_TYPE,
+    betNumber,
+    {
+      value: ethers.utils.parseEther(amount),
+    }
+  );
 
   console.log(
     "payMoneyAndCreateGame Succeed, transactionResponse is: ",
@@ -71,8 +83,8 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
 export const payMoneyAndShoot = async (amount, diceId, selection) => {
   const betNumber = selection === "big" ? 6 : 1;
 
-  const { contract } = getContractAndProvider(DICE);
-  const transactionResponse = await contract.play(diceId, betNumber, {
+  const { contract } = getContractAndProvider(CASINO);
+  const transactionResponse = await contract.playGame(diceId, betNumber, {
     value: ethers.utils.parseEther(amount),
   });
 
@@ -90,14 +102,15 @@ export const payMoneyAndShoot = async (amount, diceId, selection) => {
 };
 
 const gameToDice = (game) => {
-  const [id, player1, player2, betAmount, player1BetNumber, player2BetNumber] =
-    game;
+  const { id, wager, gamblers } = game;
   return {
     id: id.toString(),
-    player1: player1.toString(),
-    player2: player2.toString(),
-    betAmount: ethers.utils.formatEther(betAmount),
-    player1BetNumber: player1BetNumber.toString(),
-    player2BetNumber: player2BetNumber.toString(),
+    player1: gamblers[0].id.toString(),
+    player2: gamblers.length > 1 ? gamblers[1].id.toString() : NULL_PLAYER,
+    betAmount: ethers.utils.formatEther(wager),
+    player1BetNumber: gamblers[0].bet.toString(),
+    isActive: gamblers.length < 2,
   };
 };
+
+const NULL_PLAYER = "0x0000000000000000000000000000000000000000";

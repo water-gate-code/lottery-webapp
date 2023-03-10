@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
-import { getGames } from "../utils";
+import { getGames, GAME_ICONS } from "../utils";
 import { eventEmitter, Events } from "../event";
 
 function Item({ game, isActive }) {
@@ -12,6 +12,8 @@ function Item({ game, isActive }) {
       }
       to={`games/${game.id}`}
     >
+      <span>{GAME_ICONS[game.type]}</span>
+      &nbsp;&nbsp;
       {game.betAmount} ETH on {game.player1BetNumber}
     </Link>
   );

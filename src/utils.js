@@ -12,8 +12,8 @@ export const GAME_NAMES = {
   [ROCK_PAPER_SCISSORS_GAME_TYPE]: "Rock Paper Scissors",
 };
 export const GAME_ICONS = {
-  [DICE_GAME_TYPE]: "D",
-  [ROCK_PAPER_SCISSORS_GAME_TYPE]: "RPS",
+  [DICE_GAME_TYPE]: <i class="bi bi-dice-5-fill"></i>,
+  [ROCK_PAPER_SCISSORS_GAME_TYPE]: <i className="bi bi-scissors"></i>,
 };
 
 function delay(ms) {
@@ -139,9 +139,11 @@ export const payMoneyAndShoot = async (amount, diceId, selection) => {
 };
 
 const gameToDice = (game) => {
-  const { id, wager, gamblers } = game;
+  const { id, gameType, wager, gamblers } = game;
+
   return {
     id: id.toString(),
+    type: parseInt(gameType.toString()),
     player1: gamblers[0].id.toString(),
     player2: gamblers.length > 1 ? gamblers[1].id.toString() : NULL_PLAYER,
     betAmount: ethers.utils.formatEther(wager),

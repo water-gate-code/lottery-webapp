@@ -15,6 +15,10 @@ export const router = createBrowserRouter([
         element: <CreateGame />,
       },
       {
+        path: "/create/:gameType",
+        element: <CreateGame />,
+      },
+      {
         path: "games/:gameId",
         element: <Game />,
       },

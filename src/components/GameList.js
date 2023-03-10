@@ -12,7 +12,7 @@ function Item({ game, isActive }) {
       }
       to={`games/${game.id}`}
     >
-      {game.betAmount} ETH on {game.player1BetNumber < 6 ? "small" : "big"}
+      {game.betAmount} ETH on {game.player1BetNumber}
     </Link>
   );
 }

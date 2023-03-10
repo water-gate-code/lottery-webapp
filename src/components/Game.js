@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { eventEmitter, Events } from "../event";
 import { getGames, payMoneyAndShoot, connectWallet } from "../utils";
 import { WalletContext } from "../WalletContext";
+import { Address } from "./Address";
 
 function GameForm({ game, onSubmit }) {
   return (
@@ -13,9 +14,13 @@ function GameForm({ game, onSubmit }) {
       </div> */}
       <div className="row">
         <div className="col">
-          <p className="lead">Play Game: {game.id}</p>
+          <h1 className="display-1">
+            Play Game: <Address address={game.id} />
+          </h1>
           <p className="lead">Amount: {game.betAmount} ETH</p>
-          <p className="lead">Player: {game.player1}</p>
+          <p className="lead">
+            Player: <Address address={game.player1} />
+          </p>
           <p className="lead">
             On: {game.player1BetNumber < 6 ? "small" : "big"}
           </p>

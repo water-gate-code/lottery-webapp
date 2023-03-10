@@ -2,12 +2,13 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { connectWallet } from "../utils";
 import { WalletContext } from "../WalletContext";
+import { Address } from "./Address";
 
 export function Topbar() {
   const wallet = useContext(WalletContext);
   const accountInfo =
     wallet.accounts.length > 0 ? (
-      <div>{wallet.accounts[0]}</div>
+      <Address address={wallet.accounts[0]} />
     ) : (
       <button
         type="button"

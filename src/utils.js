@@ -3,8 +3,18 @@ import { CASINO } from "./contracts";
 const { ethereum } = window;
 const { ethers } = window;
 
-const DICE_GAME_TYPE = 1; // 掷骰子
-const ROCK_PAPER_SCISSORS_GAME_TYPE = 2; // 石头剪刀布
+const NULL_PLAYER = "0x0000000000000000000000000000000000000000";
+export const DICE_GAME_TYPE = 1; // 掷骰子
+export const ROCK_PAPER_SCISSORS_GAME_TYPE = 2; // 石头剪刀布
+export const GAME_TYPES = [DICE_GAME_TYPE, ROCK_PAPER_SCISSORS_GAME_TYPE];
+export const GAME_NAMES = {
+  [DICE_GAME_TYPE]: "Dice",
+  [ROCK_PAPER_SCISSORS_GAME_TYPE]: "Rock Paper Scissors",
+};
+export const GAME_ICONS = {
+  [DICE_GAME_TYPE]: "D",
+  [ROCK_PAPER_SCISSORS_GAME_TYPE]: "RPS",
+};
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -52,15 +62,43 @@ function getContractAndProvider(contractMeta) {
 export async function getGames() {
   const { contract } = getContractAndProviderByRpc(CASINO);
   const games = await contract.getGames();
+  console.log(games);
   return games.map(gameToDice);
 }
 
 export const payMoneyAndCreateGame = async (amount, selection) => {
   const { contract } = getContractAndProvider(CASINO);
-  const betNumber = selection === "big" ? 6 : 1;
+  const betNumber = selection === "Big" ? 6 : 1;
 
   const transactionResponse = await contract.createGame(
     DICE_GAME_TYPE,
+    betNumber,
+    {
+      value: ethers.utils.parseEther(amount),
+    }
+  );
+
+  console.log(
+    "payMoneyAndCreateGame Succeed, transactionResponse is: ",
+    JSON.stringify(transactionResponse)
+  );
+  const transactionReceipt = await transactionResponse.wait(0);
+
+  console.log(
+    "payMoneyAndCreateGame Succeed, transactionReceipt is: ",
+    JSON.stringify(transactionReceipt)
+  );
+};
+
+export const payMoneyAndCreateGameRps = async (amount, selection) => {
+  const { contract } = getContractAndProvider(CASINO);
+  const betNumber = selection === "Rock" ? 1 : selection === "Paper" ? 2 : 3;
+  console.log({
+    gameType: ROCK_PAPER_SCISSORS_GAME_TYPE,
+    betNumber,
+  });
+  const transactionResponse = await contract.createGame(
+    ROCK_PAPER_SCISSORS_GAME_TYPE,
     betNumber,
     {
       value: ethers.utils.parseEther(amount),
@@ -112,4 +150,8 @@ const gameToDice = (game) => {
   };
 };
 
-const NULL_PLAYER = "0x0000000000000000000000000000000000000000";
+export const formatAddress = (address) => {
+  const begin = address.substr(0, 4);
+  const end = address.substr(address.length - 1 - 4, 4);
+  return begin + "•••" + end;
+};

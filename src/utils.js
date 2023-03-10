@@ -50,7 +50,7 @@ function getContractAndProvider(contractMeta) {
   return { contract, provider };
 }
 export async function getGames() {
-  await delay(1000);
+  await delay(100);
   const { contract } = getContractAndProviderByRpc(CASINO);
   const games = await contract.getGames();
   return games.map(gameToDice);

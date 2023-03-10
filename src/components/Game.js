@@ -13,7 +13,7 @@ function GameForm({ game, onSubmit }) {
       </div> */}
       <div className="row">
         <div className="col">
-          <h1 className="display-1">Play Game: {game.id}</h1>
+          <p className="lead">Play Game: {game.id}</p>
           <p className="lead">Amount: {game.betAmount} ETH</p>
           <p className="lead">Player: {game.player1}</p>
           <p className="lead">
@@ -40,6 +40,7 @@ export function Game() {
 
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -49,23 +50,25 @@ export function Game() {
     });
   }, [gameId]);
 
-  if (!game) {
-    return null;
-  }
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
   async function onSubmit(e) {
     e.preventDefault();
-    const amount = game.betAmount.toString();
-    const selection = game.player1BetNumber < 6 ? "big" : "small";
-    if (wallet.accounts.length < 1) {
-      await connectWallet();
+    setPlaying(true);
+    try {
+      const amount = game.betAmount.toString();
+      const selection = game.player1BetNumber < 6 ? "big" : "small";
+      if (wallet.accounts.length < 1) {
+        await connectWallet();
+      }
+      const response = await payMoneyAndShoot(amount, game.id, selection);
+      eventEmitter.dispatch(Events.COMPLETE_GAME, response);
+    } catch (error) {
+      console.error(error);
     }
-    const response = await payMoneyAndShoot(amount, game.id, selection);
-    eventEmitter.dispatch(Events.COMPLETE_GAME, response);
+    setPlaying(false);
   }
 
+  if (loading) return <div>Loading...</div>;
+  if (playing) return <div>Playing...</div>;
+  if (!game) return <div>Game not found!</div>;
   return <GameForm game={game} onSubmit={onSubmit} />;
 }

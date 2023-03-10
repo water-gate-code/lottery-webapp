@@ -7,23 +7,31 @@ import { WalletContext } from "../WalletContext";
 const ALLOW_BET_AMOUNTS = ["0.1", "0.2", "0.5", "0.8", "1"];
 const SELLECTION = ["big", "small"];
 
-export function NewGame() {
+export function CreateGame() {
   const [betAmount, setBetAmount] = useState(ALLOW_BET_AMOUNTS[0]);
   const [betSelection, setBetSelection] = useState(SELLECTION[0]);
+  const [creating, setCreating] = useState(false);
   const wallet = useContext(WalletContext);
 
   async function create() {
-    if (wallet.accounts.length < 1) {
-      await connectWallet();
+    setCreating(true);
+    try {
+      if (wallet.accounts.length < 1) {
+        await connectWallet();
+      }
+      const response = await payMoneyAndCreateGame(betAmount, betSelection);
+      eventEmitter.dispatch(Events.CREATE_GAME, response);
+    } catch (error) {
+      console.error(error);
     }
-    const response = await payMoneyAndCreateGame(betAmount, betSelection);
-    eventEmitter.dispatch(Events.CREATE_GAME, response);
+    setCreating(false);
   }
 
   function onSubmit(e) {
     e.preventDefault();
     create(betAmount, betSelection);
   }
+  if (creating) return <div>Creating...</div>;
   return (
     <div className="container">
       <div className="row">

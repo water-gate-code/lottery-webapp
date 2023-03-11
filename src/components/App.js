@@ -40,7 +40,7 @@ function useInitializeWallet() {
   return { wallet, dispatch };
 }
 
-function App() {
+export function App() {
   const { wallet, dispatch } = useInitializeWallet();
   return (
     <WalletContext.Provider value={wallet}>
@@ -50,5 +50,3 @@ function App() {
     </WalletContext.Provider>
   );
 }
-
-export default App;

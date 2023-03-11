@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import { eventEmitter, Events } from "../event";
 import {
-  getGames,
+  getGame,
   payMoneyAndShoot,
   connectWallet,
   GAME_NAMES,
@@ -81,8 +81,8 @@ export function Game() {
 
   useEffect(() => {
     setLoading(true);
-    getGames(chainId).then((games) => {
-      setGame(games.find((g) => g.id == gameId));
+    getGame(chainId, gameId).then((game) => {
+      setGame(game);
       setLoading(false);
     });
   }, [gameId]);

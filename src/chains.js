@@ -1,6 +1,15 @@
 import { CASINO } from "./contracts";
 
 export const chains = {
+  1337: {
+    name: "ganache",
+    contracts: {
+      Casino: {
+        address: "0x0Fa71a9Ba8dD2838A26f0290AC79251B1929890d",
+        abi: CASINO.abi,
+      },
+    },
+  },
   5: {
     name: "goerli",
     contracts: {
@@ -10,20 +19,11 @@ export const chains = {
       },
     },
   },
-  1337: {
-    name: "ganache",
-    contracts: {
-      Casino: {
-        address: "0x079fdE98dBeE3786Ea6ce9F79997D34Bd5cEDBbf",
-        abi: CASINO.abi,
-      },
-    },
-  },
   80001: {
     name: "mumbai",
     contracts: {
       Casino: {
-        address: "0xF0eFA90068bcca7dE8E4bC1220Ca14e23c438203",
+        address: "0x8453e76c1875DBc48B7f9ced3d9F2c84F0b59a0a",
         abi: CASINO.abi,
       },
     },

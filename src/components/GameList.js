@@ -20,7 +20,7 @@ function Item({ game, isActive }) {
   );
 }
 
-function List({ games, activeGameId }) {
+function List({ games, activeGameId, loading }) {
   const gameItems = games.map((game) => (
     <Item key={game.id} game={game} isActive={game.id == activeGameId} />
   ));
@@ -33,7 +33,13 @@ function List({ games, activeGameId }) {
       >
         Create
       </Link>
-      {gameItems}
+      {loading ? (
+        <Link className={"list-group-item list-group-item-action"}>
+          Loading...
+        </Link>
+      ) : (
+        gameItems
+      )}
     </div>
   );
 }
@@ -48,12 +54,6 @@ export function GameList() {
     function updateGames() {
       setLoading(true);
       getGames(chainId).then((games) => {
-        const game = games
-          .filter((g) => g.isActive)
-          .find((game) => game.id == gameId);
-        if (gameId && !game) {
-          navigate("/");
-        }
         setGames(games);
         setLoading(false);
       });
@@ -65,9 +65,18 @@ export function GameList() {
       eventEmitter.unsubscribe(Events.CREATE_GAME, updateGames);
       eventEmitter.unsubscribe(Events.COMPLETE_GAME, updateGames);
     };
-  }, [gameId, chainId]);
+  }, [chainId]);
 
-  if (loading) return <div>Loading...</div>;
+  const game = games.find((game) => game.id == gameId);
+  if (gameId && (!game || !game.isActive)) {
+    navigate("/");
+  }
 
-  return <List games={games.filter((g) => g.isActive)} activeGameId={gameId} />;
+  return (
+    <List
+      games={games.filter((g) => g.isActive)}
+      activeGameId={gameId}
+      loading={loading}
+    />
+  );
 }

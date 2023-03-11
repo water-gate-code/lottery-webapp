@@ -17,10 +17,6 @@ export const GAME_ICONS = {
   [ROCK_PAPER_SCISSORS_GAME_TYPE]: <i className="bi bi-scissors"></i>,
 };
 
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export const ethRequest = async (args) => {
   try {
     const response = await ethereum.request(args);
@@ -58,6 +54,11 @@ export async function getGames(chainId) {
   if (!chainId) return [];
   const games = await casino(chainId, true).contract.getGames();
   return games.map(gameToDice);
+}
+export async function getGame(chainId, gameId) {
+  if (!chainId) return null;
+  const game = await casino(chainId, true).contract.getGame(gameId);
+  return gameToDice(game);
 }
 
 export const payMoneyAndCreateGame = async (chainId, amount, selection) => {

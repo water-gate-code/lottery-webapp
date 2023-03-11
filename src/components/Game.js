@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 
 import { DICE_GAME_TYPE, ROCK_PAPER_SCISSORS_GAME_TYPE } from "../utils";
-import { getGames } from "../utils";
+import { getGame } from "../utils";
 import { Game as GameDice } from "./GameDice";
 import { Game as GameRps } from "./GameRps";
 import { WalletContext } from "../WalletContext";
@@ -21,8 +21,8 @@ export function Game() {
 
   useEffect(() => {
     setLoading(true);
-    getGames(chainId).then((games) => {
-      setGame(games.find((g) => g.id == gameId));
+    getGame(chainId, gameId).then((game) => {
+      setGame(game);
       setLoading(false);
     });
   }, [gameId, chainId]);

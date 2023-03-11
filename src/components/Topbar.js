@@ -8,7 +8,18 @@ export function Topbar() {
   const wallet = useContext(WalletContext);
   const accountInfo =
     wallet.accounts.length > 0 ? (
-      <Address address={wallet.accounts[0]} />
+      <ul className="navbar-nav">
+        <li className="nav-item me-3">
+          <Address address={wallet.accounts[0]} />
+        </li>
+        <li
+          className={
+            "nav-item" + (wallet.chainInfo ? " text-primary" : " text-danger")
+          }
+        >
+          {wallet.chainInfo ? wallet.chainInfo.name : "Wrong Network"}
+        </li>
+      </ul>
     ) : (
       <button
         type="button"
@@ -19,7 +30,7 @@ export function Topbar() {
       </button>
     );
   return (
-    <nav className="navbar bg-body-tertiary">
+    <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           Barsino

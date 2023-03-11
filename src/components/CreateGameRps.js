@@ -24,7 +24,11 @@ export function CreateGame() {
       if (wallet.accounts.length < 1) {
         await connectWallet();
       }
-      const response = await payMoneyAndCreateGameRps(betAmount, betSelection);
+      const response = await payMoneyAndCreateGameRps(
+        wallet.chainId,
+        betAmount,
+        betSelection
+      );
       eventEmitter.dispatch(Events.CREATE_GAME, response);
     } catch (error) {
       console.error(error);

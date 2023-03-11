@@ -5,6 +5,7 @@ import { DICE_GAME_TYPE, ROCK_PAPER_SCISSORS_GAME_TYPE } from "../utils";
 import { getGames } from "../utils";
 import { Game as GameDice } from "./GameDice";
 import { Game as GameRps } from "./GameRps";
+import { WalletContext } from "../WalletContext";
 
 const gameForms = {
   [DICE_GAME_TYPE]: <GameDice />,
@@ -16,14 +17,15 @@ export function Game() {
 
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { chainId } = useContext(WalletContext);
 
   useEffect(() => {
     setLoading(true);
-    getGames().then((games) => {
+    getGames(chainId).then((games) => {
       setGame(games.find((g) => g.id == gameId));
       setLoading(false);
     });
-  }, [gameId]);
+  }, [gameId, chainId]);
 
   if (loading) return <div>Loading...</div>;
   if (!game) return <div>Game not found!</div>;

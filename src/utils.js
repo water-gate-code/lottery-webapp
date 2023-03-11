@@ -1,4 +1,5 @@
 import { CASINO } from "./contracts";
+import { chains } from "./chains";
 
 const { ethereum } = window;
 const { ethers } = window;
@@ -21,9 +22,13 @@ function delay(ms) {
 }
 
 export const ethRequest = async (args) => {
-  const response = await ethereum.request(args);
-  console.info(`[ethereum.request] ${args.method}:`, response);
-  return response;
+  try {
+    const response = await ethereum.request(args);
+    console.info(`[ethereum.request] ${args.method}:`, response);
+    return response;
+  } catch (error) {
+    console.error(`[ethereum.request] ${args.method}:`, error);
+  }
 };
 
 export async function connectWallet() {
@@ -37,9 +42,10 @@ export async function getChainId() {
   return parseInt(chainId);
 }
 
-function getContractAndProviderByRpc(contractMeta) {
-  const provider = new ethers.providers.JsonRpcProvider(contractMeta.RpcUrl);
-  // const signer = provider.getSigner();
+function casinoRpc(chainId) {
+  const chain = chains[chainId];
+  const contractMeta = chain.contracts.Casino;
+  const provider = new ethers.providers.JsonRpcProvider(chain.rpcUrl);
   const contract = new ethers.Contract(
     contractMeta.address,
     contractMeta.abi,
@@ -49,7 +55,9 @@ function getContractAndProviderByRpc(contractMeta) {
   return { contract, provider };
 }
 
-function getContractAndProvider(contractMeta) {
+function casino(chainId) {
+  const chain = chains[chainId];
+  const contractMeta = chain.contracts.Casino;
   const provider = new ethers.providers.Web3Provider(ethereum);
   const signer = provider.getSigner();
   const contract = new ethers.Contract(
@@ -59,14 +67,15 @@ function getContractAndProvider(contractMeta) {
   );
   return { contract, provider };
 }
-export async function getGames() {
-  const { contract } = getContractAndProviderByRpc(CASINO);
-  const games = await contract.getGames();
+
+export async function getGames(chainId) {
+  if (!chainId) return [];
+  const games = await casinoRpc(chainId).contract.getGames();
   return games.map(gameToDice);
 }
 
-export const payMoneyAndCreateGame = async (amount, selection) => {
-  const { contract } = getContractAndProvider(CASINO);
+export const payMoneyAndCreateGame = async (chainId, amount, selection) => {
+  const { contract } = casino(chainId);
   const betNumber = selection === "Big" ? 6 : 1;
 
   const transactionResponse = await contract.createGame(
@@ -89,8 +98,8 @@ export const payMoneyAndCreateGame = async (amount, selection) => {
   );
 };
 
-export const payMoneyAndCreateGameRps = async (amount, selection) => {
-  const { contract } = getContractAndProvider(CASINO);
+export const payMoneyAndCreateGameRps = async (chainId, amount, selection) => {
+  const { contract } = casino(chainId);
   const betNumber = selection === "Rock" ? 1 : selection === "Paper" ? 2 : 3;
   console.log({
     gameType: ROCK_PAPER_SCISSORS_GAME_TYPE,
@@ -116,10 +125,10 @@ export const payMoneyAndCreateGameRps = async (amount, selection) => {
   );
 };
 
-export const payMoneyAndShoot = async (amount, diceId, selection) => {
+export const payMoneyAndShoot = async (chainId, amount, diceId, selection) => {
   const betNumber = selection === "big" ? 6 : 1;
 
-  const { contract } = getContractAndProvider(CASINO);
+  const { contract } = casino(chainId);
   const transactionResponse = await contract.playGame(diceId, betNumber, {
     value: ethers.utils.parseEther(amount),
   });
@@ -137,8 +146,13 @@ export const payMoneyAndShoot = async (amount, diceId, selection) => {
   );
 };
 
-export const payMoneyAndShootRps = async (amount, diceId, selection) => {
-  const { contract } = getContractAndProvider(CASINO);
+export const payMoneyAndShootRps = async (
+  chainId,
+  amount,
+  diceId,
+  selection
+) => {
+  const { contract } = casino(chainId);
   const transactionResponse = await contract.playGame(diceId, selection, {
     value: ethers.utils.parseEther(amount),
   });

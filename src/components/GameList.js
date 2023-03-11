@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
 import { getGames, GAME_ICONS } from "../utils";
 import { eventEmitter, Events } from "../event";
+import { WalletContext } from "../WalletContext";
 
 function Item({ game, isActive }) {
   return (
@@ -38,17 +39,19 @@ function List({ games, activeGameId }) {
 }
 
 export function GameList() {
+  const { chainId } = useContext(WalletContext);
   let { gameId } = useParams();
   const navigate = useNavigate();
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     function updateGames() {
-      getGames().then((games) => {
-        if (
-          gameId &&
-          !games.filter((g) => g.isActive).find((game) => game.id == gameId)
-        ) {
+      setLoading(true);
+      getGames(chainId).then((games) => {
+        const game = games
+          .filter((g) => g.isActive)
+          .find((game) => game.id == gameId);
+        if (gameId && !game) {
           navigate("/");
         }
         setGames(games);
@@ -62,7 +65,7 @@ export function GameList() {
       eventEmitter.unsubscribe(Events.CREATE_GAME, updateGames);
       eventEmitter.unsubscribe(Events.COMPLETE_GAME, updateGames);
     };
-  }, [gameId]);
+  }, [gameId, chainId]);
 
   if (loading) return <div>Loading...</div>;
 

@@ -73,7 +73,7 @@ function GameForm({ game, onSubmit }) {
 
 export function Game() {
   let { gameId } = useParams();
-  const wallet = useContext(WalletContext);
+  const { accounts, chainId } = useContext(WalletContext);
 
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -81,7 +81,7 @@ export function Game() {
 
   useEffect(() => {
     setLoading(true);
-    getGames().then((games) => {
+    getGames(chainId).then((games) => {
       setGame(games.find((g) => g.id == gameId));
       setLoading(false);
     });
@@ -91,10 +91,15 @@ export function Game() {
     setPlaying(true);
     try {
       const amount = game.betAmount.toString();
-      if (wallet.accounts.length < 1) {
+      if (accounts.length < 1) {
         await connectWallet();
       }
-      const response = await payMoneyAndShoot(amount, game.id, selection);
+      const response = await payMoneyAndShoot(
+        chainId,
+        amount,
+        game.id,
+        selection
+      );
       eventEmitter.dispatch(Events.COMPLETE_GAME, response);
     } catch (error) {
       console.error(error);

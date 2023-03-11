@@ -9,7 +9,7 @@ export const ROCK_PAPER_SCISSORS_GAME_TYPE = 2; // 石头剪刀布
 export const GAME_TYPES = [DICE_GAME_TYPE, ROCK_PAPER_SCISSORS_GAME_TYPE];
 export const GAME_NAMES = {
   [DICE_GAME_TYPE]: "Dice",
-  [ROCK_PAPER_SCISSORS_GAME_TYPE]: "Rock Paper Scissors",
+  [ROCK_PAPER_SCISSORS_GAME_TYPE]: "Rock Paper Scissor",
 };
 export const GAME_ICONS = {
   [DICE_GAME_TYPE]: <i class="bi bi-dice-5-fill"></i>,
@@ -62,7 +62,6 @@ function getContractAndProvider(contractMeta) {
 export async function getGames() {
   const { contract } = getContractAndProviderByRpc(CASINO);
   const games = await contract.getGames();
-  console.log(games);
   return games.map(gameToDice);
 }
 
@@ -122,6 +121,25 @@ export const payMoneyAndShoot = async (amount, diceId, selection) => {
 
   const { contract } = getContractAndProvider(CASINO);
   const transactionResponse = await contract.playGame(diceId, betNumber, {
+    value: ethers.utils.parseEther(amount),
+  });
+
+  console.log(
+    "payMoneyAndCreateGame Succeed, transactionResponse is: ",
+    JSON.stringify(transactionResponse)
+  );
+
+  const transactionReceipt = await transactionResponse.wait();
+
+  console.log(
+    "payMoneyAndShoot Succeed, transactionReceipt is: ",
+    JSON.stringify(transactionReceipt)
+  );
+};
+
+export const payMoneyAndShootRps = async (amount, diceId, selection) => {
+  const { contract } = getContractAndProvider(CASINO);
+  const transactionResponse = await contract.playGame(diceId, selection, {
     value: ethers.utils.parseEther(amount),
   });
 

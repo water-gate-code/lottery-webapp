@@ -1,6 +1,6 @@
 export const CASINO = {
   RpcUrl: "HTTP://127.0.0.1:7545",
-  address: "0x28e6Da9FC313356C8b22FBB61653FA688a3845c2",
+  address: "0xbB73fc9C107394fdD2A381d7acC4Ea1dCCaE2654",
   abi: [
     {
       inputs: [],

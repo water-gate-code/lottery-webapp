@@ -81,7 +81,6 @@ export function CreateGame() {
                     }
                     onClick={(e) => {
                       e.preventDefault();
-                      console.log(sellection);
                       setBetSelection(sellection);
                     }}
                   >

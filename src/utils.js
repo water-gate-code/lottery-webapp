@@ -42,35 +42,21 @@ export async function getChainId() {
   return parseInt(chainId);
 }
 
-function casinoRpc(chainId) {
-  const chain = chains[chainId];
-  const contractMeta = chain.contracts.Casino;
-  const provider = new ethers.providers.JsonRpcProvider(chain.rpcUrl);
-  const contract = new ethers.Contract(
-    contractMeta.address,
-    contractMeta.abi,
-    provider
-  );
-
-  return { contract, provider };
-}
-
-function casino(chainId) {
+function casino(chainId, isReadOnly) {
   const chain = chains[chainId];
   const contractMeta = chain.contracts.Casino;
   const provider = new ethers.providers.Web3Provider(ethereum);
-  const signer = provider.getSigner();
   const contract = new ethers.Contract(
     contractMeta.address,
     contractMeta.abi,
-    signer
+    isReadOnly ? provider : provider.getSigner()
   );
   return { contract, provider };
 }
 
 export async function getGames(chainId) {
   if (!chainId) return [];
-  const games = await casinoRpc(chainId).contract.getGames();
+  const games = await casino(chainId, true).contract.getGames();
   return games.map(gameToDice);
 }
 
@@ -88,23 +74,22 @@ export const payMoneyAndCreateGame = async (chainId, amount, selection) => {
 
   console.log(
     "payMoneyAndCreateGame Succeed, transactionResponse is: ",
-    JSON.stringify(transactionResponse)
+    transactionResponse
   );
-  const transactionReceipt = await transactionResponse.wait(0);
+  // ask Satoru why pass 0 here?
+  // const transactionReceipt = await transactionResponse.wait(0);
+  const transactionReceipt = await transactionResponse.wait();
 
   console.log(
     "payMoneyAndCreateGame Succeed, transactionReceipt is: ",
-    JSON.stringify(transactionReceipt)
+    transactionReceipt
   );
 };
 
 export const payMoneyAndCreateGameRps = async (chainId, amount, selection) => {
   const { contract } = casino(chainId);
   const betNumber = selection === "Rock" ? 1 : selection === "Paper" ? 2 : 3;
-  console.log({
-    gameType: ROCK_PAPER_SCISSORS_GAME_TYPE,
-    betNumber,
-  });
+
   const transactionResponse = await contract.createGame(
     ROCK_PAPER_SCISSORS_GAME_TYPE,
     betNumber,
@@ -117,7 +102,7 @@ export const payMoneyAndCreateGameRps = async (chainId, amount, selection) => {
     "payMoneyAndCreateGame Succeed, transactionResponse is: ",
     JSON.stringify(transactionResponse)
   );
-  const transactionReceipt = await transactionResponse.wait(0);
+  const transactionReceipt = await transactionResponse.wait();
 
   console.log(
     "payMoneyAndCreateGame Succeed, transactionReceipt is: ",

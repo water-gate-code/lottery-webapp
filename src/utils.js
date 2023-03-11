@@ -172,6 +172,6 @@ const gameToDice = (game) => {
 
 export const formatAddress = (address) => {
   const begin = address.substr(0, 4);
-  const end = address.substr(address.length - 1 - 4, 4);
+  const end = address.substr(address.length - 4, 4);
   return begin + "•••" + end;
 };

@@ -1,6 +1,6 @@
 export const CASINO = {
-  RpcUrl: "HTTP://127.0.0.1:7545",
-  address: "0xbB73fc9C107394fdD2A381d7acC4Ea1dCCaE2654",
+  RpcUrl: "https://goerli.infura.io/v3/",
+  address: "0x4F2c8A3a13675EecE8B08796284Ea184836cE068",
   abi: [
     {
       inputs: [],

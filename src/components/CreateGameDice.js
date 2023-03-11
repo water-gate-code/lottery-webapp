@@ -9,7 +9,7 @@ import {
 import { eventEmitter, Events } from "../event";
 import { WalletContext } from "../WalletContext";
 
-const ALLOW_BET_AMOUNTS = ["0.1", "0.2", "0.5", "0.8", "1"];
+const ALLOW_BET_AMOUNTS = ["0.01", "0.02", "0.05", "0.08", "0.1"];
 const SELLECTION = ["Small", "Big"];
 
 export function CreateGame() {

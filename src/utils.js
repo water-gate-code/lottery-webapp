@@ -12,7 +12,7 @@ export const GAME_NAMES = {
   [ROCK_PAPER_SCISSORS_GAME_TYPE]: "Rock Paper Scissor",
 };
 export const GAME_ICONS = {
-  [DICE_GAME_TYPE]: <i class="bi bi-dice-5-fill"></i>,
+  [DICE_GAME_TYPE]: <i className="bi bi-dice-5-fill"></i>,
   [ROCK_PAPER_SCISSORS_GAME_TYPE]: <i className="bi bi-scissors"></i>,
 };
 
@@ -39,11 +39,11 @@ export async function getChainId() {
 
 function getContractAndProviderByRpc(contractMeta) {
   const provider = new ethers.providers.JsonRpcProvider(contractMeta.RpcUrl);
-  const signer = provider.getSigner();
+  // const signer = provider.getSigner();
   const contract = new ethers.Contract(
     contractMeta.address,
     contractMeta.abi,
-    signer
+    provider
   );
 
   return { contract, provider };

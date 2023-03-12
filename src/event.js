@@ -8,11 +8,11 @@ class EventEmitter {
       this.#events[event].forEach((callback) => callback(data));
     }, 0);
   }
-  subscribe(event, callback) {
+  on(event, callback) {
     if (!this.#events[event]) this.#events[event] = [];
     this.#events[event].push(callback);
   }
-  unsubscribe(event, callback) {
+  removeListener(event, callback) {
     if (!this.#events[event]) return;
     const subscribers = this.#events[event];
     const index = subscribers.findIndex((subscriber) => subscriber == callback);

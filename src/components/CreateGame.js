@@ -1,35 +1,22 @@
 import { useParams, useNavigate } from "react-router-dom";
 
-import { CreateGame as CreateGameDice } from "./CreateGameDice";
-import { CreateGame as CreateGameRps } from "./CreateGameRps";
-
 import {
   GAME_TYPES,
   DICE_GAME_TYPE,
-  ROCK_PAPER_SCISSORS_GAME_TYPE,
-  GAME_NAMES,
-} from "../utils";
+  getGameName,
+  CreateGameRenderer,
+} from "../games";
 
-const gameForms = {
-  [DICE_GAME_TYPE]: <CreateGameDice />,
-  [ROCK_PAPER_SCISSORS_GAME_TYPE]: <CreateGameRps />,
-};
-
-const Tab = ({ type, activeType, onClick }) => {
+const Tab = ({ text, isActive, onClick }) => {
   function _onClick(e) {
     e.preventDefault();
-    onClick && onClick(type);
+    onClick && onClick();
   }
-  const activeClassName = type == activeType ? " active" : "";
+  const activeClassName = isActive ? " active" : "";
   return (
     <li className="nav-item">
-      <a
-        className={"nav-link" + activeClassName}
-        aria-current="page"
-        href="#"
-        onClick={_onClick}
-      >
-        {GAME_NAMES[type]}
+      <a className={"nav-link" + activeClassName} href="#" onClick={_onClick}>
+        {text}
       </a>
     </li>
   );
@@ -38,15 +25,15 @@ const Tab = ({ type, activeType, onClick }) => {
 export function CreateGame() {
   let { gameType } = useParams();
   const navigate = useNavigate();
-  function goTo(type) {
-    navigate(`/create/${type}`);
-  }
+
+  const activeGameType = gameType ? parseInt(gameType) : DICE_GAME_TYPE;
+
   const tabs = GAME_TYPES.map((t) => (
     <Tab
       key={t}
-      type={t}
-      activeType={gameType || DICE_GAME_TYPE}
-      onClick={goTo}
+      text={getGameName(t)}
+      isActive={activeGameType === t}
+      onClick={() => navigate(`/create/${t}`)}
     />
   ));
 
@@ -58,7 +45,9 @@ export function CreateGame() {
         </div>
       </div>
       <div className="row">
-        <div className="col">{gameForms[gameType || DICE_GAME_TYPE]}</div>
+        <div className="col">
+          <CreateGameRenderer gameType={activeGameType} />
+        </div>
       </div>
     </div>
   );

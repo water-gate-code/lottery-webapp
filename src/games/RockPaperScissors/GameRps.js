@@ -1,16 +1,11 @@
-import { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useContext } from "react";
 
-import { eventEmitter, Events } from "../event";
-import {
-  getGame,
-  payMoneyAndShoot,
-  connectWallet,
-  GAME_NAMES,
-  GAME_ICONS,
-} from "../utils";
-import { WalletContext } from "../WalletContext";
-import { Address } from "./Address";
+import { eventEmitter, Events } from "../../event";
+
+import { connectWallet } from "../../utils";
+import { payMoneyAndShoot, getGameName, GameIcon } from "..";
+import { WalletContext } from "../../WalletContext";
+import { Address } from "../../components/Address";
 
 const SELLECTION = ["Rock", "Paper", "Scissors"];
 
@@ -21,8 +16,9 @@ function GameForm({ game, onSubmit }) {
       <div className="row">
         <div className="col">
           <h6 className="display-6">
-            {GAME_ICONS[game.type]}&nbsp;&nbsp;
-            {GAME_NAMES[game.type]}
+            <GameIcon gameType={game.type} />
+            &nbsp;&nbsp;
+            {getGameName(game.type)}
           </h6>
           <p className="lead">
             Game Id: <Address address={game.id} />
@@ -71,21 +67,10 @@ function GameForm({ game, onSubmit }) {
   );
 }
 
-export function Game() {
-  let { gameId } = useParams();
+export function Game({ game }) {
   const { accounts, chainId } = useContext(WalletContext);
 
-  const [game, setGame] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    getGame(chainId, gameId).then((game) => {
-      setGame(game);
-      setLoading(false);
-    });
-  }, [gameId]);
 
   async function onSubmit(selection) {
     setPlaying(true);
@@ -107,8 +92,6 @@ export function Game() {
     setPlaying(false);
   }
 
-  if (loading) return <div>Loading...</div>;
   if (playing) return <div>Playing...</div>;
-  if (!game) return <div>Game not found!</div>;
   return <GameForm game={game} onSubmit={onSubmit} />;
 }

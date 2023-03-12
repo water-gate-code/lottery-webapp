@@ -3,9 +3,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import detectEthereumProvider from "@metamask/detect-provider";
 
-import { App } from "./components/App";
+import { App } from "./App";
 import { NeedMetamask } from "./components/NeedMetamask";
 import reportWebVitals from "./reportWebVitals";
 

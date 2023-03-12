@@ -1,13 +1,9 @@
 import { useState, useContext } from "react";
 
-import {
-  payMoneyAndCreateGame,
-  connectWallet,
-  DICE_GAME_TYPE,
-  GAME_NAMES,
-} from "../utils";
-import { eventEmitter, Events } from "../event";
-import { WalletContext } from "../WalletContext";
+import { connectWallet } from "../../utils";
+import { payMoneyAndCreateGame, DICE_GAME_TYPE, getGameName } from "../";
+import { eventEmitter, Events } from "../../event";
+import { WalletContext } from "../../WalletContext";
 
 const ALLOW_BET_AMOUNTS = ["0.01", "0.02", "0.05", "0.08", "0.1"];
 const SELLECTION = ["Small", "Big"];
@@ -46,7 +42,7 @@ export function CreateGame() {
       <div className="row">
         <div className="col">
           <h6 className="display-6 mt-3 mb-5">
-            Create a new {GAME_NAMES[DICE_GAME_TYPE]} game
+            Create a new {getGameName(DICE_GAME_TYPE)} game
           </h6>
         </div>
       </div>

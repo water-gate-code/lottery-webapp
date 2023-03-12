@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
-import { getGames, GAME_ICONS } from "../utils";
+import { GameIcon, getGames } from "../games";
 import { eventEmitter, Events } from "../event";
 import { WalletContext } from "../WalletContext";
 
@@ -13,7 +13,9 @@ function Item({ game, isActive }) {
       }
       to={`games/${game.id}`}
     >
-      <span>{GAME_ICONS[game.type]}</span>
+      <span>
+        <GameIcon gameType={game.type} />
+      </span>
       &nbsp;&nbsp;
       {game.betAmount} ETH on {game.player1BetNumber}
     </Link>
@@ -59,18 +61,20 @@ export function GameList() {
       });
     }
     updateGames();
-    eventEmitter.subscribe(Events.CREATE_GAME, updateGames);
-    eventEmitter.subscribe(Events.COMPLETE_GAME, updateGames);
+    eventEmitter.on(Events.CREATE_GAME, updateGames);
+    eventEmitter.on(Events.COMPLETE_GAME, updateGames);
     return () => {
-      eventEmitter.unsubscribe(Events.CREATE_GAME, updateGames);
-      eventEmitter.unsubscribe(Events.COMPLETE_GAME, updateGames);
+      eventEmitter.removeListener(Events.CREATE_GAME, updateGames);
+      eventEmitter.removeListener(Events.COMPLETE_GAME, updateGames);
     };
   }, [chainId]);
 
-  const game = games.find((game) => game.id == gameId);
-  if (gameId && (!game || !game.isActive)) {
-    navigate("/");
-  }
+  useEffect(() => {
+    const game = games.find((game) => game.id == gameId);
+    if (gameId && (!game || !game.isActive)) {
+      return navigate("/");
+    }
+  });
 
   return (
     <List

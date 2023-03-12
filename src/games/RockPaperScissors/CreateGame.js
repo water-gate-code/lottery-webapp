@@ -1,11 +1,7 @@
 import { useState, useContext } from "react";
 
 import { connectWallet } from "../../utils";
-import {
-  payMoneyAndCreateGameRps,
-  ROCK_PAPER_SCISSORS_GAME_TYPE,
-  getGameName,
-} from "../";
+import { createGame, ROCK_PAPER_SCISSORS_GAME_TYPE, getGameName } from "../";
 import { eventEmitter, Events } from "../../event";
 import { WalletContext } from "../../WalletContext";
 
@@ -14,7 +10,7 @@ const SELLECTION = ["Rock", "Paper", "Scissors"];
 
 export function CreateGame() {
   const [betAmount, setBetAmount] = useState(ALLOW_BET_AMOUNTS[0]);
-  const [betSelection, setBetSelection] = useState(SELLECTION[0]);
+  const [betSelection, setBetSelection] = useState(1);
   const [creating, setCreating] = useState(false);
   const wallet = useContext(WalletContext);
 
@@ -24,12 +20,14 @@ export function CreateGame() {
       if (wallet.accounts.length < 1) {
         await connectWallet();
       }
-      const response = await payMoneyAndCreateGameRps(
+
+      const receipt = await createGame(
         wallet.chainId,
         betAmount,
+        ROCK_PAPER_SCISSORS_GAME_TYPE,
         betSelection
       );
-      eventEmitter.dispatch(Events.CREATE_GAME, response);
+      eventEmitter.dispatch(Events.CREATE_GAME, receipt);
     } catch (error) {
       console.error(error);
     }
@@ -38,7 +36,7 @@ export function CreateGame() {
 
   function onSubmit(e) {
     e.preventDefault();
-    create(betAmount, betSelection);
+    create();
   }
   if (creating) return <div>Creating...</div>;
   return (
@@ -75,17 +73,17 @@ export function CreateGame() {
             </div>
             <div className="mb-3">
               <div className="btn-group">
-                {SELLECTION.map((sellection) => (
+                {SELLECTION.map((sellection, index) => (
                   <a
                     key={sellection}
                     className={
                       "btn btn-outline-primary " +
-                      (sellection == betSelection ? "active" : "") +
+                      (index + 1 == betSelection ? "active" : "") +
                       " px-4"
                     }
                     onClick={(e) => {
                       e.preventDefault();
-                      setBetSelection(sellection);
+                      setBetSelection(index + 1);
                     }}
                   >
                     {sellection}

@@ -66,7 +66,6 @@ function casino(chainId, isReadOnly) {
   );
   return { contract, provider };
 }
-
 export async function getGames(chainId) {
   if (!chainId) return [];
   const games = await casino(chainId, true).contract.getGames();
@@ -77,100 +76,27 @@ export async function getGame(chainId, gameId) {
   const game = await casino(chainId, true).contract.getGame(gameId);
   return formatGame(game);
 }
-
-export const payMoneyAndCreateGame = async (chainId, amount, selection) => {
+export const createGame = async (chainId, amount, gameType, bet) => {
   const { contract } = casino(chainId);
-  const betNumber = selection === "Big" ? 6 : 1;
 
-  const transactionResponse = await contract.createGame(
-    DICE_GAME_TYPE,
-    betNumber,
-    {
-      value: ethers.utils.parseEther(amount),
-    }
-  );
-
-  console.log(
-    "payMoneyAndCreateGame Succeed, transactionResponse is: ",
-    transactionResponse
-  );
+  const response = await contract.createGame(gameType, bet, {
+    value: ethers.utils.parseEther(amount),
+  });
   // ask Satoru why pass 0 here?
-  // const transactionReceipt = await transactionResponse.wait(0);
-  const transactionReceipt = await transactionResponse.wait();
-
-  console.log(
-    "payMoneyAndCreateGame Succeed, transactionReceipt is: ",
-    transactionReceipt
-  );
+  // const receipt = await response.wait(0);
+  const receipt = await response.wait();
+  return receipt;
 };
-
-export const payMoneyAndCreateGameRps = async (chainId, amount, selection) => {
+export const playGame = async (chainId, amount, gameId, bet) => {
   const { contract } = casino(chainId);
-  const betNumber = selection === "Rock" ? 1 : selection === "Paper" ? 2 : 3;
 
-  const transactionResponse = await contract.createGame(
-    ROCK_PAPER_SCISSORS_GAME_TYPE,
-    betNumber,
-    {
-      value: ethers.utils.parseEther(amount),
-    }
-  );
-
-  console.log(
-    "payMoneyAndCreateGame Succeed, transactionResponse is: ",
-    JSON.stringify(transactionResponse)
-  );
-  const transactionReceipt = await transactionResponse.wait();
-
-  console.log(
-    "payMoneyAndCreateGame Succeed, transactionReceipt is: ",
-    JSON.stringify(transactionReceipt)
-  );
-};
-
-export const payMoneyAndShoot = async (chainId, amount, diceId, selection) => {
-  const betNumber = selection === "big" ? 6 : 1;
-
-  const { contract } = casino(chainId);
-  const transactionResponse = await contract.playGame(diceId, betNumber, {
+  const response = await contract.playGame(gameId, bet, {
     value: ethers.utils.parseEther(amount),
   });
-
-  console.log(
-    "payMoneyAndCreateGame Succeed, transactionResponse is: ",
-    JSON.stringify(transactionResponse)
-  );
-
-  const transactionReceipt = await transactionResponse.wait();
-
-  console.log(
-    "payMoneyAndShoot Succeed, transactionReceipt is: ",
-    JSON.stringify(transactionReceipt)
-  );
-};
-
-export const payMoneyAndShootRps = async (
-  chainId,
-  amount,
-  diceId,
-  selection
-) => {
-  const { contract } = casino(chainId);
-  const transactionResponse = await contract.playGame(diceId, selection, {
-    value: ethers.utils.parseEther(amount),
-  });
-
-  console.log(
-    "payMoneyAndCreateGame Succeed, transactionResponse is: ",
-    JSON.stringify(transactionResponse)
-  );
-
-  const transactionReceipt = await transactionResponse.wait();
-
-  console.log(
-    "payMoneyAndShoot Succeed, transactionReceipt is: ",
-    JSON.stringify(transactionReceipt)
-  );
+  // ask Satoru why pass 0 here?
+  // const receipt = await response.wait(0);
+  const receipt = await response.wait();
+  return receipt;
 };
 
 const formatGame = (game) => {

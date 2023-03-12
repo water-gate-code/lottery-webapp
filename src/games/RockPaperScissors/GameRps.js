@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import { eventEmitter, Events } from "../../event";
 
 import { connectWallet } from "../../utils";
-import { payMoneyAndShoot, getGameName, GameIcon } from "..";
+import { playGame, getGameName, GameIcon } from "..";
 import { WalletContext } from "../../WalletContext";
 import { Address } from "../../components/Address";
 
@@ -79,13 +79,8 @@ export function Game({ game }) {
       if (accounts.length < 1) {
         await connectWallet();
       }
-      const response = await payMoneyAndShoot(
-        chainId,
-        amount,
-        game.id,
-        selection
-      );
-      eventEmitter.dispatch(Events.COMPLETE_GAME, response);
+      const receipt = await playGame(chainId, amount, game.id, selection);
+      eventEmitter.dispatch(Events.COMPLETE_GAME, receipt);
     } catch (error) {
       console.error(error);
     }

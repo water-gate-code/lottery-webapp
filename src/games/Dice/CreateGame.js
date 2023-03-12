@@ -1,12 +1,16 @@
 import { useState, useContext } from "react";
 
 import { connectWallet } from "../../utils";
-import { payMoneyAndCreateGame, DICE_GAME_TYPE, getGameName } from "../";
+import { DICE_GAME_TYPE, getGameName, createGame } from "../";
 import { eventEmitter, Events } from "../../event";
 import { WalletContext } from "../../WalletContext";
 
 const ALLOW_BET_AMOUNTS = ["0.01", "0.02", "0.05", "0.08", "0.1"];
 const SELLECTION = ["Small", "Big"];
+const SELLECTION_MAP = {
+  Small: 1,
+  Big: 6,
+};
 
 export function CreateGame() {
   const [betAmount, setBetAmount] = useState(ALLOW_BET_AMOUNTS[0]);
@@ -20,12 +24,13 @@ export function CreateGame() {
       if (wallet.accounts.length < 1) {
         await connectWallet();
       }
-      const response = await payMoneyAndCreateGame(
+      const receipt = await createGame(
         wallet.chainId,
         betAmount,
-        betSelection
+        DICE_GAME_TYPE,
+        SELLECTION_MAP[betSelection]
       );
-      eventEmitter.dispatch(Events.CREATE_GAME, response);
+      eventEmitter.dispatch(Events.CREATE_GAME, receipt);
     } catch (error) {
       console.error(error);
     }

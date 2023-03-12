@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 
 import { eventEmitter, Events } from "../../event";
 import { connectWallet } from "../../utils";
-import { payMoneyAndShoot, getGameName, GameIcon } from "..";
+import { playGame, getGameName, GameIcon } from "..";
 import { WalletContext } from "../../WalletContext";
 import { Address } from "../../components/Address";
 
@@ -51,17 +51,18 @@ export function Game({ game }) {
     setPlaying(true);
     try {
       const amount = game.betAmount.toString();
-      const selection = game.player1BetNumber < 6 ? "big" : "small";
+
       if (accounts.length < 1) {
         await connectWallet();
       }
-      const response = await payMoneyAndShoot(
+      const receipt = await playGame(
         chainId,
         amount,
         game.id,
-        selection
+        game.player1BetNumber === 6 ? 1 : 6
       );
-      eventEmitter.dispatch(Events.COMPLETE_GAME, response);
+
+      eventEmitter.dispatch(Events.COMPLETE_GAME, receipt);
     } catch (error) {
       console.error(error);
     }

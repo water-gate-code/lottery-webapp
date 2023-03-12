@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 
 import { getGame, GameRenderer } from "../games";
-import { WalletContext } from "../WalletContext";
+import { WalletContext } from "../contexts/WalletContext";
 
 export function Game() {
   let { gameId } = useParams();

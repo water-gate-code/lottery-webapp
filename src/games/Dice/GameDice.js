@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import { eventEmitter, Events } from "../../event";
 import { connectWallet } from "../../utils";
 import { playGame, getGameName, GameIcon } from "..";
-import { WalletContext } from "../../WalletContext";
+import { WalletContext } from "../../contexts/WalletContext";
 import { Address } from "../../components/Address";
 
 function GameForm({ game, onSubmit }) {
@@ -64,9 +64,10 @@ export function Game({ game }) {
 
       eventEmitter.dispatch(Events.COMPLETE_GAME, receipt);
     } catch (error) {
-      console.error(error);
+      throw error;
+    } finally {
+      setPlaying(false);
     }
-    setPlaying(false);
   }
 
   if (playing) return <div>Playing...</div>;

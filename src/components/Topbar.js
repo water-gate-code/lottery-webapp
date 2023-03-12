@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { connectWallet } from "../utils";
-import { WalletContext } from "../WalletContext";
+import { WalletContext } from "../contexts/WalletContext";
 import { Address } from "./Address";
 
 export function Topbar() {

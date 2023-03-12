@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { chains } from "./chains";
+import { chains } from "../chains";
 
 export const WalletContext = createContext(null);
 export const WalletDispatchContext = createContext(null);
@@ -11,7 +11,7 @@ export const WALLET_ACTION_TYPES = {
 
 export function walletReducer(wallet, action) {
   switch (action.type) {
-    case "UPDATE_WALLET": {
+    case WALLET_ACTION_TYPES.UPDATE_WALLET: {
       const { accounts, chainId, initialized } = action.wallet;
       return {
         ...wallet,
@@ -21,11 +21,11 @@ export function walletReducer(wallet, action) {
         initialized,
       };
     }
-    case "DISCONNECTED": {
+    case WALLET_ACTION_TYPES.DISCONNECTED: {
       return initialWallet;
     }
     default: {
-      throw Error("Unknown action: " + action.type);
+      throw Error("Unknown wallet action: " + action.type);
     }
   }
 }

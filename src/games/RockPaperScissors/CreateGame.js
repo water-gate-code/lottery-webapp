@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import { connectWallet } from "../../utils";
 import { createGame, ROCK_PAPER_SCISSORS_GAME_TYPE, getGameName } from "../";
 import { eventEmitter, Events } from "../../event";
-import { WalletContext } from "../../WalletContext";
+import { WalletContext } from "../../contexts/WalletContext";
 
 const ALLOW_BET_AMOUNTS = ["0.01", "0.02", "0.05", "0.08", "0.1"];
 const SELLECTION = ["Rock", "Paper", "Scissors"];
@@ -29,9 +29,10 @@ export function CreateGame() {
       );
       eventEmitter.dispatch(Events.CREATE_GAME, receipt);
     } catch (error) {
-      console.error(error);
+      throw error;
+    } finally {
+      setCreating(false);
     }
-    setCreating(false);
   }
 
   function onSubmit(e) {

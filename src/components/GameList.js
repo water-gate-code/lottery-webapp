@@ -3,7 +3,13 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 
 import { GameIcon, getGames } from "../games";
 import { eventEmitter, Events } from "../event";
-import { WalletContext } from "../WalletContext";
+import { WalletContext } from "../contexts/WalletContext";
+import {
+  NotificationDispatchContext,
+  NotificationType,
+  NOTIFICATION_ACTION_TYPES,
+  createNotification,
+} from "../contexts/NotificationContext";
 
 function Item({ game, isActive }) {
   return (
@@ -22,7 +28,7 @@ function Item({ game, isActive }) {
   );
 }
 
-function List({ games, activeGameId, loading }) {
+function List({ games, activeGameId }) {
   const gameItems = games.map((game) => (
     <Item key={game.id} game={game} isActive={game.id === activeGameId} />
   ));
@@ -35,52 +41,69 @@ function List({ games, activeGameId, loading }) {
       >
         Create
       </Link>
-      {loading ? (
-        <Link className={"list-group-item list-group-item-action"}>
-          Loading...
-        </Link>
-      ) : (
-        gameItems
-      )}
+      {gameItems}
     </div>
   );
 }
 
 export function GameList() {
   const { chainId } = useContext(WalletContext);
+  const notificationDispatch = useContext(NotificationDispatchContext);
   let { gameId } = useParams();
   const navigate = useNavigate();
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     function updateGames() {
       setLoading(true);
+      const clearLoadingNotification = dispatchLoadingNotification();
+      const stopLoading = () => {
+        setLoading(false);
+        clearLoadingNotification();
+      };
+
       getGames(chainId).then((games) => {
         setGames(games);
-        setLoading(false);
+        stopLoading();
       });
+
+      // this cancel not realy cancel the request, but just cancel the display loading
+      return () => stopLoading();
     }
-    updateGames();
+    function dispatchLoadingNotification() {
+      const notification = createNotification(
+        NotificationType.info,
+        "Loading Games..."
+      );
+      notificationDispatch({
+        type: NOTIFICATION_ACTION_TYPES.ADD_NOTIFICATION,
+        notification,
+      });
+
+      return () => {
+        notificationDispatch({
+          type: NOTIFICATION_ACTION_TYPES.REMOVE_NOTIFICATION,
+          id: notification.id,
+        });
+      };
+    }
+    const cancelUpdateGames = updateGames();
     eventEmitter.on(Events.CREATE_GAME, updateGames);
     eventEmitter.on(Events.COMPLETE_GAME, updateGames);
     return () => {
       eventEmitter.removeListener(Events.CREATE_GAME, updateGames);
       eventEmitter.removeListener(Events.COMPLETE_GAME, updateGames);
+      cancelUpdateGames();
     };
-  }, [chainId]);
+  }, [chainId, notificationDispatch]);
 
   useEffect(() => {
     const game = games.find((game) => game.id === gameId);
-    if (gameId && (!game || !game.isActive)) {
+    if (gameId && !loading && (!game || !game.isActive)) {
       return navigate("/");
     }
   });
 
-  return (
-    <List
-      games={games.filter((g) => g.isActive)}
-      activeGameId={gameId}
-      loading={loading}
-    />
-  );
+  return <List games={games.filter((g) => g.isActive)} activeGameId={gameId} />;
 }

@@ -4,7 +4,7 @@ import { eventEmitter, Events } from "../../event";
 
 import { connectWallet } from "../../utils";
 import { playGame, getGameName, GameIcon } from "..";
-import { WalletContext } from "../../WalletContext";
+import { WalletContext } from "../../contexts/WalletContext";
 import { Address } from "../../components/Address";
 
 const SELLECTION = ["Rock", "Paper", "Scissors"];
@@ -80,9 +80,10 @@ export function Game({ game }) {
       const receipt = await playGame(chainId, amount, game.id, selection);
       eventEmitter.dispatch(Events.COMPLETE_GAME, receipt);
     } catch (error) {
-      console.error(error);
+      throw error;
+    } finally {
+      setPlaying(false);
     }
-    setPlaying(false);
   }
 
   if (playing) return <div>Playing...</div>;

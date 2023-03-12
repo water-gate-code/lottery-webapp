@@ -62,71 +62,71 @@ export const AccountProvider = React.memo((props) => {
     checkMetaMask();
   }, []);
 
-  useEffect(() => {
-    ethereum.on("accountsChanged", handleAccountsChange);
-    ethereum.on("chainChanged", handleChainChanged);
-    // ethereum.on('connect', handleConnect);
-    ethereum.on("disconnect", handleDisConnect);
+  // useEffect(() => {
+  //   ethereum.on("accountsChanged", handleAccountsChange);
+  //   ethereum.on("chainChanged", handleChainChanged);
+  //   // ethereum.on('connect', handleConnect);
+  //   ethereum.on("disconnect", handleDisConnect);
 
-    return () => {
-      ethereum.removeListener("accountsChanged", handleAccountsChange);
-      ethereum.removeListener("chainChanged", handleChainChanged);
-      // ethereum.removeListener("connect", handleConnect);
-      ethereum.removeListener("disconnect", handleDisConnect);
-    };
-  }, []);
+  //   return () => {
+  //     ethereum.removeListener("accountsChanged", handleAccountsChange);
+  //     ethereum.removeListener("chainChanged", handleChainChanged);
+  //     // ethereum.removeListener("connect", handleConnect);
+  //     ethereum.removeListener("disconnect", handleDisConnect);
+  //   };
+  // }, [handleAccountsChange]);
 
-  const handleDisConnect = (error) => {
-    const { message, code, data = {} } = error;
-    window.alert(`钱包断开连接`);
-  };
-  const handleConnect = (connectInfo) => {
-    const { chainId } = connectInfo;
-    const chainIdString = chainIdConvertHexToInt(chainId).toString();
-    if (!isSupportChain(chainIdString)) {
-      window.alert(
-        `目前不支持${getChainName(chainIdString)}链，请手动切换后刷新页面`
-      );
-    } else {
-      window.location.reload();
-    }
-  };
+  // const handleDisConnect = (error) => {
+  //   // const { message, code, data = {} } = error;
+  //   window.alert(`钱包断开连接`);
+  // };
+  // const handleConnect = (connectInfo) => {
+  //   const { chainId } = connectInfo;
+  //   const chainIdString = chainIdConvertHexToInt(chainId).toString();
+  //   if (!isSupportChain(chainIdString)) {
+  //     window.alert(
+  //       `目前不支持${getChainName(chainIdString)}链，请手动切换后刷新页面`
+  //     );
+  //   } else {
+  //     window.location.reload();
+  //   }
+  // };
 
-  const handleChainChanged = (chainId) => {
-    if (!isSupportChain(chainIdConvertHexToInt(chainId).toString())) {
-      window.alert(
-        `目前不支持${getChainName(chainId)}链，请手动切换后刷新页面`
-      );
-    } else {
-      window.location.reload();
-    }
-  };
+  // const handleChainChanged = (chainId) => {
+  //   if (!isSupportChain(chainIdConvertHexToInt(chainId).toString())) {
+  //     window.alert(
+  //       `目前不支持${getChainName(chainId)}链，请手动切换后刷新页面`
+  //     );
+  //   } else {
+  //     window.location.reload();
+  //   }
+  // };
 
-  const handleAccountsChange = async () => {
-    try {
-      const accounts = await ethRequest({ method: "eth_accounts" });
-      if (!(accounts.length > 0)) {
-        window.alert(`目前无账户链`);
-      }
-      console.log(`accountsChanged :`, JSON.stringify(accounts));
-      const chainId = await getChainId();
-      console.log(`chainId :`, chainId);
-      if (!isSupportChain(chainId)) {
-        window.alert(
-          `目前不支持${getChainName(chainId)}链，请手动切换后刷新页面`
-        );
-      } else {
-        setAccountInfo({
-          ...accountInfo,
-          account: accounts[0],
-          isConnected: ethereum.isConnected(),
-          chainId,
-        });
-      }
-    } catch (err) {
-      console.error(`accountsChanged failed:`, JSON.stringify(err));
-    }
-  };
+  // const handleAccountsChange = async () => {
+  //   try {
+  //     const accounts = await ethRequest({ method: "eth_accounts" });
+  //     if (!(accounts.length > 0)) {
+  //       window.alert(`目前无账户链`);
+  //     }
+  //     console.log(`accountsChanged :`, JSON.stringify(accounts));
+  //     const chainId = await getChainId();
+  //     console.log(`chainId :`, chainId);
+  //     if (!isSupportChain(chainId)) {
+  //       window.alert(
+  //         `目前不支持${getChainName(chainId)}链，请手动切换后刷新页面`
+  //       );
+  //     } else {
+  //       setAccountInfo({
+  //         ...accountInfo,
+  //         account: accounts[0],
+  //         isConnected: ethereum.isConnected(),
+  //         chainId,
+  //       });
+  //     }
+  //   } catch (err) {
+  //     console.error(`accountsChanged failed:`, JSON.stringify(err));
+  //   }
+  // };
 
   const connectWallet = async () => {
     try {

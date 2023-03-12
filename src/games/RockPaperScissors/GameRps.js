@@ -40,20 +40,18 @@ function GameForm({ game, onSubmit }) {
             <div className="mb-3">
               <div className="btn-group">
                 {SELLECTION.map((sellection, index) => (
-                  <a
+                  <button
                     key={sellection}
                     className={
                       "btn btn-outline-primary " +
-                      (index + 1 == betSelection ? "active" : "") +
+                      (index + 1 === betSelection ? "active" : "") +
                       " px-4"
                     }
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setBetSelection(index + 1);
-                    }}
+                    type="button"
+                    onClick={() => setBetSelection(index + 1)}
                   >
                     {sellection}
-                  </a>
+                  </button>
                 ))}
               </div>
             </div>

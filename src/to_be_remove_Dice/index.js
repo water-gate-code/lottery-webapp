@@ -75,7 +75,7 @@ export const DicePlayGround = React.memo((props) => {
     } else {
       window.alert("Waiting for another player");
     }
-  }, [shootDice, selection]);
+  }, [shootDice, selection, gamberLarge.address, gamberSmall.address]);
 
   const isEnd = !diceShaking && diceNumber > 0;
   const isStart = !diceShaking && diceNumber === 0;

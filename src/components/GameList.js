@@ -24,7 +24,7 @@ function Item({ game, isActive }) {
 
 function List({ games, activeGameId, loading }) {
   const gameItems = games.map((game) => (
-    <Item key={game.id} game={game} isActive={game.id == activeGameId} />
+    <Item key={game.id} game={game} isActive={game.id === activeGameId} />
   ));
   const activeClassName = !activeGameId ? " active" : "";
   return (
@@ -70,7 +70,7 @@ export function GameList() {
   }, [chainId]);
 
   useEffect(() => {
-    const game = games.find((game) => game.id == gameId);
+    const game = games.find((game) => game.id === gameId);
     if (gameId && (!game || !game.isActive)) {
       return navigate("/");
     }

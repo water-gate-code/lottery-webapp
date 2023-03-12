@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import {
   GAME_TYPES,
@@ -7,33 +7,28 @@ import {
   CreateGameRenderer,
 } from "../games";
 
-const Tab = ({ text, isActive, onClick }) => {
-  function _onClick(e) {
-    e.preventDefault();
-    onClick && onClick();
-  }
+const Tab = ({ text, isActive, type }) => {
   const activeClassName = isActive ? " active" : "";
   return (
     <li className="nav-item">
-      <a className={"nav-link" + activeClassName} href="#" onClick={_onClick}>
+      <Link className={"nav-link" + activeClassName} to={`/create/${type}`}>
         {text}
-      </a>
+      </Link>
     </li>
   );
 };
 
 export function CreateGame() {
   let { gameType } = useParams();
-  const navigate = useNavigate();
 
   const activeGameType = gameType ? parseInt(gameType) : DICE_GAME_TYPE;
 
   const tabs = GAME_TYPES.map((t) => (
     <Tab
       key={t}
+      type={t}
       text={getGameName(t)}
       isActive={activeGameType === t}
-      onClick={() => navigate(`/create/${t}`)}
     />
   ));
 

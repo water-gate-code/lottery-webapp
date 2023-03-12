@@ -15,7 +15,9 @@ class EventEmitter {
   removeListener(event, callback) {
     if (!this.#events[event]) return;
     const subscribers = this.#events[event];
-    const index = subscribers.findIndex((subscriber) => subscriber == callback);
+    const index = subscribers.findIndex(
+      (subscriber) => subscriber === callback
+    );
     subscribers.splice(index, 1);
   }
 }

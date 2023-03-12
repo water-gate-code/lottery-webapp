@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 
-import { getGame, DICE_GAME_TYPE, GameRenderer } from "../games";
+import { getGame, GameRenderer } from "../games";
 import { WalletContext } from "../WalletContext";
 
 export function Game() {

@@ -35,8 +35,7 @@ const listenForTransactionMine = (transactionResponse, provider) => {
 };
 
 const gameToDice = (game) => {
-  const [id, player1, player2, betAmount, player1BetNumber, player2BetNumber] =
-    game;
+  const [id, player1, player2, player1BetNumber, player2BetNumber] = game;
   const player1Name = player1.slice(0, 8);
   const player1Bet = player1BetNumber.toString();
   const player2Name = player2.slice(0, 8);

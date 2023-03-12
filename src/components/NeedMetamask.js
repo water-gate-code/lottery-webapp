@@ -9,6 +9,7 @@ export function NeedMetamask() {
         className="btn btn-primary button"
         href="https://metamask.io/download/"
         target="_blank"
+        rel="noreferrer"
       >
         <strong>
           <span className="fs-5">Install Metamask</span>

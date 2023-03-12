@@ -57,40 +57,38 @@ export function CreateGame() {
             <div className="mb-3">
               <div className="btn-group">
                 {ALLOW_BET_AMOUNTS.map((amount) => (
-                  <a
+                  <button
                     key={amount}
                     className={
                       "btn btn-outline-primary " +
-                      (amount == betAmount ? "active" : "") +
+                      (amount === betAmount ? "active" : "") +
                       " px-4"
                     }
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setBetAmount(amount);
-                    }}
+                    type="button"
+                    onClick={() => setBetAmount(amount)}
                   >
                     {amount} ETH
-                  </a>
+                  </button>
                 ))}
               </div>
             </div>
             <div className="mb-3">
               <div className="btn-group">
                 {SELLECTION.map((sellection) => (
-                  <a
+                  <button
                     key={sellection}
                     className={
                       "btn btn-outline-primary " +
-                      (sellection == betSelection ? "active" : "") +
+                      (sellection === betSelection ? "active" : "") +
                       " px-4"
                     }
+                    type="button"
                     onClick={(e) => {
-                      e.preventDefault();
                       setBetSelection(sellection);
                     }}
                   >
                     {sellection}
-                  </a>
+                  </button>
                 ))}
               </div>
             </div>

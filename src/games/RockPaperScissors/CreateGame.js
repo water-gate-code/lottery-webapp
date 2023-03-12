@@ -54,11 +54,11 @@ export function CreateGame() {
             <div className="mb-3">
               <div className="btn-group">
                 {ALLOW_BET_AMOUNTS.map((amount) => (
-                  <a
+                  <button
                     key={amount}
                     className={
                       "btn btn-outline-primary " +
-                      (amount == betAmount ? "active" : "") +
+                      (amount === betAmount ? "active" : "") +
                       " px-4"
                     }
                     onClick={(e) => {
@@ -67,18 +67,18 @@ export function CreateGame() {
                     }}
                   >
                     {amount} ETH
-                  </a>
+                  </button>
                 ))}
               </div>
             </div>
             <div className="mb-3">
               <div className="btn-group">
                 {SELLECTION.map((sellection, index) => (
-                  <a
+                  <button
                     key={sellection}
                     className={
                       "btn btn-outline-primary " +
-                      (index + 1 == betSelection ? "active" : "") +
+                      (index + 1 === betSelection ? "active" : "") +
                       " px-4"
                     }
                     onClick={(e) => {
@@ -87,7 +87,7 @@ export function CreateGame() {
                     }}
                   >
                     {sellection}
-                  </a>
+                  </button>
                 ))}
               </div>
             </div>

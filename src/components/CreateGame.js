@@ -1,18 +1,13 @@
 import { useParams, Link } from "react-router-dom";
 
-import {
-  GAME_TYPES,
-  DICE_GAME_TYPE,
-  getGameName,
-  CreateGameRenderer,
-} from "../games";
+import { GameType, getGameName, CreateGameRenderer } from "../games";
 
-const Tab = ({ text, isActive, type }) => {
-  const activeClassName = isActive ? " active" : "";
+const Tab = ({ isActive, type }) => {
+  const className = `nav-link ${isActive ? "active" : ""}`;
   return (
     <li className="nav-item">
-      <Link className={"nav-link" + activeClassName} to={`/create/${type}`}>
-        {text}
+      <Link className={className} to={`/create/${type}`}>
+        {getGameName(type)}
       </Link>
     </li>
   );
@@ -21,27 +16,21 @@ const Tab = ({ text, isActive, type }) => {
 export function CreateGame() {
   let { gameType } = useParams();
 
-  const activeGameType = gameType ? parseInt(gameType) : DICE_GAME_TYPE;
-
-  const tabs = GAME_TYPES.map((t) => (
-    <Tab
-      key={t}
-      type={t}
-      text={getGameName(t)}
-      isActive={activeGameType === t}
-    />
-  ));
+  const activeType = gameType ? parseInt(gameType) : GameType.Dice;
 
   return (
     <div className="container">
       <div className="row">
         <div className="col">
-          <ul className="nav nav-tabs  justify-content-center">{tabs}</ul>
+          <ul className="nav nav-tabs  justify-content-center">
+            <Tab type={GameType.Dice} isActive={activeType === GameType.Dice} />
+            <Tab type={GameType.Rps} isActive={activeType === GameType.Rps} />
+          </ul>
         </div>
       </div>
       <div className="row">
         <div className="col">
-          <CreateGameRenderer gameType={activeGameType} />
+          <CreateGameRenderer gameType={activeType} />
         </div>
       </div>
     </div>

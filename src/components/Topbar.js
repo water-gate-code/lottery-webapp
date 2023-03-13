@@ -24,17 +24,12 @@ export function Topbar() {
         <Link className="navbar-brand" to="/">
           Barsino
         </Link>
-
-        <ul className="navbar-nav">
-          <li className="nav-item me-3">{accountInfo}</li>
-          <li
-            className={
-              "nav-item" + (wallet.chainInfo ? " text-primary" : " text-danger")
-            }
-          >
-            {wallet.chainInfo ? wallet.chainInfo.name : "Wrong Network"}
-          </li>
-        </ul>
+        <div>
+          <span className="navbar-text me-3">{accountInfo}</span>
+          <span className="navbar-text">
+            {wallet.chainInfo ? wallet.chainInfo.name : null}
+          </span>
+        </div>
       </div>
     </nav>
   );

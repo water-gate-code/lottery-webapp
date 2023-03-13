@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 
 import { connectWallet } from "../../utils";
-import { createGame, ROCK_PAPER_SCISSORS_GAME_TYPE, getGameName } from "../";
+import { createGame, GameType, getGameName } from "../";
 import { eventEmitter, Events } from "../../event";
 import { WalletContext } from "../../contexts/WalletContext";
 
@@ -24,7 +24,7 @@ export function CreateGame() {
       const receipt = await createGame(
         wallet.chainId,
         betAmount,
-        ROCK_PAPER_SCISSORS_GAME_TYPE,
+        GameType.Rps,
         betSelection
       );
       eventEmitter.dispatch(Events.CREATE_GAME, receipt);
@@ -45,7 +45,7 @@ export function CreateGame() {
       <div className="row">
         <div className="col">
           <h6 className="display-6 mt-3 mb-5">
-            Create a new {getGameName(ROCK_PAPER_SCISSORS_GAME_TYPE)} game
+            Create a new {getGameName(GameType.Rps)} game
           </h6>
         </div>
       </div>

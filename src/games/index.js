@@ -7,15 +7,16 @@ import { Game as GameRps } from "./RockPaperScissors/GameRps";
 const { ethers } = window;
 const { ethereum } = window;
 
-export const DICE_GAME_TYPE = 1; // 掷骰子
-export const ROCK_PAPER_SCISSORS_GAME_TYPE = 2; // 石头剪刀布
-export const GAME_TYPES = [DICE_GAME_TYPE, ROCK_PAPER_SCISSORS_GAME_TYPE];
+export const GameType = {
+  Dice: 1,
+  Rps: 2,
+};
 
 export const getGameName = (gameType) => {
   switch (gameType) {
-    case DICE_GAME_TYPE:
+    case GameType.Dice:
       return "Dice";
-    case ROCK_PAPER_SCISSORS_GAME_TYPE:
+    case GameType.Rps:
       return "Rock Paper Scissors";
     default:
       throw new Error(`Invalid Game Type (type="${gameType}")`);
@@ -24,9 +25,9 @@ export const getGameName = (gameType) => {
 
 export const GameIcon = ({ gameType }) => {
   switch (gameType) {
-    case DICE_GAME_TYPE:
+    case GameType.Dice:
       return <i className="bi bi-dice-5-fill"></i>;
-    case ROCK_PAPER_SCISSORS_GAME_TYPE:
+    case GameType.Rps:
       return <i className="bi bi-scissors"></i>;
     default:
       throw new Error(`Invalid Game Type (type="${gameType}")`);
@@ -35,9 +36,9 @@ export const GameIcon = ({ gameType }) => {
 
 export const CreateGameRenderer = ({ gameType }) => {
   switch (gameType) {
-    case DICE_GAME_TYPE:
+    case GameType.Dice:
       return <CreateGameDice />;
-    case ROCK_PAPER_SCISSORS_GAME_TYPE:
+    case GameType.Rps:
       return <CreateGameRps />;
     default:
       throw new Error(`Invalid Game Type (type="${gameType}")`);
@@ -46,9 +47,9 @@ export const CreateGameRenderer = ({ gameType }) => {
 
 export const GameRenderer = ({ game }) => {
   switch (game.type) {
-    case DICE_GAME_TYPE:
+    case GameType.Dice:
       return <GameDice game={game} />;
-    case ROCK_PAPER_SCISSORS_GAME_TYPE:
+    case GameType.Rps:
       return <GameRps game={game} />;
     default:
       throw new Error(`Invalid Game Type (type="${game.type}")`);

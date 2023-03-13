@@ -1,20 +1,19 @@
 import { useState, useContext } from "react";
 
 import { connectWallet } from "../../utils";
-import { DICE_GAME_TYPE, getGameName, createGame } from "../";
+import { GameType, getGameName, createGame } from "../";
 import { eventEmitter, Events } from "../../event";
 import { WalletContext } from "../../contexts/WalletContext";
 
 const ALLOW_BET_AMOUNTS = ["0.01", "0.02", "0.05", "0.08", "0.1"];
-const SELLECTION = ["Small", "Big"];
-const SELLECTION_MAP = {
+const Option = {
   Small: 1,
   Big: 6,
 };
 
 export function CreateGame() {
   const [betAmount, setBetAmount] = useState(ALLOW_BET_AMOUNTS[0]);
-  const [betSelection, setBetSelection] = useState(SELLECTION[0]);
+  const [betSelection, setBetSelection] = useState(Option.Small);
   const [creating, setCreating] = useState(false);
   const wallet = useContext(WalletContext);
 
@@ -27,8 +26,8 @@ export function CreateGame() {
       const receipt = await createGame(
         wallet.chainId,
         betAmount,
-        DICE_GAME_TYPE,
-        SELLECTION_MAP[betSelection]
+        GameType.Dice,
+        betSelection
       );
       eventEmitter.dispatch(Events.CREATE_GAME, receipt);
     } catch (error) {
@@ -48,7 +47,7 @@ export function CreateGame() {
       <div className="row">
         <div className="col">
           <h6 className="display-6 mt-3 mb-5">
-            Create a new {getGameName(DICE_GAME_TYPE)} game
+            Create a new {getGameName(GameType.Dice)} game
           </h6>
         </div>
       </div>
@@ -75,20 +74,20 @@ export function CreateGame() {
             </div>
             <div className="mb-3">
               <div className="btn-group">
-                {SELLECTION.map((sellection) => (
+                {Object.keys(Option).map((symble) => (
                   <button
-                    key={sellection}
+                    key={Option[symble]}
                     className={
                       "btn btn-outline-primary " +
-                      (sellection === betSelection ? "active" : "") +
+                      (Option[symble] === betSelection ? "active" : "") +
                       " px-4"
                     }
                     type="button"
                     onClick={(e) => {
-                      setBetSelection(sellection);
+                      setBetSelection(Option[symble]);
                     }}
                   >
-                    {sellection}
+                    {symble}
                   </button>
                 ))}
               </div>

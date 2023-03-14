@@ -5,7 +5,7 @@ import { getGame, GameRenderer } from "../games";
 import { WalletContext } from "../contexts/WalletContext";
 
 export function Game() {
-  let { gameId } = useParams();
+  const { gameId } = useParams();
 
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);

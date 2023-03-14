@@ -49,7 +49,7 @@ function List({ games, activeGameId }) {
 export function GameList() {
   const { chainId } = useContext(WalletContext);
   const notificationDispatch = useContext(NotificationDispatchContext);
-  let { gameId } = useParams();
+  const { gameId } = useParams();
   const navigate = useNavigate();
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);

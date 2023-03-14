@@ -14,7 +14,7 @@ const Tab = ({ isActive, type }) => {
 };
 
 export function CreateGame() {
-  let { gameType } = useParams();
+  const { gameType } = useParams();
 
   const activeType = gameType ? parseInt(gameType) : GameType.Dice;
 

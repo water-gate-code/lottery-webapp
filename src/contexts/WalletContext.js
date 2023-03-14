@@ -18,7 +18,7 @@ export function walletReducer(wallet, action) {
         accounts,
         balance: { ...balance },
         chainId,
-        chainInfo: chains[chainId],
+        chainInfo: chains[chainId] && chains[chainId].info,
         initialized,
       };
     }

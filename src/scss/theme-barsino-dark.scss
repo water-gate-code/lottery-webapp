@@ -28,17 +28,6 @@ $barsino-gold-900: shade-color($barsino-gold, 80%) !default;
 
 $primary-barsino-dark: $barsino-gold-500 !default;
 
-$theme-colors: (
-  "primary": $primary-barsino-dark,
-  "secondary": $secondary,
-  "success": $success,
-  "info": $info,
-  "warning": $warning,
-  "danger": $danger,
-  "light": $light,
-  "dark": $dark,
-);
-
 // scss-docs-start sass-barsino-dark-mode-vars
 $primary-text-barsino-dark: $barsino-gold-300 !default;
 $secondary-text-barsino-dark: $barsino-purple-300 !default;

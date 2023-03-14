@@ -42,9 +42,21 @@ export function Topbar() {
         </Link>
         <div>
           {accountInfo}
-          <span className="navbar-text">
-            {wallet.chainInfo ? wallet.chainInfo.name : null}
-          </span>
+
+          {wallet.chainInfo ? (
+            <>
+              <span className="navbar-brand me-2">
+                <img
+                  src={wallet.chainInfo.icon}
+                  className="rounded"
+                  alt={wallet.chainInfo.name}
+                  width="20"
+                  height="20"
+                />
+              </span>
+              <span className="navbar-text">{wallet.chainInfo.name}</span>
+            </>
+          ) : null}
         </div>
       </div>
     </nav>

@@ -11,6 +11,8 @@ import reportWebVitals from "./reportWebVitals";
 const rootDom = document.getElementById("root");
 const root = ReactDOM.createRoot(rootDom);
 
+console.log("process.env.NODE_ENV", process.env.NODE_ENV);
+
 if (!window.ethereum) {
   root.render(<NeedMetamask />);
 } else {

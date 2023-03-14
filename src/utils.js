@@ -1,4 +1,5 @@
 const { ethereum } = window;
+const { ethers } = window;
 
 export const ethRequest = async (args) => {
   try {
@@ -15,6 +16,13 @@ export async function connectWallet() {
 }
 export async function getAccounts() {
   return await ethRequest({ method: "eth_accounts" });
+}
+export async function getBalance(account) {
+  const balance = await ethRequest({
+    method: "eth_getBalance",
+    params: [account, "latest"],
+  });
+  return ethers.utils.formatEther(balance);
 }
 export async function getChainId() {
   const chainId = await ethRequest({ method: "eth_chainId" });

@@ -1,4 +1,4 @@
-import "./custom.scss";
+import "./scss/custom.scss";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 import React from "react";
@@ -8,7 +8,8 @@ import { App } from "./App";
 import { NeedMetamask } from "./components/NeedMetamask";
 import reportWebVitals from "./reportWebVitals";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const rootDom = document.getElementById("root");
+const root = ReactDOM.createRoot(rootDom);
 
 if (!window.ethereum) {
   root.render(<NeedMetamask />);

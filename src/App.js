@@ -1,7 +1,7 @@
 import { useReducer, useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 
-import { getAccounts, getChainId } from "./utils";
+import { getAccounts, getChainId, getBalance } from "./utils";
 import {
   WalletContext,
   WalletDispatchContext,
@@ -34,9 +34,15 @@ function useInitializeApp() {
     async function dispatchUpdatedWallet() {
       const chainId = await getChainId();
       const accounts = await getAccounts();
+      const balance = {};
+      if (accounts.length > 0) {
+        const defaultAccount = accounts[0];
+        balance[defaultAccount] = await getBalance(defaultAccount);
+      }
+
       walletDispatch({
         type: WALLET_ACTION_TYPES.UPDATE_WALLET,
-        wallet: { accounts, chainId, initialized: true },
+        wallet: { accounts, balance, chainId, initialized: true },
       });
     }
 

@@ -39,11 +39,11 @@ export function Topbar() {
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           <img
-            src="/logo.png"
+            src="/logo-b.png"
             alt="Barsino"
             width="24"
             height="24"
-            class="d-inline-block align-text-top me-2"
+            className="d-inline-block align-text-top me-2"
           />
           Barsino
         </Link>

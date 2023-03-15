@@ -38,8 +38,16 @@ export function Topbar() {
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
+          <img
+            src="/logo.png"
+            alt="Barsino"
+            width="24"
+            height="24"
+            class="d-inline-block align-text-top me-2"
+          />
           Barsino
         </Link>
+
         <div>
           {accountInfo}
 

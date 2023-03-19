@@ -23,6 +23,15 @@ import { router } from "./router";
 
 const { ethereum } = window;
 
+function errorEventParser(errorEvent) {
+  console.log("errorEventParser:", errorEvent);
+  const message =
+    errorEvent.reason?.data?.message ||
+    errorEvent.reason?.message ||
+    errorEvent.message;
+  return { message };
+}
+
 function useInitializeApp() {
   const [wallet, walletDispatch] = useReducer(walletReducer, initialWallet);
   const [notification, notificationDispatch] = useReducer(
@@ -50,20 +59,13 @@ function useInitializeApp() {
       // event.preventDefault(); // This will not print the error in the console });
       // TODO: https://reactjs.org/docs/error-boundaries.html
       // console.error("barsino error:", errorEvent);
-      let notification = null;
-      if (errorEvent.message) {
-        notification = createNotification(
+
+      const { message } = errorEventParser(errorEvent);
+      if (message) {
+        const notification = createNotification(
           NotificationType.danger,
-          errorEvent.message
+          message
         );
-      }
-      if (errorEvent.reason && errorEvent.reason.message) {
-        notification = createNotification(
-          NotificationType.danger,
-          errorEvent.reason.message
-        );
-      }
-      if (notification) {
         notificationDispatch({
           type: NOTIFICATION_ACTION_TYPES.ADD_NOTIFICATION,
           notification,

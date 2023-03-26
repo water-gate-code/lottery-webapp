@@ -14,8 +14,11 @@ export function Topbar() {
           title={wallet.balance[wallet.accounts[0]]}
         >
           <i className="bi bi-wallet-fill me-2"></i>
-          <span className="text-primary">
-            {parseFloat(wallet.balance[wallet.accounts[0]]).toFixed(2)}
+          <span
+            className="text-primary"
+            title={wallet.balance[wallet.accounts[0]]}
+          >
+            {parseFloat(wallet.balance[wallet.accounts[0]]).toFixed(4)}
           </span>
         </span>
         <span className="navbar-text me-3">

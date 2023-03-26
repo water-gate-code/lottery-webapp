@@ -1,145 +1,194 @@
 export const CASINO = {
-  abi: [
+  "abi": [
     {
-      inputs: [],
-      stateMutability: "nonpayable",
-      type: "constructor",
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "gameType",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "choice",
+          "type": "uint256"
+        }
+      ],
+      "name": "createGame",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
     },
     {
-      inputs: [
+      "inputs": [],
+      "name": "getActiveGames",
+      "outputs": [
         {
-          internalType: "uint256",
-          name: "gameType",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "bet",
-          type: "uint256",
-        },
-      ],
-      name: "createGame",
-      outputs: [],
-      stateMutability: "payable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "targetGame",
-          type: "address",
-        },
-      ],
-      name: "getGame",
-      outputs: [
-        {
-          components: [
+          "components": [
             {
-              internalType: "address",
-              name: "id",
-              type: "address",
+              "internalType": "address",
+              "name": "id",
+              "type": "address"
             },
             {
-              internalType: "uint256",
-              name: "wager",
-              type: "uint256",
+              "internalType": "uint256",
+              "name": "wager",
+              "type": "uint256"
             },
             {
-              internalType: "uint256",
-              name: "gameType",
-              type: "uint256",
+              "internalType": "uint256",
+              "name": "gameType",
+              "type": "uint256"
             },
             {
-              components: [
+              "components": [
                 {
-                  internalType: "address",
-                  name: "id",
-                  type: "address",
+                  "internalType": "address",
+                  "name": "id",
+                  "type": "address"
                 },
                 {
-                  internalType: "uint256",
-                  name: "bet",
-                  type: "uint256",
-                },
+                  "internalType": "uint256",
+                  "name": "choice",
+                  "type": "uint256"
+                }
               ],
-              internalType: "struct Gambler[]",
-              name: "gamblers",
-              type: "tuple[]",
-            },
+              "internalType": "struct Gambler[]",
+              "name": "gamblers",
+              "type": "tuple[]"
+            }
           ],
-          internalType: "struct DisplayInfo",
-          name: "",
-          type: "tuple",
-        },
+          "internalType": "struct DisplayInfo[]",
+          "name": "",
+          "type": "tuple[]"
+        }
       ],
-      stateMutability: "view",
-      type: "function",
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [],
-      name: "getGames",
-      outputs: [
+      "inputs": [
         {
-          components: [
+          "internalType": "address",
+          "name": "targetGame",
+          "type": "address"
+        }
+      ],
+      "name": "getGame",
+      "outputs": [
+        {
+          "components": [
             {
-              internalType: "address",
-              name: "id",
-              type: "address",
+              "internalType": "address",
+              "name": "id",
+              "type": "address"
             },
             {
-              internalType: "uint256",
-              name: "wager",
-              type: "uint256",
+              "internalType": "uint256",
+              "name": "wager",
+              "type": "uint256"
             },
             {
-              internalType: "uint256",
-              name: "gameType",
-              type: "uint256",
+              "internalType": "uint256",
+              "name": "gameType",
+              "type": "uint256"
             },
             {
-              components: [
+              "components": [
                 {
-                  internalType: "address",
-                  name: "id",
-                  type: "address",
+                  "internalType": "address",
+                  "name": "id",
+                  "type": "address"
                 },
                 {
-                  internalType: "uint256",
-                  name: "bet",
-                  type: "uint256",
-                },
+                  "internalType": "uint256",
+                  "name": "choice",
+                  "type": "uint256"
+                }
               ],
-              internalType: "struct Gambler[]",
-              name: "gamblers",
-              type: "tuple[]",
-            },
+              "internalType": "struct Gambler[]",
+              "name": "gamblers",
+              "type": "tuple[]"
+            }
           ],
-          internalType: "struct DisplayInfo[]",
-          name: "",
-          type: "tuple[]",
-        },
+          "internalType": "struct DisplayInfo",
+          "name": "",
+          "type": "tuple"
+        }
       ],
-      stateMutability: "view",
-      type: "function",
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [
+      "inputs": [],
+      "name": "getGames",
+      "outputs": [
         {
-          internalType: "address",
-          name: "targetGame",
-          type: "address",
-        },
-        {
-          internalType: "uint256",
-          name: "bet",
-          type: "uint256",
-        },
+          "components": [
+            {
+              "internalType": "address",
+              "name": "id",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "wager",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "gameType",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "id",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "choice",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct Gambler[]",
+              "name": "gamblers",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct DisplayInfo[]",
+          "name": "",
+          "type": "tuple[]"
+        }
       ],
-      name: "playGame",
-      outputs: [],
-      stateMutability: "payable",
-      type: "function",
+      "stateMutability": "view",
+      "type": "function"
     },
+    {
+      "inputs": [],
+      "name": "init",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "targetGame",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "choice",
+          "type": "uint256"
+        }
+      ],
+      "name": "playGame",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    }
   ],
 };

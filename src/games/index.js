@@ -108,7 +108,7 @@ const formatGame = (game) => {
     type: parseInt(gameType.toString()),
     player1: gamblers[0].id.toString(),
     betAmount: ethers.utils.formatEther(wager),
-    player1BetNumber: gamblers[0].bet.toString(),
+    player1BetNumber: gamblers[0].choice.toString(),
     isActive: gamblers.length < 2,
   };
 };

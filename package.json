@@ -16,6 +16,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -41,6 +42,7 @@
   },
   "devDependencies": {
     "sass": "^1.58.3",
-    "serve": "^14.2.0"
+    "serve": "^14.2.0",
+    "source-map-explorer": "^2.5.3"
   }
 }

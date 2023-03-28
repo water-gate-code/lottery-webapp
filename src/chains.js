@@ -20,7 +20,7 @@ export const chains = {
     local: true,
     contracts: {
       Casino: {
-        address: "0x0Fa71a9Ba8dD2838A26f0290AC79251B1929890d",
+        address: "0xDE8Ee6E53C771eC7f32a2619A37666CD7687B0E4",
         abi: CASINO.abi,
       },
     },
@@ -47,7 +47,7 @@ export const chains = {
     },
     contracts: {
       Casino: {
-        address: "0x4F2c8A3a13675EecE8B08796284Ea184836cE068",
+        address: "0x9D234F00B143AE3566570C09015815218DE0DEc5",
         abi: CASINO.abi,
       },
     },
@@ -74,7 +74,7 @@ export const chains = {
     },
     contracts: {
       Casino: {
-        address: "0x8453e76c1875DBc48B7f9ced3d9F2c84F0b59a0a",
+        address: "0x7e9BA8A648B3850b87Be4e3956F9388950c3d86A",
         abi: CASINO.abi,
       },
     },

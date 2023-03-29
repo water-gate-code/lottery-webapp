@@ -3,6 +3,7 @@ import { ErrorPage } from "./components/ErrorPage";
 import { Game } from "./components/Game";
 import { CreateGame } from "./components/CreateGame";
 import { Layout } from "./components/Layout";
+import { Result } from "./components/Result";
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
       {
         path: "/create/:gameType",
         element: <CreateGame />,
+      },
+      {
+        path: "/result/:result",
+        element: <Result />,
       },
       {
         path: "games/:gameId",

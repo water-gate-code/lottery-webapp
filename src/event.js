@@ -1,7 +1,7 @@
 class EventEmitter {
   #events = {};
   dispatch(event, data) {
-    console.log(`dispatch ${event}`, data);
+    console.log(`[event] ${event}`, data);
     if (!this.#events[event]) return;
 
     setTimeout(() => {

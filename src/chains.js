@@ -20,7 +20,7 @@ export const chains = {
     local: true,
     contracts: {
       Casino: {
-        address: "0xDE8Ee6E53C771eC7f32a2619A37666CD7687B0E4",
+        address: "0xD8b07B81b127F649402d4ACaB23b881e466dE881",
         abi: CASINO.abi,
       },
     },

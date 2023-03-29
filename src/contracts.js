@@ -1,6 +1,66 @@
 export const CASINO = {
   abi: [
     {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "address",
+          name: "winner",
+          type: "address",
+        },
+      ],
+      name: "CompleteGame_Event",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          components: [
+            {
+              internalType: "address",
+              name: "id",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "wager",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "gameType",
+              type: "uint256",
+            },
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "id",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "choice",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct Gambler[]",
+              name: "gamblers",
+              type: "tuple[]",
+            },
+          ],
+          indexed: false,
+          internalType: "struct DisplayInfo",
+          name: "game",
+          type: "tuple",
+        },
+      ],
+      name: "CreateGame_Event",
+      type: "event",
+    },
+    {
       inputs: [
         {
           internalType: "uint256",

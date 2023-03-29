@@ -47,29 +47,23 @@ function List({ games, activeGameId }) {
 }
 
 export function GameList() {
-  const { chainId } = useContext(WalletContext);
+  const { chainId, accounts } = useContext(WalletContext);
   const notificationDispatch = useContext(NotificationDispatchContext);
   const { gameId } = useParams();
   const navigate = useNavigate();
   const [games, setGames] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     function updateGames() {
-      setLoading(true);
       const clearLoadingNotification = dispatchLoadingNotification();
-      const stopLoading = () => {
-        setLoading(false);
-        clearLoadingNotification();
-      };
 
       getGames(chainId).then((games) => {
         setGames(games);
-        stopLoading();
+        clearLoadingNotification();
       });
 
       // this cancel not realy cancel the request, but just cancel the display loading
-      return () => stopLoading();
+      return () => clearLoadingNotification();
     }
     function dispatchLoadingNotification() {
       const notification = createNotification(
@@ -88,22 +82,37 @@ export function GameList() {
         });
       };
     }
+
     const cancelUpdateGames = updateGames();
-    eventEmitter.on(Events.CREATE_GAME, updateGames);
-    eventEmitter.on(Events.COMPLETE_GAME, updateGames);
     return () => {
-      eventEmitter.removeListener(Events.CREATE_GAME, updateGames);
-      eventEmitter.removeListener(Events.COMPLETE_GAME, updateGames);
       cancelUpdateGames();
     };
   }, [chainId, notificationDispatch]);
 
   useEffect(() => {
-    const game = games.find((game) => game.id === gameId);
-    if (gameId && !loading && (!game || !game.isActive)) {
-      return navigate("/");
+    function onCreateGame(game) {
+      setGames((preGames) => [game, ...preGames]);
+      navigate(`/games/${game.id}`);
     }
-  });
+    eventEmitter.on(Events.CREATE_GAME, onCreateGame);
+    return () => {
+      eventEmitter.removeListener(Events.CREATE_GAME, onCreateGame);
+    };
+  }, [navigate]);
+
+  useEffect(() => {
+    function onCompleteGame(winner) {
+      const isWinner = accounts.find(
+        (a) => a.toLowerCase() === winner.toLowerCase()
+      );
+      setGames((preGames) => preGames.filter((g) => g.id !== gameId));
+      navigate(`/result/${isWinner ? "win" : "lose"}`);
+    }
+    eventEmitter.on(Events.COMPLETE_GAME, onCompleteGame);
+    return () => {
+      eventEmitter.removeListener(Events.COMPLETE_GAME, onCompleteGame);
+    };
+  }, [navigate, accounts, gameId]);
 
   return <List games={games.filter((g) => g.isActive)} activeGameId={gameId} />;
 }

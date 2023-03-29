@@ -7,6 +7,9 @@ import { Game as GameRps } from "./RockPaperScissors/GameRps";
 const { ethers } = window;
 const { ethereum } = window;
 
+const CreateGame_Event = "CreateGame_Event";
+const CompleteGame_Event = "CompleteGame_Event";
+
 export const GameType = {
   Dice: 1,
   Rps: 2,
@@ -56,17 +59,37 @@ export const GameRenderer = ({ game }) => {
   }
 };
 
-function casino(chainId, isReadOnly) {
-  const chain = chains[chainId];
-  const contractMeta = chain.contracts.Casino;
-  const provider = new ethers.providers.Web3Provider(ethereum);
-  const contract = new ethers.Contract(
-    contractMeta.address,
-    contractMeta.abi,
-    isReadOnly ? provider : provider.getSigner()
-  );
-  return { contract, provider };
+const casino = (function () {
+  const cache = {};
+  return function casino(chainId, isReadOnly) {
+    const cacheKey = `${chainId}-${isReadOnly ? 1 : 0}`;
+    if (!cache[cacheKey]) {
+      const chain = chains[chainId];
+      const casinoMeta = chain.contracts.Casino;
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const contract = new ethers.Contract(
+        casinoMeta.address,
+        casinoMeta.abi,
+        isReadOnly ? provider : provider.getSigner()
+      );
+      cache[cacheKey] = { contract, provider };
+    }
+
+    return cache[cacheKey];
+  };
+})();
+
+function createGameListener(game, event) {
+  console.log("[event]: CreateGame_Event", { game, event });
 }
+
+export function onCreateGame() {
+  casino(1337, true).contract.on("CreateGame_Event", createGameListener);
+}
+export function offCreateGame() {
+  casino(1337, true).contract.off("CreateGame_Event", createGameListener);
+}
+
 export async function getGames(chainId) {
   if (!chainId) return [];
   const games = await casino(chainId, true).contract.getGames();
@@ -83,10 +106,12 @@ export const createGame = async (chainId, amount, gameType, bet) => {
   const response = await contract.createGame(gameType, bet, {
     value: ethers.utils.parseEther(amount),
   });
-  // ask Satoru why pass 0 here?
-  // const receipt = await response.wait(0);
   const receipt = await response.wait();
-  return receipt;
+  const { events } = receipt;
+
+  const createGameEvent = events.find((e) => e.event === CreateGame_Event);
+
+  return formatGame(createGameEvent.args.game);
 };
 export const playGame = async (chainId, amount, gameId, bet) => {
   const { contract } = casino(chainId);
@@ -94,10 +119,13 @@ export const playGame = async (chainId, amount, gameId, bet) => {
   const response = await contract.playGame(gameId, bet, {
     value: ethers.utils.parseEther(amount),
   });
-  // ask Satoru why pass 0 here?
-  // const receipt = await response.wait(0);
+
   const receipt = await response.wait();
-  return receipt;
+  const { events } = receipt;
+
+  const completeGameEvent = events.find((e) => e.event === CompleteGame_Event);
+
+  return completeGameEvent.args.winner;
 };
 
 const formatGame = (game) => {

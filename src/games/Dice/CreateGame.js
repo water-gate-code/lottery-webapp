@@ -23,13 +23,13 @@ export function CreateGame() {
       if (wallet.accounts.length < 1) {
         await connectWallet();
       }
-      const receipt = await createGame(
+      const game = await createGame(
         wallet.chainId,
         betAmount,
         GameType.Dice,
         betSelection
       );
-      eventEmitter.dispatch(Events.CREATE_GAME, receipt);
+      eventEmitter.dispatch(Events.CREATE_GAME, game);
     } catch (error) {
       throw error;
     } finally {

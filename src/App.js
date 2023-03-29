@@ -24,7 +24,6 @@ import { router } from "./router";
 const { ethereum } = window;
 
 function errorEventParser(errorEvent) {
-  console.log("errorEventParser:", errorEvent);
   const message =
     errorEvent.reason?.data?.message ||
     errorEvent.reason?.message ||
@@ -58,7 +57,6 @@ function useInitializeApp() {
     function errorHandler(errorEvent) {
       // event.preventDefault(); // This will not print the error in the console });
       // TODO: https://reactjs.org/docs/error-boundaries.html
-      // console.error("barsino error:", errorEvent);
 
       const { message } = errorEventParser(errorEvent);
       if (message) {

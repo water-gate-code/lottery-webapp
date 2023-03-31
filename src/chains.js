@@ -1,6 +1,6 @@
 import { CASINO } from "./contracts";
 
-export const supportChainIds = [80001, 5, 1337];
+export const supportChainIds = [80001, 1337];
 
 export const chains = {
   1337: {
@@ -18,6 +18,7 @@ export const chains = {
       explorers: [],
     },
     local: true,
+    testNet: true,
     contracts: {
       Casino: {
         address: "0xD8b07B81b127F649402d4ACaB23b881e466dE881",
@@ -25,33 +26,33 @@ export const chains = {
       },
     },
   },
-  5: {
-    info: {
-      name: "Goerli",
-      title: "Ethereum Testnet Goerli",
-      chain: "ETH",
-      icon: "https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg",
-      nativeCurrency: { name: "Goerli Ether", symbol: "ETH", decimals: 18 },
-      shortName: "gor",
-      chainId: 5,
-      networkId: 5,
-      rpc: ["https://goerli.infura.io/v3/"],
-      infoURL: "https://goerli.net/#about",
-      explorers: [
-        {
-          name: "etherscan-goerli",
-          url: "https://goerli.etherscan.io",
-          standard: "EIP3091",
-        },
-      ],
-    },
-    contracts: {
-      Casino: {
-        address: "0x9D234F00B143AE3566570C09015815218DE0DEc5",
-        abi: CASINO.abi,
-      },
-    },
-  },
+  // 5: {
+  //   info: {
+  //     name: "Goerli",
+  //     title: "Ethereum Testnet Goerli",
+  //     chain: "ETH",
+  //     icon: "https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg",
+  //     nativeCurrency: { name: "Goerli Ether", symbol: "ETH", decimals: 18 },
+  //     shortName: "gor",
+  //     chainId: 5,
+  //     networkId: 5,
+  //     rpc: ["https://goerli.infura.io/v3/"],
+  //     infoURL: "https://goerli.net/#about",
+  //     explorers: [
+  //       {
+  //         name: "etherscan-goerli",
+  //         url: "https://goerli.etherscan.io",
+  //         standard: "EIP3091",
+  //       },
+  //     ],
+  //   },
+  //   contracts: {
+  //     Casino: {
+  //       address: "0x9D234F00B143AE3566570C09015815218DE0DEc5",
+  //       abi: CASINO.abi,
+  //     },
+  //   },
+  // },
   80001: {
     info: {
       name: "Mumbai",
@@ -72,10 +73,17 @@ export const chains = {
         },
       ],
     },
+    local: false,
+    testNet: true,
     contracts: {
       Casino: {
-        address: "0x7e9BA8A648B3850b87Be4e3956F9388950c3d86A",
+        address: "0xB74986565aeBD33dF6f69A2F1ec2823A9b467998",
         abi: CASINO.abi,
+      },
+    },
+    currency: {
+      native: {
+        minScale: 0.01,
       },
     },
   },

@@ -4,10 +4,10 @@ const { ethers } = window;
 export const ethRequest = async (args) => {
   try {
     const response = await ethereum.request(args);
-    console.info(`[ethereum.request]: ${args.method}:`, response);
+    console.info(`[wallet.request]: ${args.method}:`, response);
     return response;
   } catch (error) {
-    console.error(`[ethereum.request]: ${args.method}:`, error);
+    console.error(`[wallet.request]: ${args.method}:`, error);
     throw error;
   }
 };

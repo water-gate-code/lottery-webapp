@@ -7,10 +7,16 @@ import { Game as GameRps } from "./RockPaperScissors/GameRps";
 const { ethers } = window;
 const { ethereum } = window;
 
+// const MIN_BET_SCALE = {
+//   1337: 1, // Ganache
+//   80001: 0.01, // Mumbai
+// };
+
 const CREATEGAME_EVENT = "CreateGame_Event";
 const COMPLETEGAME_EVENT = "CompleteGame_Event";
+const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 export const isEmptyAddress = (address) => {
-  return address.toLowerCase() === "0x0000000000000000000000000000000000000000";
+  return address.toLowerCase() === EMPTY_ADDRESS;
 };
 
 export const GameType = {
@@ -82,16 +88,16 @@ const casino = (function () {
   };
 })();
 
-function createGameListener(game, event) {
-  console.log(`[contract event]: ${CREATEGAME_EVENT}`, { game, event });
-}
+// function createGameListener(game, event) {
+//   console.log(`[contract event]: ${CREATEGAME_EVENT}`, { game, event });
+// }
 
-export function onCreateGame() {
-  casino(1337, true).contract.on(CREATEGAME_EVENT, createGameListener);
-}
-export function offCreateGame() {
-  casino(1337, true).contract.off(CREATEGAME_EVENT, createGameListener);
-}
+// export function onCreateGame() {
+//   casino(80001, true).contract.on(CREATEGAME_EVENT, createGameListener);
+// }
+// export function offCreateGame() {
+//   casino(80001, true).contract.off(CREATEGAME_EVENT, createGameListener);
+// }
 
 export async function getGames(chainId) {
   if (!chainId) return [];

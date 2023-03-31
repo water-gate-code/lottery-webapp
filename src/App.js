@@ -2,6 +2,7 @@ import { useReducer, useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 
 import { getAccounts, getChainId, getBalance } from "./utils";
+import { eventEmitter, Events } from "./event";
 import {
   WalletContext,
   WalletDispatchContext,
@@ -39,24 +40,9 @@ function useInitializeApp() {
   );
 
   useEffect(() => {
-    async function dispatchUpdatedWallet() {
-      const chainId = await getChainId();
-      const accounts = await getAccounts();
-      const balance = {};
-      if (accounts.length > 0) {
-        const defaultAccount = accounts[0];
-        balance[defaultAccount] = await getBalance(defaultAccount);
-      }
-
-      walletDispatch({
-        type: WALLET_ACTION_TYPES.UPDATE_WALLET,
-        wallet: { accounts, balance, chainId, initialized: true },
-      });
-    }
-
+    // Global error handler
     function errorHandler(errorEvent) {
       // event.preventDefault(); // This will not print the error in the console });
-      // TODO: https://reactjs.org/docs/error-boundaries.html
 
       const { message } = errorEventParser(errorEvent);
       if (message) {
@@ -76,22 +62,69 @@ function useInitializeApp() {
         }, 3000);
       }
     }
-
-    dispatchUpdatedWallet();
-
+    // Add listener on all possible error event
+    // TODO: https://reactjs.org/docs/error-boundaries.html
     window.addEventListener("error", errorHandler);
     window.addEventListener("unhandledrejection", errorHandler);
 
-    ethereum.on("accountsChanged", dispatchUpdatedWallet);
-    ethereum.on("disconnect", dispatchUpdatedWallet);
-    ethereum.on("chainChanged", dispatchUpdatedWallet);
+    // Fetch and dispatch necessary wallet information
+    async function dispatchUpdatedWallet() {
+      const chainId = await getChainId();
+      const accounts = await getAccounts();
+      const balance = {};
+      if (accounts.length > 0) {
+        const defaultAccount = accounts[0];
+        balance[defaultAccount] = await getBalance(defaultAccount);
+      }
+
+      walletDispatch({
+        type: WALLET_ACTION_TYPES.UPDATE_WALLET,
+        wallet: { accounts, balance, chainId, initialized: true },
+      });
+    }
+    // Initialize necessary wallet information
+    dispatchUpdatedWallet();
+    function onConnect(connectInfo) {
+      console.log("[wallet.event] connect. ConnectInfo:", connectInfo);
+      dispatchUpdatedWallet();
+    }
+    function onDisconnect(error) {
+      console.log("[wallet.event] disconnect. ProviderRpcError:", error);
+      dispatchUpdatedWallet();
+    }
+    function onAccountsChanged(accounts) {
+      console.log("[wallet.event] accountsChanged. accounts:", accounts);
+      dispatchUpdatedWallet();
+    }
+    function onChainChanged(chainId) {
+      console.log("[wallet.event] chainChanged. chainId:", chainId);
+      dispatchUpdatedWallet();
+    }
+    function onMessage(message) {
+      console.log("[wallet.event] message. ProviderMessage:", message);
+      dispatchUpdatedWallet();
+    }
+
+    ethereum.on("connect", onConnect);
+    ethereum.on("disconnect", onDisconnect);
+    ethereum.on("accountsChanged", onAccountsChanged);
+    ethereum.on("chainChanged", onChainChanged);
+    ethereum.on("message", onMessage);
+
+    eventEmitter.on(Events.CREATE_GAME, dispatchUpdatedWallet);
+    eventEmitter.on(Events.COMPLETE_GAME, dispatchUpdatedWallet);
     return () => {
       window.removeEventListener("error", errorHandler);
       window.removeEventListener("unhandledrejection", errorHandler);
 
-      ethereum.removeListener("accountsChanged", dispatchUpdatedWallet);
-      ethereum.removeListener("disconnect", dispatchUpdatedWallet);
-      ethereum.removeListener("chainChanged", dispatchUpdatedWallet);
+      ethereum.removeListener("connect", onConnect);
+      ethereum.removeListener("disconnect", onDisconnect);
+      ethereum.removeListener("accountsChanged", onAccountsChanged);
+      ethereum.removeListener("chainChanged", onChainChanged);
+      ethereum.removeListener("message", onMessage);
+
+      eventEmitter.removeListener(Events.CREATE_GAME, dispatchUpdatedWallet);
+      eventEmitter.removeListener(Events.COMPLETE_GAME, dispatchUpdatedWallet);
     };
   }, []);
   return { wallet, walletDispatch, notification, notificationDispatch };

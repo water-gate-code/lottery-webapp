@@ -83,14 +83,14 @@ const casino = (function () {
 })();
 
 function createGameListener(game, event) {
-  console.log("[event]: CREATEGAME_EVENT", { game, event });
+  console.log(`[contract event]: ${CREATEGAME_EVENT}`, { game, event });
 }
 
 export function onCreateGame() {
-  casino(1337, true).contract.on("CREATEGAME_EVENT", createGameListener);
+  casino(1337, true).contract.on(CREATEGAME_EVENT, createGameListener);
 }
 export function offCreateGame() {
-  casino(1337, true).contract.off("CREATEGAME_EVENT", createGameListener);
+  casino(1337, true).contract.off(CREATEGAME_EVENT, createGameListener);
 }
 
 export async function getGames(chainId) {

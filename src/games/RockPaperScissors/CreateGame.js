@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 
 import { connectWallet } from "../../utils";
-import { createGame, GameType, getGameName } from "../";
+import { GameType, getGameName } from "../";
 import { eventEmitter, Events } from "../../event";
 import { WalletContext } from "../../contexts/WalletContext";
 
@@ -12,17 +12,16 @@ export function CreateGame() {
   const [betAmount, setBetAmount] = useState(ALLOW_BET_AMOUNTS[0]);
   const [betSelection, setBetSelection] = useState(1);
   const [creating, setCreating] = useState(false);
-  const wallet = useContext(WalletContext);
+  const { accounts, casino } = useContext(WalletContext);
 
   async function create() {
     setCreating(true);
     try {
-      if (wallet.accounts.length < 1) {
+      if (accounts.length < 1) {
         await connectWallet();
       }
 
-      const receipt = await createGame(
-        wallet.chainId,
+      const receipt = await casino.createGame(
         betAmount,
         GameType.Rps,
         betSelection

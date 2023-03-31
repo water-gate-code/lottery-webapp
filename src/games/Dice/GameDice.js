@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 
 import { eventEmitter, Events } from "../../event";
 import { connectWallet } from "../../utils";
-import { playGame, getGameName, GameIcon } from "..";
+import { getGameName, GameIcon } from "..";
 import { WalletContext } from "../../contexts/WalletContext";
 import { Address } from "../../components/Address";
 
@@ -42,7 +42,7 @@ function GameForm({ game, onSubmit }) {
 }
 
 export function Game({ game }) {
-  const { accounts, chainId } = useContext(WalletContext);
+  const { accounts, casino } = useContext(WalletContext);
 
   const [playing, setPlaying] = useState(false);
 
@@ -55,8 +55,7 @@ export function Game({ game }) {
       if (accounts.length < 1) {
         await connectWallet();
       }
-      const receipt = await playGame(
-        chainId,
+      const receipt = await casino.playGame(
         amount,
         game.id,
         game.player1BetNumber === 6 ? 1 : 6

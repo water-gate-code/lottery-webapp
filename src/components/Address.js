@@ -1,9 +1,9 @@
-import { formatAddress } from "../utils";
+import { shortenAddress } from "../utils";
 
 export function Address({ address }) {
   return (
     <span className="text-primary" title={address}>
-      {formatAddress(address)}
+      {shortenAddress(address)}
     </span>
   );
 }

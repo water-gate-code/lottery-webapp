@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import { chains } from "../chains";
+import { Casino } from "../utils";
 
 export const WalletContext = createContext(null);
 export const WalletDispatchContext = createContext(null);
@@ -13,13 +14,15 @@ export function walletReducer(wallet, action) {
   switch (action.type) {
     case WALLET_ACTION_TYPES.UPDATE_WALLET: {
       const { accounts, balance, chainId, initialized } = action.wallet;
+      const chain = chains[chainId];
       return {
         ...wallet,
         accounts,
         balance: { ...balance },
         chainId,
-        chainInfo: chains[chainId] && chains[chainId].info,
+        chainInfo: chain && chain.info,
         initialized,
+        casino: chain ? new Casino(chain) : null,
       };
     }
     case WALLET_ACTION_TYPES.DISCONNECTED: {
@@ -37,4 +40,5 @@ export const initialWallet = {
   chainId: null,
   chainInfo: null,
   initialized: false,
+  casino: null,
 };

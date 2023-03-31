@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
-import { GameIcon, getGames, isEmptyAddress } from "../games";
+import { GameIcon, isEmptyAddress } from "../games";
 import { eventEmitter, Events } from "../event";
 import { WalletContext } from "../contexts/WalletContext";
 import {
@@ -47,7 +47,7 @@ function List({ games, activeGameId }) {
 }
 
 export function GameList() {
-  const { chainId, accounts } = useContext(WalletContext);
+  const { accounts, casino } = useContext(WalletContext);
   const notificationDispatch = useContext(NotificationDispatchContext);
   const { gameId } = useParams();
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ export function GameList() {
     function updateGames() {
       const clearLoadingNotification = dispatchLoadingNotification();
 
-      getGames(chainId).then((games) => {
+      casino.getGames().then((games) => {
         setGames(games);
         clearLoadingNotification();
       });
@@ -87,7 +87,7 @@ export function GameList() {
     return () => {
       cancelUpdateGames();
     };
-  }, [chainId, notificationDispatch]);
+  }, [casino, notificationDispatch]);
 
   useEffect(() => {
     function onCreateGame(game) {

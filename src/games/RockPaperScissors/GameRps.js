@@ -9,7 +9,7 @@ import { Address } from "../../components/Address";
 
 const SELLECTION = ["Rock", "Paper", "Scissors"];
 
-function GameForm({ game, onSubmit }) {
+function GameForm({ game, currencySymbol, onSubmit }) {
   const [betSelection, setBetSelection] = useState(1);
   return (
     <div className="container">
@@ -26,7 +26,9 @@ function GameForm({ game, onSubmit }) {
           <p className="lead">
             Player: <Address address={game.player1} />
           </p>
-          <p className="lead">Amount: {game.betAmount} ETH</p>
+          <p className="lead">
+            Amount: {game.betAmount} {currencySymbol}
+          </p>
         </div>
       </div>
       <div className="row">
@@ -66,7 +68,8 @@ function GameForm({ game, onSubmit }) {
 }
 
 export function Game({ game }) {
-  const { accounts, casino } = useContext(WalletContext);
+  const { accounts, casino, chain } = useContext(WalletContext);
+  const currencySymbol = chain.info.nativeCurrency.symbol;
 
   const [playing, setPlaying] = useState(false);
 
@@ -87,5 +90,7 @@ export function Game({ game }) {
   }
 
   if (playing) return <div>Playing...</div>;
-  return <GameForm game={game} onSubmit={onSubmit} />;
+  return (
+    <GameForm game={game} currencySymbol={currencySymbol} onSubmit={onSubmit} />
+  );
 }

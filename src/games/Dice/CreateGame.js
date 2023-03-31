@@ -5,17 +5,18 @@ import { GameType, getGameName } from "../";
 import { eventEmitter, Events } from "../../event";
 import { WalletContext } from "../../contexts/WalletContext";
 
-const ALLOW_BET_AMOUNTS = ["0.01", "0.02", "0.05", "0.08", "0.1"];
 const Option = {
   Small: 1,
   Big: 6,
 };
 
 export function CreateGame() {
-  const [betAmount, setBetAmount] = useState(ALLOW_BET_AMOUNTS[0]);
+  const { accounts, casino, chain } = useContext(WalletContext);
+  const currency = chain.info.nativeCurrency.symbol;
+  const amountScales = [1, 2, 5, 8, 10].map((n) => n * chain.nativeMinScale);
+  const [betAmount, setBetAmount] = useState(amountScales[0]);
   const [betSelection, setBetSelection] = useState(Option.Small);
   const [creating, setCreating] = useState(false);
-  const { accounts, casino } = useContext(WalletContext);
 
   async function create() {
     setCreating(true);
@@ -55,7 +56,7 @@ export function CreateGame() {
           <form onSubmit={onSubmit}>
             <div className="mb-3">
               <div className="btn-group">
-                {ALLOW_BET_AMOUNTS.map((amount) => (
+                {amountScales.map((amount) => (
                   <button
                     key={amount}
                     className={
@@ -66,7 +67,7 @@ export function CreateGame() {
                     type="button"
                     onClick={() => setBetAmount(amount)}
                   >
-                    {amount} ETH
+                    {`${amount} ${currency}`}
                   </button>
                 ))}
               </div>

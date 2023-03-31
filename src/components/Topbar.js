@@ -54,18 +54,18 @@ export function Topbar() {
         <div>
           {accountInfo}
 
-          {wallet.chainInfo ? (
+          {wallet.chain ? (
             <>
               <span className="navbar-brand me-2">
                 <img
-                  src={wallet.chainInfo.icon}
+                  src={wallet.chain.info.icon}
                   className="rounded"
-                  alt={wallet.chainInfo.name}
+                  alt={wallet.chain.info.name}
                   width="20"
                   height="20"
                 />
               </span>
-              <span className="navbar-text">{wallet.chainInfo.name}</span>
+              <span className="navbar-text">{wallet.chain.info.name}</span>
             </>
           ) : null}
         </div>

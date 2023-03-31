@@ -115,7 +115,7 @@ export class Casino {
   }
   async createGame(amount, gameType, bet) {
     const response = await this.#signedContract.createGame(gameType, bet, {
-      value: ethers.utils.parseEther(amount),
+      value: ethers.utils.parseEther(amount.toString()),
     });
     const receipt = await response.wait();
     const { events } = receipt;
@@ -126,7 +126,7 @@ export class Casino {
   }
   async playGame(amount, gameId, bet) {
     const response = await this.#signedContract.playGame(gameId, bet, {
-      value: ethers.utils.parseEther(amount),
+      value: ethers.utils.parseEther(amount.toString()),
     });
 
     const receipt = await response.wait();

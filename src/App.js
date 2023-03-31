@@ -133,12 +133,13 @@ function useInitializeApp() {
 export function App() {
   const { wallet, walletDispatch, notification, notificationDispatch } =
     useInitializeApp();
+  if (!wallet.initialized) return null;
   return (
     <NotificationContext.Provider value={notification}>
       <NotificationDispatchContext.Provider value={notificationDispatch}>
         <WalletContext.Provider value={wallet}>
           <WalletDispatchContext.Provider value={walletDispatch}>
-            {wallet.initialized ? <RouterProvider router={router} /> : null}
+            <RouterProvider router={router} />
           </WalletDispatchContext.Provider>
         </WalletContext.Provider>
       </NotificationDispatchContext.Provider>

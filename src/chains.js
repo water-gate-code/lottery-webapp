@@ -19,6 +19,7 @@ export const chains = {
     },
     local: true,
     testNet: true,
+    nativeMinScale: 1,
     contracts: {
       Casino: {
         address: "0xD8b07B81b127F649402d4ACaB23b881e466dE881",
@@ -75,15 +76,11 @@ export const chains = {
     },
     local: false,
     testNet: true,
+    nativeMinScale: 0.01,
     contracts: {
       Casino: {
         address: "0xB74986565aeBD33dF6f69A2F1ec2823A9b467998",
         abi: CASINO.abi,
-      },
-    },
-    currency: {
-      native: {
-        minScale: 0.01,
       },
     },
   },

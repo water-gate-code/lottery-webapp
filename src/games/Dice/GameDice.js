@@ -6,7 +6,7 @@ import { getGameName, GameIcon } from "..";
 import { WalletContext } from "../../contexts/WalletContext";
 import { Address } from "../../components/Address";
 
-function GameForm({ game, onSubmit }) {
+function GameForm({ game, currencySymbol, onSubmit }) {
   return (
     <div className="container">
       <div className="row">
@@ -22,7 +22,9 @@ function GameForm({ game, onSubmit }) {
           <p className="lead">
             Player: <Address address={game.player1} />
           </p>
-          <p className="lead">Amount: {game.betAmount} ETH</p>
+          <p className="lead">
+            Amount: {game.betAmount} {currencySymbol}
+          </p>
           <p className="lead">
             On: {game.player1BetNumber < 6 ? "Small" : "Big"}
           </p>
@@ -42,8 +44,8 @@ function GameForm({ game, onSubmit }) {
 }
 
 export function Game({ game }) {
-  const { accounts, casino } = useContext(WalletContext);
-
+  const { accounts, casino, chain } = useContext(WalletContext);
+  const currencySymbol = chain.info.nativeCurrency.symbol;
   const [playing, setPlaying] = useState(false);
 
   async function onSubmit(e) {
@@ -70,5 +72,7 @@ export function Game({ game }) {
   }
 
   if (playing) return <div>Playing...</div>;
-  return <GameForm game={game} onSubmit={onSubmit} />;
+  return (
+    <GameForm game={game} currencySymbol={currencySymbol} onSubmit={onSubmit} />
+  );
 }

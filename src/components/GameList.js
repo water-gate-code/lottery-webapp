@@ -11,7 +11,7 @@ import {
   createNotification,
 } from "../contexts/NotificationContext";
 
-function Item({ game, isActive }) {
+function Item({ game, currencySymbol, isActive }) {
   return (
     <Link
       className={
@@ -23,14 +23,19 @@ function Item({ game, isActive }) {
         <GameIcon gameType={game.type} />
       </span>
       &nbsp;&nbsp;
-      {game.betAmount} ETH on {game.player1BetNumber}
+      {game.betAmount} {currencySymbol} on {game.player1BetNumber}
     </Link>
   );
 }
 
-function List({ games, activeGameId }) {
+function List({ games, currencySymbol, activeGameId }) {
   const gameItems = games.map((game) => (
-    <Item key={game.id} game={game} isActive={game.id === activeGameId} />
+    <Item
+      key={game.id}
+      game={game}
+      currencySymbol={currencySymbol}
+      isActive={game.id === activeGameId}
+    />
   ));
   const activeClassName = !activeGameId ? " active" : "";
   return (
@@ -47,7 +52,8 @@ function List({ games, activeGameId }) {
 }
 
 export function GameList() {
-  const { accounts, casino } = useContext(WalletContext);
+  const { accounts, casino, chain } = useContext(WalletContext);
+  const currencySymbol = chain.info.nativeCurrency.symbol;
   const notificationDispatch = useContext(NotificationDispatchContext);
   const { gameId } = useParams();
   const navigate = useNavigate();
@@ -113,5 +119,11 @@ export function GameList() {
     };
   }, [navigate, accounts, gameId]);
 
-  return <List games={games.filter((g) => g.isActive)} activeGameId={gameId} />;
+  return (
+    <List
+      games={games.filter((g) => g.isActive)}
+      currencySymbol={currencySymbol}
+      activeGameId={gameId}
+    />
+  );
 }

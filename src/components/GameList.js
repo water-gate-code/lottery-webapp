@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
-import { GameIcon, getGames } from "../games";
+import { GameIcon, getGames, isEmptyAddress } from "../games";
 import { eventEmitter, Events } from "../event";
 import { WalletContext } from "../contexts/WalletContext";
 import {
@@ -102,11 +102,10 @@ export function GameList() {
 
   useEffect(() => {
     function onCompleteGame(winner) {
-      const isWinner = accounts.find(
-        (a) => a.toLowerCase() === winner.toLowerCase()
-      );
+      const equal = (address) => address.toLowerCase() === winner.toLowerCase();
+      const result = isEmptyAddress(winner) ? 0 : accounts.find(equal) ? 1 : -1;
       setGames((preGames) => preGames.filter((g) => g.id !== gameId));
-      navigate(`/result/${isWinner ? "win" : "lose"}`);
+      navigate(`/result/${result > 0 ? "win" : result < 0 ? "lose" : "equal"}`);
     }
     eventEmitter.on(Events.COMPLETE_GAME, onCompleteGame);
     return () => {

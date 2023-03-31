@@ -7,8 +7,11 @@ import { Game as GameRps } from "./RockPaperScissors/GameRps";
 const { ethers } = window;
 const { ethereum } = window;
 
-const CreateGame_Event = "CreateGame_Event";
-const CompleteGame_Event = "CompleteGame_Event";
+const CREATEGAME_EVENT = "CreateGame_Event";
+const COMPLETEGAME_EVENT = "CompleteGame_Event";
+export const isEmptyAddress = (address) => {
+  return address.toLowerCase() === "0x0000000000000000000000000000000000000000";
+};
 
 export const GameType = {
   Dice: 1,
@@ -80,14 +83,14 @@ const casino = (function () {
 })();
 
 function createGameListener(game, event) {
-  console.log("[event]: CreateGame_Event", { game, event });
+  console.log("[event]: CREATEGAME_EVENT", { game, event });
 }
 
 export function onCreateGame() {
-  casino(1337, true).contract.on("CreateGame_Event", createGameListener);
+  casino(1337, true).contract.on("CREATEGAME_EVENT", createGameListener);
 }
 export function offCreateGame() {
-  casino(1337, true).contract.off("CreateGame_Event", createGameListener);
+  casino(1337, true).contract.off("CREATEGAME_EVENT", createGameListener);
 }
 
 export async function getGames(chainId) {
@@ -109,7 +112,7 @@ export const createGame = async (chainId, amount, gameType, bet) => {
   const receipt = await response.wait();
   const { events } = receipt;
 
-  const createGameEvent = events.find((e) => e.event === CreateGame_Event);
+  const createGameEvent = events.find((e) => e.event === CREATEGAME_EVENT);
 
   return formatGame(createGameEvent.args.game);
 };
@@ -123,7 +126,7 @@ export const playGame = async (chainId, amount, gameId, bet) => {
   const receipt = await response.wait();
   const { events } = receipt;
 
-  const completeGameEvent = events.find((e) => e.event === CompleteGame_Event);
+  const completeGameEvent = events.find((e) => e.event === COMPLETEGAME_EVENT);
 
   return completeGameEvent.args.winner;
 };

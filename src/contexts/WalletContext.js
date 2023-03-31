@@ -19,6 +19,7 @@ export function walletReducer(wallet, action) {
         ...wallet,
         accounts,
         balance: { ...balance },
+        chainId,
         chain,
         initialized,
         casino: chain ? new Casino(chain) : null,
@@ -36,6 +37,7 @@ export function walletReducer(wallet, action) {
 export const initialWallet = {
   accounts: [], // 当前登陆的账号
   balance: {},
+  chainId: null,
   chain: null,
   initialized: false,
   casino: null,

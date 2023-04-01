@@ -96,7 +96,7 @@ export class Casino {
   #signedContract;
   #provider;
   constructor(chain) {
-    if (!chain) throw new Error("Chain id is required!");
+    if (!chain) throw new Error("Chain is required!");
     this.#chain = chain;
     const { address, abi } = this.#chain.contracts.Casino;
     this.#provider = new ethers.providers.Web3Provider(ethereum);

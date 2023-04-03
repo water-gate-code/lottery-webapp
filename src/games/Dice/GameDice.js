@@ -1,6 +1,5 @@
 import { useState, useContext } from "react";
 
-import { eventEmitter, Events } from "../../event";
 import { connectWallet } from "../../utils";
 import { getGameName, GameIcon } from "..";
 import { WalletContext } from "../../contexts/WalletContext";
@@ -57,17 +56,14 @@ export function Game({ game }) {
       if (accounts.length < 1) {
         await connectWallet();
       }
-      const receipt = await casino.playGame(
+      await casino.playGame(
         amount,
         game.id,
         game.player1BetNumber === 6 ? 1 : 6
       );
-
-      eventEmitter.dispatch(Events.COMPLETE_GAME, receipt);
     } catch (error) {
-      throw error;
-    } finally {
       setPlaying(false);
+      throw error;
     }
   }
 

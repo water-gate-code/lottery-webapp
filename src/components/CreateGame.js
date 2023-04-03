@@ -1,5 +1,7 @@
-import { useParams, Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
+import { eventEmitter, Events } from "../event";
 import { GameType, getGameName, CreateGameRenderer } from "../games";
 
 const Tab = ({ isActive, type }) => {
@@ -15,9 +17,19 @@ const Tab = ({ isActive, type }) => {
 
 export function CreateGame() {
   const { gameType } = useParams();
+  const navigate = useNavigate();
 
   const activeType = gameType ? parseInt(gameType) : GameType.Dice;
 
+  useEffect(() => {
+    function onCreateGame(game) {
+      navigate(`/games/${game.id}`);
+    }
+    eventEmitter.on(Events.CREATE_GAME, onCreateGame);
+    return () => {
+      eventEmitter.removeListener(Events.CREATE_GAME, onCreateGame);
+    };
+  }, [navigate]);
   return (
     <div className="container">
       <div className="row">

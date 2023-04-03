@@ -81,7 +81,8 @@ export function Game({ game }) {
         await connectWallet();
       }
       const receipt = await casino.playGame(amount, game.id, selection);
-      eventEmitter.dispatch(Events.COMPLETE_GAME, receipt);
+      const winner = casino.parseWinnerFromEvent(receipt);
+      eventEmitter.dispatch(Events.COMPLETE_GAME, winner);
     } catch (error) {
       throw error;
     } finally {

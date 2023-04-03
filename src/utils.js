@@ -105,6 +105,13 @@ export class Casino {
     this.#signedContract = new ethers.Contract(address, abi, signer);
   }
 
+  on(event, callback) {
+    this.#contract.on(event, callback);
+  }
+  off(event, callback) {
+    this.#contract.off(event, callback);
+  }
+
   async getGames() {
     const games = await this.#contract.getGames();
     return games.map(formatGame);
@@ -129,7 +136,9 @@ export class Casino {
       value: ethers.utils.parseEther(amount.toString()),
     });
 
-    const receipt = await response.wait();
+    return await response.wait();
+  }
+  parseWinnerFromEvent(receipt) {
     const { events } = receipt;
 
     const completeGameEvent = events.find(
@@ -139,14 +148,3 @@ export class Casino {
     return completeGameEvent.args.winner;
   }
 }
-
-// function createGameListener(game, event) {
-//   console.log(`[contract event]: ${CREATEGAME_EVENT}`, { game, event });
-// }
-
-// export function onCreateGame() {
-//   casino(80001, true).contract.on(CREATEGAME_EVENT, createGameListener);
-// }
-// export function offCreateGame() {
-//   casino(80001, true).contract.off(CREATEGAME_EVENT, createGameListener);
-// }

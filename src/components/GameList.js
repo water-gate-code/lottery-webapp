@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
-import { GameIcon, isEmptyAddress } from "../games";
+import { GameIcon } from "../games";
 import { eventEmitter, Events } from "../event";
 import { WalletContext } from "../contexts/WalletContext";
 import {
@@ -96,22 +96,8 @@ export function GameList() {
   }, [casino, notificationDispatch]);
 
   useEffect(() => {
-    function onCreateGame(game) {
-      setGames((preGames) => [game, ...preGames]);
-      navigate(`/games/${game.id}`);
-    }
-    eventEmitter.on(Events.CREATE_GAME, onCreateGame);
-    return () => {
-      eventEmitter.removeListener(Events.CREATE_GAME, onCreateGame);
-    };
-  }, [navigate]);
-
-  useEffect(() => {
     function onCompleteGame(winner) {
-      const equal = (address) => address.toLowerCase() === winner.toLowerCase();
-      const result = isEmptyAddress(winner) ? 0 : accounts.find(equal) ? 1 : -1;
       setGames((preGames) => preGames.filter((g) => g.id !== gameId));
-      navigate(`/result/${result > 0 ? "win" : result < 0 ? "lose" : "equal"}`);
     }
     eventEmitter.on(Events.COMPLETE_GAME, onCompleteGame);
     return () => {

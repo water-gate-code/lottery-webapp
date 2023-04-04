@@ -28,7 +28,7 @@ jobs:
           npm run build
 
       - name: Deploy
-      - uses: jeanlescure/react-deploy-to-s3-action@main
+        uses: jeanlescure/react-deploy-to-s3-action@main
         with:
           args: --acl public-read --follow-symlinks --delete
         env:

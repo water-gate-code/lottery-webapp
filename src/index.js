@@ -1,17 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import "./scss/custom.scss";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+import { App } from "./App";
+import { NeedMetamask } from "./components/NeedMetamask";
+import reportWebVitals from "./reportWebVitals";
+
+const rootDom = document.getElementById("root");
+const root = ReactDOM.createRoot(rootDom);
+
+console.log("process.env.NODE_ENV", process.env.NODE_ENV);
+
+if (!window.ethereum) {
+  root.render(<NeedMetamask />);
+} else {
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+reportWebVitals((vitals) => {
+  console.log("[Vitals]:", vitals);
+});

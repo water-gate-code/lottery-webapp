@@ -1,0 +1,160 @@
+// Barsino dark color mode variables
+//
+// Custom variables for the `[data-bs-theme="barsino-dark"]` theme. Use this as a starting point for your own custom color modes by creating a new theme-specific file like `_variables-dark.scss` and adding the variables you need.
+
+//
+// Global colors
+//
+
+$barsino-purple-100: tint-color($barsino-purple, 80%) !default;
+$barsino-purple-200: tint-color($barsino-purple, 60%) !default;
+$barsino-purple-300: tint-color($barsino-purple, 40%) !default;
+$barsino-purple-400: tint-color($barsino-purple, 20%) !default;
+$barsino-purple-500: $barsino-purple !default;
+$barsino-purple-600: shade-color($barsino-purple, 20%) !default;
+$barsino-purple-700: shade-color($barsino-purple, 40%) !default;
+$barsino-purple-800: shade-color($barsino-purple, 60%) !default;
+$barsino-purple-900: shade-color($barsino-purple, 80%) !default;
+
+$barsino-gold-100: tint-color($barsino-gold, 80%) !default;
+$barsino-gold-200: tint-color($barsino-gold, 60%) !default;
+$barsino-gold-300: tint-color($barsino-gold, 40%) !default;
+$barsino-gold-400: tint-color($barsino-gold, 20%) !default;
+$barsino-gold-500: $barsino-gold !default;
+$barsino-gold-600: shade-color($barsino-gold, 20%) !default;
+$barsino-gold-700: shade-color($barsino-gold, 40%) !default;
+$barsino-gold-800: shade-color($barsino-gold, 60%) !default;
+$barsino-gold-900: shade-color($barsino-gold, 80%) !default;
+
+$primary-barsino-dark: $barsino-gold-500 !default;
+
+// scss-docs-start sass-barsino-dark-mode-vars
+$primary-text-barsino-dark: $barsino-gold-300 !default;
+$secondary-text-barsino-dark: $barsino-purple-300 !default;
+$success-text-barsino-dark: $green-300 !default;
+$info-text-barsino-dark: $cyan-300 !default;
+$warning-text-barsino-dark: $yellow-300 !default;
+$danger-text-barsino-dark: $red-300 !default;
+$light-text-barsino-dark: $barsino-purple-100 !default;
+$dark-text-barsino-dark: $barsino-purple-300 !default;
+
+$primary-bg-subtle-barsino-dark: $barsino-gold-900 !default;
+$secondary-bg-subtle-barsino-dark: $barsino-purple-900 !default;
+$success-bg-subtle-barsino-dark: $green-900 !default;
+$info-bg-subtle-barsino-dark: $cyan-900 !default;
+$warning-bg-subtle-barsino-dark: $yellow-900 !default;
+$danger-bg-subtle-barsino-dark: $red-900 !default;
+$light-bg-subtle-barsino-dark: $barsino-purple-800 !default;
+$dark-bg-subtle-barsino-dark: mix($barsino-purple-800, $black) !default;
+
+$primary-border-subtle-barsino-dark: $barsino-gold-700 !default;
+$secondary-border-subtle-barsino-dark: $barsino-purple-700 !default;
+$success-border-subtle-barsino-dark: $green-700 !default;
+$info-border-subtle-barsino-dark: $cyan-800 !default;
+$warning-border-subtle-barsino-dark: $yellow-800 !default;
+$danger-border-subtle-barsino-dark: $red-700 !default;
+$light-border-subtle-barsino-dark: $barsino-purple-700 !default;
+$dark-border-subtle-barsino-dark: $barsino-purple-800 !default;
+
+$body-color-barsino-dark: $barsino-purple-500 !default;
+$body-bg-barsino-dark: $barsino-purple-900 !default;
+$body-emphasis-color-barsino-dark: $barsino-purple-100 !default;
+$body-secondary-color-barsino-dark: rgba(
+  $body-color-barsino-dark,
+  0.75
+) !default;
+$body-secondary-bg-barsino-dark: $barsino-purple-800 !default;
+$body-tertiary-color-barsino-dark: rgba($body-color-barsino-dark, 0.5) !default;
+$body-tertiary-bg-barsino-dark: mix(
+  $barsino-purple-800,
+  $barsino-purple-900,
+  50%
+) !default;
+$emphasis-color-barsino-dark: $white !default;
+$border-color-barsino-dark: $barsino-purple-700 !default;
+$border-color-translucent-barsino-dark: rgba($white, 0.15) !default;
+$headings-color-barsino-dark: #fff !default;
+$link-color-barsino-dark: $barsino-gold-300 !default;
+$link-hover-color-barsino-dark: $barsino-gold-200 !default;
+$code-color-barsino-dark: $pink-300 !default;
+
+//
+// Forms
+//
+
+$form-select-indicator-color-barsino-dark: $body-color-barsino-dark !default;
+$form-select-indicator-barsino-dark: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$form-select-indicator-color-barsino-dark}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>") !default;
+
+$form-switch-color-barsino-dark: rgba($white, 0.25) !default;
+$form-switch-bg-image-barsino-dark: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-switch-color-barsino-dark}'/></svg>") !default;
+
+//
+// Accordion
+//
+
+$accordion-button-icon-barsino-dark: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$primary-text-barsino-dark}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !default;
+$accordion-button-active-icon-barsino-dark: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$primary-text-barsino-dark}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !default;
+// scss-docs-end sass-barsino-dark-mode-vars
+
+[data-bs-theme="barsino-dark"] {
+  // scss-docs-start root-dark-mode-vars
+  --#{$prefix}body-color: #{$body-color-barsino-dark};
+  --#{$prefix}body-color-rgb: #{to-rgb($body-color-barsino-dark)};
+  --#{$prefix}body-bg: #{$body-bg-barsino-dark};
+  --#{$prefix}body-bg-rgb: #{to-rgb($body-bg-barsino-dark)};
+
+  --#{$prefix}emphasis-color: #{$body-emphasis-color-barsino-dark};
+  --#{$prefix}emphasis-color-rgb: #{to-rgb($body-emphasis-color-barsino-dark)};
+
+  --#{$prefix}secondary-color: #{$body-secondary-color-barsino-dark};
+  --#{$prefix}secondary-color-rgb: #{to-rgb($body-secondary-color-barsino-dark)};
+  --#{$prefix}secondary-bg: #{$body-secondary-bg-barsino-dark};
+  --#{$prefix}secondary-bg-rgb: #{to-rgb($body-secondary-bg-barsino-dark)};
+
+  --#{$prefix}tertiary-color: #{$body-tertiary-color-barsino-dark};
+  --#{$prefix}tertiary-color-rgb: #{to-rgb($body-tertiary-color-barsino-dark)};
+  --#{$prefix}tertiary-bg: #{$body-tertiary-bg-barsino-dark};
+  --#{$prefix}tertiary-bg-rgb: #{to-rgb($body-tertiary-bg-barsino-dark)};
+
+  --#{$prefix}emphasis-color: #{$emphasis-color-barsino-dark};
+
+  --#{$prefix}primary-text: #{$primary-text-barsino-dark};
+  --#{$prefix}secondary-text: #{$secondary-text-barsino-dark};
+  --#{$prefix}success-text: #{$success-text-barsino-dark};
+  --#{$prefix}info-text: #{$info-text-barsino-dark};
+  --#{$prefix}warning-text: #{$warning-text-barsino-dark};
+  --#{$prefix}danger-text: #{$danger-text-barsino-dark};
+  --#{$prefix}light-text: #{$light-text-barsino-dark};
+  --#{$prefix}dark-text: #{$dark-text-barsino-dark};
+
+  --#{$prefix}primary-bg-subtle: #{$primary-bg-subtle-barsino-dark};
+  --#{$prefix}secondary-bg-subtle: #{$secondary-bg-subtle-barsino-dark};
+  --#{$prefix}success-bg-subtle: #{$success-bg-subtle-barsino-dark};
+  --#{$prefix}info-bg-subtle: #{$info-bg-subtle-barsino-dark};
+  --#{$prefix}warning-bg-subtle: #{$warning-bg-subtle-barsino-dark};
+  --#{$prefix}danger-bg-subtle: #{$danger-bg-subtle-barsino-dark};
+  --#{$prefix}light-bg-subtle: #{$light-bg-subtle-barsino-dark};
+  --#{$prefix}dark-bg-subtle: #{$dark-bg-subtle-barsino-dark};
+
+  --#{$prefix}primary-border-subtle: #{$primary-border-subtle-barsino-dark};
+  --#{$prefix}secondary-border-subtle: #{$secondary-border-subtle-barsino-dark};
+  --#{$prefix}success-border-subtle: #{$success-border-subtle-barsino-dark};
+  --#{$prefix}info-border-subtle: #{$info-border-subtle-barsino-dark};
+  --#{$prefix}warning-border-subtle: #{$warning-border-subtle-barsino-dark};
+  --#{$prefix}danger-border-subtle: #{$danger-border-subtle-barsino-dark};
+  --#{$prefix}light-border-subtle: #{$light-border-subtle-barsino-dark};
+  --#{$prefix}dark-border-subtle: #{$dark-border-subtle-barsino-dark};
+
+  --#{$prefix}heading-color: #{$headings-color-barsino-dark};
+
+  --#{$prefix}link-color: #{$link-color-barsino-dark};
+  --#{$prefix}link-hover-color: #{$link-hover-color-barsino-dark};
+  --#{$prefix}link-color-rgb: #{to-rgb($link-color-barsino-dark)};
+  --#{$prefix}link-hover-color-rgb: #{to-rgb($link-hover-color-barsino-dark)};
+
+  --#{$prefix}code-color: #{$code-color-barsino-dark};
+
+  --#{$prefix}border-color: #{$border-color-barsino-dark};
+  --#{$prefix}border-color-translucent: #{$border-color-translucent-barsino-dark};
+  // scss-docs-end root-barsino-dark-mode-vars
+}

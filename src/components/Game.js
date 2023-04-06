@@ -33,7 +33,12 @@ export function Game() {
     };
   }, [navigate, accounts]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-border text-primary m-5" role="status"></div>
+      </div>
+    );
   if (!game) return <div>Game not found!</div>;
   return <GameRenderer game={game} />;
 }

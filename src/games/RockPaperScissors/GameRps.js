@@ -90,7 +90,12 @@ export function Game({ game }) {
     }
   }
 
-  if (playing) return <div>Playing...</div>;
+  if (playing)
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-border text-primary m-5" role="status"></div>
+      </div>
+    );
   return (
     <GameForm game={game} currencySymbol={currencySymbol} onSubmit={onSubmit} />
   );

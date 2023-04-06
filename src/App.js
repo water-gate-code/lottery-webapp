@@ -133,7 +133,12 @@ function useInitializeApp() {
 export function App() {
   const { wallet, walletDispatch, notification, notificationDispatch } =
     useInitializeApp();
-  if (!wallet.initialized) return null;
+  if (!wallet.initialized)
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-border text-primary m-5" role="status"></div>
+      </div>
+    );
   return (
     <NotificationContext.Provider value={notification}>
       <NotificationDispatchContext.Provider value={notificationDispatch}>

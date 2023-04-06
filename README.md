@@ -1,4 +1,14 @@
-# lottery-webapp
+# Barsino
+
+TODO:
+
+- Typescript
+- i18n
+- Redux
+- Worker cache
+- Test
+
+# How to start
 
 # Getting Started with Create React App
 

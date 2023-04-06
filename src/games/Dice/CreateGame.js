@@ -41,7 +41,12 @@ export function CreateGame() {
     e.preventDefault();
     create(betAmount, betSelection);
   }
-  if (creating) return <div>Creating...</div>;
+  if (creating)
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-border text-primary m-5" role="status"></div>
+      </div>
+    );
   return (
     <div className="container">
       <div className="row">

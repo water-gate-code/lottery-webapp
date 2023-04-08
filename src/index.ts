@@ -7,13 +7,30 @@ import {
   sendToGoogleAnalytics,
 } from "./utils/reportWebVitals";
 import { store } from "./store";
-import { errorHandler } from "./errorHandler";
 import { getAccounts, getBalance, getChainId } from "./utils/wallet";
 import { auth, setBalance } from "./store/slices/user";
-import { initialize } from "./store/slices/app";
+import {
+  NotificationType,
+  clearNotify,
+  initialize,
+  newNotification,
+  notify,
+} from "./store/slices/app";
 import { setChain } from "./store/slices/chain";
+import { errorEventParser } from "./utils/tools";
 
 const { ethereum } = window;
+
+function errorHandler(errorEvent: any) {
+  // event.preventDefault(); // This will not print the error in the console });
+
+  const { message } = errorEventParser(errorEvent);
+  if (message) {
+    const notification = newNotification(NotificationType.danger, message);
+    store.dispatch(notify(notification));
+    setTimeout(() => store.dispatch(clearNotify(notification)), 3000);
+  }
+}
 
 async function updateChainId() {
   const chainId = await getChainId();
@@ -32,7 +49,6 @@ async function updateAuth() {
     updateBalance(address);
   }
 }
-
 async function setWallet() {
   await updateChainId();
   await updateAuth();

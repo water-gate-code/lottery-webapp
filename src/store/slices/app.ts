@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, nanoid } from "@reduxjs/toolkit";
 
-import type { RootState } from "../../store";
+import type { RootState } from "../";
 import { metamaskInstalled } from "../../utils/wallet";
 
 export enum NotificationType {

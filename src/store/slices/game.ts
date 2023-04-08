@@ -1,19 +1,26 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../../store";
+import type { RootState } from "../";
 import { Game } from "../../utils/casino";
 
+interface RemoteData<T> {
+  value: T;
+  status: "idle" | "fetching" | "fetched";
+}
 interface GamePlay {
-  game: Game;
+  game: RemoteData<Game>;
   status: "idle" | "loading" | "finished";
   result: "win" | "lose" | "equal";
 }
 interface GameState {
-  gameList: Game[];
+  gameList: RemoteData<Game[]>;
   currentGamePlay?: GamePlay;
 }
 
 const initialState = {
-  gameList: [],
+  gameList: {
+    value: [],
+    status: "idle",
+  },
 } as GameState;
 
 export const gameSlice = createSlice({
@@ -21,7 +28,10 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     setGameList: (state, action: PayloadAction<Game[]>) => {
-      state.gameList = action.payload;
+      state.gameList = {
+        value: action.payload,
+        status: "fetched",
+      };
     },
   },
 });

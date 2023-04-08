@@ -1,17 +1,27 @@
-import { useState, useContext, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 
 import { connectWallet } from "../../utils";
 import { GameType, getGameName } from "../";
 import { eventEmitter, Events } from "../../event";
-import { WalletContext } from "../../contexts/WalletContext";
+import { useAppSelector } from "../../hooks";
+import { selectCasino, selectChain } from "../../store/slices/chain";
+import { selectUser } from "../../store/slices/user";
 
 const SELLECTION = ["Rock", "Paper", "Scissors"];
 
 export function CreateGame() {
-  const { accounts, casino, chain } = useContext(WalletContext);
-  const currency = chain === null ? "" : chain.info.nativeCurrency.symbol;
+  const casino = useAppSelector(selectCasino);
+  const user = useAppSelector(selectUser);
+  const chain = useAppSelector(selectChain);
+  const supportChain = chain.id !== null && chain.support;
+  if (!supportChain) {
+    throw new Error("Invalid chain");
+  }
+  const currency = chain.info.nativeCurrency.symbol;
   const amountScales =
-    chain === null ? [] : [1, 2, 5, 8, 10].map((n) => n * chain.nativeMinScale);
+    chain === null
+      ? []
+      : [1, 2, 5, 8, 10].map((n) => n * chain.config.nativeMinScale);
   const [betAmount, setBetAmount] = useState(amountScales[0]);
   const [betSelection, setBetSelection] = useState(1);
   const [creating, setCreating] = useState(false);
@@ -19,7 +29,7 @@ export function CreateGame() {
   async function create() {
     setCreating(true);
     try {
-      if (accounts.length < 1) {
+      if (!user.authed) {
         await connectWallet();
       }
       if (casino === null) {

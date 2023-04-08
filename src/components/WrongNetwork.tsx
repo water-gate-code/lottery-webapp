@@ -1,8 +1,10 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 
 import { supportChainIds, chains, ChainInfo } from "../chains";
-import { WalletContext } from "../contexts/WalletContext";
 import { switchNetwork, addToNetwork, connectWallet } from "../utils";
+import { useAppSelector } from "../hooks";
+import { selectUser } from "../store/slices/user";
+import { selectChain } from "../store/slices/chain";
 
 const fetchChainData = (function () {
   let chainDataCatch: any[] = [];
@@ -28,7 +30,7 @@ async function changeNetwork(address: string | null, chainInfo: ChainInfo) {
   }
 }
 
-function ChainItem({ address, chain, onClick }: any) {
+function ChainItem({ chain, onClick }: any) {
   return (
     <div className="card m-3">
       <div className="card-body">
@@ -49,8 +51,8 @@ export function WrongNetwork() {
   const [fullChainList, setFullChainList] = useState<any>([]);
   const [loading, setLoading] = useState(true);
 
-  const wallet = useContext(WalletContext);
-  const address = wallet.accounts.length > 0 ? wallet.accounts[0] : null;
+  const user = useAppSelector(selectUser);
+  const chain = useAppSelector(selectChain);
 
   useEffect(() => {
     fetchChainData()
@@ -59,7 +61,7 @@ export function WrongNetwork() {
   }, []);
 
   const selectedNetwork = fullChainList.find(
-    (chain: ChainInfo) => chain.chainId === wallet.chainId
+    (c: ChainInfo) => c.chainId === chain.id
   );
   const network = selectedNetwork ? (
     <span className="text-primary">{`{${selectedNetwork.name}}`}</span>
@@ -82,9 +84,11 @@ export function WrongNetwork() {
             <ChainItem
               key={id}
               chain={chains[id].info}
-              address={address}
               onClick={() => {
-                changeNetwork(address, chains[id].info);
+                changeNetwork(
+                  user.authed ? user.address : null,
+                  chains[id].info
+                );
               }}
             />
           ))}

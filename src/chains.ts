@@ -1,7 +1,6 @@
 import { CASINO } from "./contracts";
 
-type SupportChainId = 137 | 80001 | 1337;
-export const supportChainIds: SupportChainId[] = [137, 80001, 1337];
+export const supportChainIds: number[] = [137, 80001, 1337];
 
 export interface ChainNativeCurrency {
   name: string;

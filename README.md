@@ -2,9 +2,10 @@
 
 TODO:
 
-- Typescript
-- i18n
 - Redux
+- upgrade [Ethersjs to 6 with typescript](https://www.npmjs.com/package/ethers)
+- remove all any type
+- i18n
 - Worker cache
 - Test
 

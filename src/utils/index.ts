@@ -1,4 +1,4 @@
-import { ChainConfig, ChainInfo } from "./chains";
+import type { ChainConfig, ChainInfo } from "../chains";
 
 const { ethereum } = window;
 const { ethers } = window;
@@ -27,10 +27,10 @@ export async function connectWallet() {
 export async function getAccounts(): Promise<string[]> {
   return await ethRequest({ method: "eth_accounts" });
 }
-export async function getBalance(account: string) {
+export async function getBalance(address: string): Promise<string> {
   const balance = await ethRequest({
     method: "eth_getBalance",
-    params: [account, "latest"],
+    params: [address, "latest"],
   });
   return ethers.utils.formatEther(balance);
 }

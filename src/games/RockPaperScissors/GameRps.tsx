@@ -1,11 +1,13 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 import { eventEmitter, Events } from "../../event";
 
 import { connectWallet } from "../../utils";
 import { getGameName, GameIcon } from "..";
-import { WalletContext } from "../../contexts/WalletContext";
 import { Address } from "../../components/Address";
+import { useAppSelector } from "../../hooks";
+import { selectCasino, selectChain } from "../../store/slices/chain";
+import { selectUser } from "../../store/slices/user";
 
 const SELLECTION = ["Rock", "Paper", "Scissors"];
 
@@ -68,8 +70,14 @@ function GameForm({ game, currencySymbol, onSubmit }: any) {
 }
 
 export function Game({ game }: any) {
-  const { accounts, casino, chain } = useContext(WalletContext);
-  const currencySymbol = chain === null ? "" : chain.info.nativeCurrency.symbol;
+  const casino = useAppSelector(selectCasino);
+  const user = useAppSelector(selectUser);
+  const chain = useAppSelector(selectChain);
+  const supportChain = chain.id !== null && chain.support;
+  if (!supportChain) {
+    throw new Error("Invalid chain");
+  }
+  const currencySymbol = chain.info.nativeCurrency.symbol;
 
   const [playing, setPlaying] = useState(false);
 
@@ -77,7 +85,7 @@ export function Game({ game }: any) {
     setPlaying(true);
     try {
       const amount = game.betAmount.toString();
-      if (accounts.length < 1) {
+      if (!user.authed) {
         await connectWallet();
       }
       if (casino === null) {

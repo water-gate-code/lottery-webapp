@@ -1,44 +1,39 @@
-import { useContext } from "react";
 import { Link } from "react-router-dom";
+
+import { useAppSelector } from "../hooks";
+import { selectUser } from "../store/slices/user";
 import { connectWallet } from "../utils";
-import { WalletContext } from "../contexts/WalletContext";
 import { Address } from "./Address";
+import { selectChain } from "../store/slices/chain";
 
 export function Topbar() {
-  const wallet = useContext(WalletContext);
-  const accountInfo =
-    wallet.accounts.length > 0 ? (
-      <>
-        <span
-          className="navbar-text me-3"
-          title={wallet.balance[wallet.accounts[0]].toString()}
-        >
-          <i className="bi bi-wallet-fill me-2"></i>
-          <span
-            className="text-primary"
-            title={wallet.balance[wallet.accounts[0]].toString()}
-          >
-            {parseFloat(wallet.balance[wallet.accounts[0]].toString()).toFixed(
-              4
-            )}
-          </span>
+  const user = useAppSelector(selectUser);
+  const chain = useAppSelector(selectChain);
+
+  const accountInfo = user.authed ? (
+    <>
+      <span className="navbar-text me-3" title={user.balance.toString()}>
+        <i className="bi bi-wallet-fill me-2"></i>
+        <span className="text-primary">
+          {parseFloat(user.balance).toFixed(4)}
         </span>
-        <span className="navbar-text me-3">
-          <i className="bi bi-person-fill me-2"></i>
-          <Address address={wallet.accounts[0]} />
-        </span>
-      </>
-    ) : (
-      <span className="navbar-text me-3">
-        <button
-          type="button"
-          className="btn btn-primary button"
-          onClick={connectWallet}
-        >
-          Connect Your Wallet
-        </button>
       </span>
-    );
+      <span className="navbar-text me-3">
+        <i className="bi bi-person-fill me-2"></i>
+        <Address address={user.address} />
+      </span>
+    </>
+  ) : (
+    <span className="navbar-text me-3">
+      <button
+        type="button"
+        className="btn btn-primary button"
+        onClick={connectWallet}
+      >
+        Connect Your Wallet
+      </button>
+    </span>
+  );
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -56,18 +51,18 @@ export function Topbar() {
         <div>
           {accountInfo}
 
-          {wallet.chain ? (
+          {chain.id !== null && chain.support ? (
             <>
               <span className="navbar-brand me-2">
                 <img
-                  src={wallet.chain.info.icon}
+                  src={chain.info.icon}
                   className="rounded"
-                  alt={wallet.chain.info.name}
+                  alt={chain.info.name}
                   width="20"
                   height="20"
                 />
               </span>
-              <span className="navbar-text">{wallet.chain.info.name}</span>
+              <span className="navbar-text">{chain.info.name}</span>
             </>
           ) : null}
         </div>

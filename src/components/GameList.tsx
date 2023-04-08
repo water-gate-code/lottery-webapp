@@ -3,13 +3,14 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 
 import { GameIcon } from "../games";
 import { eventEmitter, Events } from "../event";
-import { WalletContext } from "../contexts/WalletContext";
 import {
   NotificationDispatchContext,
   NotificationType,
   NOTIFICATION_ACTION_TYPES,
   createNotification,
 } from "../contexts/NotificationContext";
+import { useAppSelector } from "../hooks";
+import { selectCasino, selectChain } from "../store/slices/chain";
 
 function Item({ game, currencySymbol, isActive }: any) {
   return (
@@ -52,8 +53,13 @@ function List({ games, currencySymbol, activeGameId }: any) {
 }
 
 export function GameList() {
-  const { accounts, casino, chain } = useContext(WalletContext);
-  const currencySymbol = chain === null ? "" : chain.info.nativeCurrency.symbol;
+  const casino = useAppSelector(selectCasino);
+  const chain = useAppSelector(selectChain);
+  const supportChain = chain.id !== null && chain.support;
+  if (!supportChain) {
+    throw new Error("Invalid chain");
+  }
+  const currencySymbol = chain.info.nativeCurrency.symbol;
   const notificationDispatch = useContext(NotificationDispatchContext);
   const { gameId } = useParams();
   const navigate = useNavigate();
@@ -104,7 +110,7 @@ export function GameList() {
     return () => {
       eventEmitter.removeListener(Events.COMPLETE_GAME, onCompleteGame);
     };
-  }, [navigate, accounts, gameId]);
+  }, [navigate, gameId]);
 
   return (
     <List

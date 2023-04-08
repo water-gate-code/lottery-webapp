@@ -1,35 +1,21 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import { eventEmitter, Events } from "../event";
-import { WalletContext } from "../contexts/WalletContext";
 import { Topbar } from "./Topbar";
 import { GameList } from "./GameList";
 import { WrongNetwork } from "./WrongNetwork";
 import { Notification } from "./Notification";
+import { useAppSelector } from "../hooks";
+import { selectCasino, selectChain } from "../store/slices/chain";
 
 const { ethereum } = window;
 
 function GameScreen() {
-  const { casino, chain } = useContext(WalletContext);
-
-  useEffect(() => {
-    function onCompleteGame(winner: string) {
-      console.log(`[contract event] winner:`, winner);
-      eventEmitter.dispatch(Events.COMPLETE_GAME, winner);
-    }
-    if (casino !== null) {
-      casino.on("CompleteGame_Event", onCompleteGame);
-      return () => {
-        casino.off("CompleteGame_Event", onCompleteGame);
-      };
-    }
-  }, [casino]);
-  if (chain === null) return null;
   return (
     <>
       <Topbar />
-      <div className="container-fluid mt-3" key={chain.info.chainId}>
+      <div className="container-fluid mt-3">
         <div className="row">
           <div className="col-2">
             <GameList />
@@ -47,9 +33,10 @@ function GameScreen() {
 }
 
 export function Layout() {
-  const wallet = useContext(WalletContext);
+  const chain = useAppSelector(selectChain);
+  const casino = useAppSelector(selectCasino);
   const navigate = useNavigate();
-  const supportNetwork = !!wallet.chain;
+  const supportNetwork = chain.id !== null && chain.support;
 
   useEffect(() => {
     const onChainChanged = () => navigate("/");
@@ -59,7 +46,20 @@ export function Layout() {
     };
   }, [navigate]);
 
-  if (supportNetwork) {
+  useEffect(() => {
+    function onCompleteGame(winner: string) {
+      console.log(`[contract event] winner:`, winner);
+      eventEmitter.dispatch(Events.COMPLETE_GAME, winner);
+    }
+    if (casino !== null) {
+      casino.on("CompleteGame_Event", onCompleteGame);
+      return () => {
+        casino.off("CompleteGame_Event", onCompleteGame);
+      };
+    }
+  }, [casino]);
+
+  if (supportNetwork && casino != null) {
     return <GameScreen />;
   }
 

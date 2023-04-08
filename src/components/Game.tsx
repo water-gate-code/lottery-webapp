@@ -1,13 +1,16 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { GameRenderer, isEmptyAddress } from "../games";
-import { WalletContext } from "../contexts/WalletContext";
 import { eventEmitter, Events } from "../event";
+import { useAppSelector } from "../hooks";
+import { selectCasino } from "../store/slices/chain";
+import { selectUser } from "../store/slices/user";
 
 export function Game() {
   const { gameId } = useParams();
-  const { accounts, casino } = useContext(WalletContext);
+  const casino = useAppSelector(selectCasino);
+  const user = useAppSelector(selectUser);
   const navigate = useNavigate();
 
   const [game, setGame] = useState({});
@@ -27,16 +30,20 @@ export function Game() {
 
   useEffect(() => {
     function onCompleteGame(winner: string) {
-      const equal = (address: string) =>
+      const isWinner = (address: string) =>
         address.toLowerCase() === winner.toLowerCase();
-      const result = isEmptyAddress(winner) ? 0 : accounts.find(equal) ? 1 : -1;
+      const result = isEmptyAddress(winner)
+        ? 0
+        : user.authed && isWinner(user.address)
+        ? 1
+        : -1;
       navigate(`/result/${result > 0 ? "win" : result < 0 ? "lose" : "equal"}`);
     }
     eventEmitter.on(Events.COMPLETE_GAME, onCompleteGame);
     return () => {
       eventEmitter.removeListener(Events.COMPLETE_GAME, onCompleteGame);
     };
-  }, [navigate, accounts]);
+  }, [navigate, user]);
 
   if (loading)
     return (

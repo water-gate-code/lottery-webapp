@@ -2,14 +2,11 @@ import { useReducer, useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 
 import { getAccounts, getChainId, getBalance } from "./utils";
+import { useAppDispatch, useAppSelector } from "./hooks";
+import { auth } from "./store/slices/user";
+import { initialize, selectApp } from "./store/slices/app";
+import { setChain } from "./store/slices/chain";
 import { eventEmitter, Events } from "./event";
-import {
-  WalletContext,
-  WalletDispatchContext,
-  initialWallet,
-  walletReducer,
-  WALLET_ACTION_TYPES,
-} from "./contexts/WalletContext";
 import {
   NotificationContext,
   NotificationDispatchContext,
@@ -33,7 +30,8 @@ function errorEventParser(errorEvent: any) {
 }
 
 function useInitializeApp() {
-  const [wallet, walletDispatch] = useReducer(walletReducer, initialWallet);
+  const dispatch = useAppDispatch();
+
   const [notification, notificationDispatch] = useReducer(
     notificationReducer,
     initialNotification
@@ -71,16 +69,13 @@ function useInitializeApp() {
     async function dispatchUpdatedWallet() {
       const chainId = await getChainId();
       const accounts = await getAccounts();
-      const balance: { [address: string]: number } = {};
       if (accounts.length > 0) {
-        const defaultAccount = accounts[0];
-        balance[defaultAccount] = await getBalance(defaultAccount);
+        const address = accounts[0];
+        const balance = await getBalance(address);
+        dispatch(auth({ address, balance }));
       }
-
-      walletDispatch({
-        type: WALLET_ACTION_TYPES.UPDATE_WALLET,
-        payload: { ...wallet, accounts, balance, chainId, initialized: true },
-      });
+      dispatch(initialize());
+      dispatch(setChain(chainId));
     }
     // Initialize necessary wallet information
     dispatchUpdatedWallet();
@@ -126,14 +121,14 @@ function useInitializeApp() {
       eventEmitter.removeListener(Events.CREATE_GAME, dispatchUpdatedWallet);
       eventEmitter.removeListener(Events.COMPLETE_GAME, dispatchUpdatedWallet);
     };
-  }, []);
-  return { wallet, walletDispatch, notification, notificationDispatch };
+  }, [dispatch]);
+  return { notification, notificationDispatch };
 }
 
 export function App() {
-  const { wallet, walletDispatch, notification, notificationDispatch } =
-    useInitializeApp();
-  if (!wallet.initialized)
+  const { initialized } = useAppSelector(selectApp);
+  const { notification, notificationDispatch } = useInitializeApp();
+  if (!initialized)
     return (
       <div className="d-flex justify-content-center">
         <div className="spinner-border text-primary m-5" role="status"></div>
@@ -142,11 +137,7 @@ export function App() {
   return (
     <NotificationContext.Provider value={notification}>
       <NotificationDispatchContext.Provider value={notificationDispatch}>
-        <WalletContext.Provider value={wallet}>
-          <WalletDispatchContext.Provider value={walletDispatch}>
-            <RouterProvider router={router} />
-          </WalletDispatchContext.Provider>
-        </WalletContext.Provider>
+        <RouterProvider router={router} />
       </NotificationDispatchContext.Provider>
     </NotificationContext.Provider>
   );

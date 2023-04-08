@@ -3,14 +3,14 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 
 import { GameIcon } from "../games";
 import { eventEmitter, Events } from "../event";
-import {
-  NotificationDispatchContext,
-  NotificationType,
-  NOTIFICATION_ACTION_TYPES,
-  createNotification,
-} from "../contexts/NotificationContext";
-import { useAppSelector } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import { selectCasino, selectChain } from "../store/slices/chain";
+import {
+  clearNotify,
+  newNotification,
+  NotificationType,
+  notify,
+} from "../store/slices/app";
 
 function Item({ game, currencySymbol, isActive }: any) {
   return (
@@ -60,7 +60,7 @@ export function GameList() {
     throw new Error("Invalid chain");
   }
   const currencySymbol = chain.info.nativeCurrency.symbol;
-  const notificationDispatch = useContext(NotificationDispatchContext);
+  const dispatch = useAppDispatch();
   const { gameId } = useParams();
   const navigate = useNavigate();
   const [games, setGames] = useState<any>([]);
@@ -73,34 +73,28 @@ export function GameList() {
           setGames(games);
           clearLoadingNotification();
         });
+      } else {
+        clearLoadingNotification();
       }
 
       // this cancel not realy cancel the request, but just cancel the display loading
       return () => clearLoadingNotification();
     }
     function dispatchLoadingNotification() {
-      const notification = createNotification(
+      const notification = newNotification(
         NotificationType.info,
         "Loading Games..."
       );
-      notificationDispatch({
-        type: NOTIFICATION_ACTION_TYPES.ADD_NOTIFICATION,
-        payload: notification,
-      });
+      dispatch(notify(notification));
 
-      return () => {
-        notificationDispatch({
-          type: NOTIFICATION_ACTION_TYPES.REMOVE_NOTIFICATION,
-          payload: notification,
-        });
-      };
+      return () => dispatch(clearNotify(notification));
     }
 
     const cancelUpdateGames = updateGames();
     return () => {
       cancelUpdateGames();
     };
-  }, [casino, notificationDispatch]);
+  }, [casino, dispatch]);
 
   useEffect(() => {
     function onCompleteGame(winner: string) {

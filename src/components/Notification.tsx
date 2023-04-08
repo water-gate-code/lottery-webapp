@@ -1,9 +1,5 @@
-import { useContext } from "react";
-
-import {
-  NotificationContext,
-  NotificationType,
-} from "../contexts/NotificationContext";
+import { useAppSelector } from "../hooks";
+import { NotificationType, selectApp } from "../store/slices/app";
 
 const Item = ({ type, title }: any) => {
   const iconStyle = {
@@ -32,7 +28,7 @@ const Item = ({ type, title }: any) => {
 };
 
 export function Notification() {
-  const { queue: notifications } = useContext(NotificationContext);
+  const { notifications } = useAppSelector(selectApp);
   const items = notifications.map((n) => {
     return <Item key={n.id} type={n.type} title={n.title} />;
   });

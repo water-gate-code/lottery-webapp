@@ -50,11 +50,17 @@ export const { setChain } = chainSlice.actions;
 export const selectChain = (state: RootState) => state.chain;
 export const selectSupport = (state: RootState) =>
   state.chain.id !== null && state.chain.support;
-export const selectCasino = (state: RootState) => {
-  const { chain } = state;
-  if (chain.id !== null && chain.support) {
-    return new Casino(chain.config);
-  }
-  return null;
-};
+export const selectCasino = (function () {
+  const casinoCache: { [chainId: number]: Casino } = {};
+  return (state: RootState) => {
+    const { chain } = state;
+    if (chain.id !== null && chain.support) {
+      if (!casinoCache[chain.id])
+        casinoCache[chain.id] = new Casino(chain.config);
+
+      return casinoCache[chain.id];
+    }
+    return null;
+  };
+})();
 export const chainReducer = chainSlice.reducer;

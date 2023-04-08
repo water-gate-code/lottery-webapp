@@ -1,21 +1,19 @@
-import { useReducer, useEffect } from "react";
+import { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 
 import { getAccounts, getChainId, getBalance } from "./utils";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { auth } from "./store/slices/user";
-import { initialize, selectApp } from "./store/slices/app";
+import {
+  NotificationType,
+  clearNotify,
+  initialize,
+  newNotification,
+  notify,
+  selectApp,
+} from "./store/slices/app";
 import { setChain } from "./store/slices/chain";
 import { eventEmitter, Events } from "./event";
-import {
-  NotificationContext,
-  NotificationDispatchContext,
-  initialNotification,
-  notificationReducer,
-  NOTIFICATION_ACTION_TYPES,
-  NotificationType,
-  createNotification,
-} from "./contexts/NotificationContext";
 
 import { router } from "./router";
 
@@ -32,11 +30,6 @@ function errorEventParser(errorEvent: any) {
 function useInitializeApp() {
   const dispatch = useAppDispatch();
 
-  const [notification, notificationDispatch] = useReducer(
-    notificationReducer,
-    initialNotification
-  );
-
   useEffect(() => {
     // Global error handler
     function errorHandler(errorEvent: any) {
@@ -44,20 +37,9 @@ function useInitializeApp() {
 
       const { message } = errorEventParser(errorEvent);
       if (message) {
-        const notification = createNotification(
-          NotificationType.danger,
-          message
-        );
-        notificationDispatch({
-          type: NOTIFICATION_ACTION_TYPES.ADD_NOTIFICATION,
-          payload: notification,
-        });
-        setTimeout(() => {
-          notificationDispatch({
-            type: NOTIFICATION_ACTION_TYPES.REMOVE_NOTIFICATION,
-            payload: notification,
-          });
-        }, 3000);
+        const notification = newNotification(NotificationType.danger, message);
+        dispatch(notify(notification));
+        setTimeout(() => dispatch(clearNotify(notification)), 3000);
       }
     }
     // Add listener on all possible error event
@@ -122,23 +104,17 @@ function useInitializeApp() {
       eventEmitter.removeListener(Events.COMPLETE_GAME, dispatchUpdatedWallet);
     };
   }, [dispatch]);
-  return { notification, notificationDispatch };
 }
 
 export function App() {
+  useInitializeApp();
   const { initialized } = useAppSelector(selectApp);
-  const { notification, notificationDispatch } = useInitializeApp();
+
   if (!initialized)
     return (
       <div className="d-flex justify-content-center">
         <div className="spinner-border text-primary m-5" role="status"></div>
       </div>
     );
-  return (
-    <NotificationContext.Provider value={notification}>
-      <NotificationDispatchContext.Provider value={notificationDispatch}>
-        <RouterProvider router={router} />
-      </NotificationDispatchContext.Provider>
-    </NotificationContext.Provider>
-  );
+  return <RouterProvider router={router} />;
 }

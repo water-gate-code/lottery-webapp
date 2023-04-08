@@ -1,8 +1,46 @@
 import { CASINO } from "./contracts";
 
-export const supportChainIds = [137, 80001, 1337];
+type SupportChainId = 137 | 80001 | 1337;
+export const supportChainIds: SupportChainId[] = [137, 80001, 1337];
 
-export const chains = {
+export interface ChainNativeCurrency {
+  name: string;
+  symbol: string;
+  decimals: number;
+}
+export interface ChainExplorer {
+  name: string;
+  url: string;
+  standard: string;
+}
+export interface ChainInfo {
+  name: string;
+  title: string;
+  chain: string;
+  icon: string;
+  rpc: string[];
+  nativeCurrency: ChainNativeCurrency;
+  infoURL: string;
+  shortName: string;
+  chainId: number;
+  networkId: number;
+  explorers: ChainExplorer[];
+}
+export interface ChainContract {
+  address: string;
+  abi: object;
+}
+export interface ChainConfig {
+  info: ChainInfo;
+  local: boolean;
+  testNet: boolean;
+  nativeMinScale: number;
+  contracts: {
+    Casino: ChainContract;
+  };
+}
+
+export const chains: { [chainId: number]: ChainConfig } = {
   1337: {
     info: {
       name: "Ganache",
@@ -27,33 +65,6 @@ export const chains = {
       },
     },
   },
-  // 5: {
-  //   info: {
-  //     name: "Goerli",
-  //     title: "Ethereum Testnet Goerli",
-  //     chain: "ETH",
-  //     icon: "https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg",
-  //     nativeCurrency: { name: "Goerli Ether", symbol: "ETH", decimals: 18 },
-  //     shortName: "gor",
-  //     chainId: 5,
-  //     networkId: 5,
-  //     rpc: ["https://goerli.infura.io/v3/"],
-  //     infoURL: "https://goerli.net/#about",
-  //     explorers: [
-  //       {
-  //         name: "etherscan-goerli",
-  //         url: "https://goerli.etherscan.io",
-  //         standard: "EIP3091",
-  //       },
-  //     ],
-  //   },
-  //   contracts: {
-  //     Casino: {
-  //       address: "0x9D234F00B143AE3566570C09015815218DE0DEc5",
-  //       abi: CASINO.abi,
-  //     },
-  //   },
-  // },
   80001: {
     info: {
       name: "Mumbai",
@@ -87,6 +98,7 @@ export const chains = {
   137: {
     info: {
       name: "Polygon Mainnet",
+      title: "Polygon Mainnet",
       chain: "Polygon",
       icon: "https://icons.llamao.fi/icons/chains/rsz_polygon.jpg",
       rpc: [

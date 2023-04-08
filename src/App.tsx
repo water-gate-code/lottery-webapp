@@ -24,7 +24,7 @@ import { router } from "./router";
 
 const { ethereum } = window;
 
-function errorEventParser(errorEvent) {
+function errorEventParser(errorEvent: any) {
   const message =
     errorEvent.reason?.data?.message ||
     errorEvent.reason?.message ||
@@ -41,7 +41,7 @@ function useInitializeApp() {
 
   useEffect(() => {
     // Global error handler
-    function errorHandler(errorEvent) {
+    function errorHandler(errorEvent: any) {
       // event.preventDefault(); // This will not print the error in the console });
 
       const { message } = errorEventParser(errorEvent);
@@ -52,12 +52,12 @@ function useInitializeApp() {
         );
         notificationDispatch({
           type: NOTIFICATION_ACTION_TYPES.ADD_NOTIFICATION,
-          notification,
+          payload: notification,
         });
         setTimeout(() => {
           notificationDispatch({
             type: NOTIFICATION_ACTION_TYPES.REMOVE_NOTIFICATION,
-            id: notification.id,
+            payload: notification,
           });
         }, 3000);
       }
@@ -71,7 +71,7 @@ function useInitializeApp() {
     async function dispatchUpdatedWallet() {
       const chainId = await getChainId();
       const accounts = await getAccounts();
-      const balance = {};
+      const balance: { [address: string]: number } = {};
       if (accounts.length > 0) {
         const defaultAccount = accounts[0];
         balance[defaultAccount] = await getBalance(defaultAccount);
@@ -79,28 +79,28 @@ function useInitializeApp() {
 
       walletDispatch({
         type: WALLET_ACTION_TYPES.UPDATE_WALLET,
-        wallet: { accounts, balance, chainId, initialized: true },
+        payload: { ...wallet, accounts, balance, chainId, initialized: true },
       });
     }
     // Initialize necessary wallet information
     dispatchUpdatedWallet();
-    function onConnect(connectInfo) {
+    function onConnect(connectInfo: any) {
       console.log("[wallet.event] connect. ConnectInfo:", connectInfo);
       dispatchUpdatedWallet();
     }
-    function onDisconnect(error) {
+    function onDisconnect(error: any) {
       console.log("[wallet.event] disconnect. ProviderRpcError:", error);
       dispatchUpdatedWallet();
     }
-    function onAccountsChanged(accounts) {
+    function onAccountsChanged(accounts: any) {
       console.log("[wallet.event] accountsChanged. accounts:", accounts);
       dispatchUpdatedWallet();
     }
-    function onChainChanged(chainId) {
+    function onChainChanged(chainId: any) {
       console.log("[wallet.event] chainChanged. chainId:", chainId);
       dispatchUpdatedWallet();
     }
-    function onMessage(message) {
+    function onMessage(message: any) {
       console.log("[wallet.event] message. ProviderMessage:", message);
       dispatchUpdatedWallet();
     }

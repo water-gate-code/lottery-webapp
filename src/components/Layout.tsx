@@ -14,16 +14,18 @@ function GameScreen() {
   const { casino, chain } = useContext(WalletContext);
 
   useEffect(() => {
-    function onCompleteGame(winner) {
+    function onCompleteGame(winner: string) {
       console.log(`[contract event] winner:`, winner);
       eventEmitter.dispatch(Events.COMPLETE_GAME, winner);
     }
-
-    casino.on("CompleteGame_Event", onCompleteGame);
-    return () => {
-      casino.off("CompleteGame_Event", onCompleteGame);
-    };
+    if (casino !== null) {
+      casino.on("CompleteGame_Event", onCompleteGame);
+      return () => {
+        casino.off("CompleteGame_Event", onCompleteGame);
+      };
+    }
   }, [casino]);
+  if (chain === null) return null;
   return (
     <>
       <Topbar />

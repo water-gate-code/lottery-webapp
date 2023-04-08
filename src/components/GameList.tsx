@@ -11,7 +11,7 @@ import {
   createNotification,
 } from "../contexts/NotificationContext";
 
-function Item({ game, currencySymbol, isActive }) {
+function Item({ game, currencySymbol, isActive }: any) {
   return (
     <Link
       className={
@@ -28,8 +28,8 @@ function Item({ game, currencySymbol, isActive }) {
   );
 }
 
-function List({ games, currencySymbol, activeGameId }) {
-  const gameItems = games.map((game) => (
+function List({ games, currencySymbol, activeGameId }: any) {
+  const gameItems = games.map((game: any) => (
     <Item
       key={game.id}
       game={game}
@@ -53,20 +53,21 @@ function List({ games, currencySymbol, activeGameId }) {
 
 export function GameList() {
   const { accounts, casino, chain } = useContext(WalletContext);
-  const currencySymbol = chain.info.nativeCurrency.symbol;
+  const currencySymbol = chain === null ? "" : chain.info.nativeCurrency.symbol;
   const notificationDispatch = useContext(NotificationDispatchContext);
   const { gameId } = useParams();
   const navigate = useNavigate();
-  const [games, setGames] = useState([]);
+  const [games, setGames] = useState<any>([]);
 
   useEffect(() => {
     function updateGames() {
       const clearLoadingNotification = dispatchLoadingNotification();
-
-      casino.getGames().then((games) => {
-        setGames(games);
-        clearLoadingNotification();
-      });
+      if (casino !== null) {
+        casino.getGames().then((games) => {
+          setGames(games);
+          clearLoadingNotification();
+        });
+      }
 
       // this cancel not realy cancel the request, but just cancel the display loading
       return () => clearLoadingNotification();
@@ -78,13 +79,13 @@ export function GameList() {
       );
       notificationDispatch({
         type: NOTIFICATION_ACTION_TYPES.ADD_NOTIFICATION,
-        notification,
+        payload: notification,
       });
 
       return () => {
         notificationDispatch({
           type: NOTIFICATION_ACTION_TYPES.REMOVE_NOTIFICATION,
-          id: notification.id,
+          payload: notification,
         });
       };
     }
@@ -96,8 +97,8 @@ export function GameList() {
   }, [casino, notificationDispatch]);
 
   useEffect(() => {
-    function onCompleteGame(winner) {
-      setGames((preGames) => preGames.filter((g) => g.id !== gameId));
+    function onCompleteGame(winner: string) {
+      setGames((preGames: any[]) => preGames.filter((g) => g.id !== gameId));
     }
     eventEmitter.on(Events.COMPLETE_GAME, onCompleteGame);
     return () => {
@@ -107,7 +108,7 @@ export function GameList() {
 
   return (
     <List
-      games={games.filter((g) => g.isActive)}
+      games={games.filter((g: any) => g.isActive)}
       currencySymbol={currencySymbol}
       activeGameId={gameId}
     />

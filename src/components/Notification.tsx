@@ -5,7 +5,7 @@ import {
   NotificationType,
 } from "../contexts/NotificationContext";
 
-const Item = ({ type, title }) => {
+const Item = ({ type, title }: any) => {
   const iconStyle = {
     width: "0.9em",
     height: "0.9em",

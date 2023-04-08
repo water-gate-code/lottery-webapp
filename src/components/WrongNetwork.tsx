@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 
-import { supportChainIds, chains } from "../chains";
+import { supportChainIds, chains, ChainInfo } from "../chains";
 import { WalletContext } from "../contexts/WalletContext";
 import { switchNetwork, addToNetwork, connectWallet } from "../utils";
 
 const fetchChainData = (function () {
-  let chainDataCatch = [];
+  let chainDataCatch: any[] = [];
   return async function () {
     if (chainDataCatch.length > 0) return chainDataCatch;
     const response = await fetch("https://chainid.network/chains.json");
@@ -14,21 +14,21 @@ const fetchChainData = (function () {
   };
 })();
 
-async function changeNetwork(address, chain) {
+async function changeNetwork(address: string | null, chainInfo: ChainInfo) {
   try {
-    if (!address) {
+    if (address === null) {
       await connectWallet();
     }
-    await switchNetwork(chain.chainId);
-  } catch (switchError) {
+    await switchNetwork(chainInfo.chainId);
+  } catch (switchError: any) {
     // This error code indicates that the chain has not been added to MetaMask.
     if (switchError.code === 4902) {
-      addToNetwork({ address, chain });
+      addToNetwork(address, chainInfo);
     }
   }
 }
 
-function ChainItem({ address, chain, onClick }) {
+function ChainItem({ address, chain, onClick }: any) {
   return (
     <div className="card m-3">
       <div className="card-body">
@@ -46,7 +46,7 @@ function ChainItem({ address, chain, onClick }) {
 }
 
 export function WrongNetwork() {
-  const [fullChainList, setFullChainList] = useState([]);
+  const [fullChainList, setFullChainList] = useState<any>([]);
   const [loading, setLoading] = useState(true);
 
   const wallet = useContext(WalletContext);
@@ -59,7 +59,7 @@ export function WrongNetwork() {
   }, []);
 
   const selectedNetwork = fullChainList.find(
-    (chain) => chain.chainId === wallet.chainId
+    (chain: ChainInfo) => chain.chainId === wallet.chainId
   );
   const network = selectedNetwork ? (
     <span className="text-primary">{`{${selectedNetwork.name}}`}</span>

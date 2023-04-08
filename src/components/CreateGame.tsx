@@ -4,7 +4,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { eventEmitter, Events } from "../event";
 import { GameType, getGameName, CreateGameRenderer } from "../games";
 
-const Tab = ({ isActive, type }) => {
+const Tab = ({ isActive, type }: { isActive: boolean; type: number }) => {
   const className = `nav-link ${isActive ? "active" : ""}`;
   return (
     <li className="nav-item">
@@ -22,7 +22,7 @@ export function CreateGame() {
   const activeType = gameType ? parseInt(gameType) : GameType.Dice;
 
   useEffect(() => {
-    function onCreateGame(game) {
+    function onCreateGame(game: any) {
       navigate(`/games/${game.id}`);
     }
     eventEmitter.on(Events.CREATE_GAME, onCreateGame);

@@ -10,20 +10,25 @@ export function Game() {
   const { accounts, casino } = useContext(WalletContext);
   const navigate = useNavigate();
 
-  const [game, setGame] = useState(null);
+  const [game, setGame] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    casino.getGame(gameId).then((game) => {
-      setGame(game);
+    if (casino !== null && gameId !== undefined) {
+      casino.getGame(gameId).then((game) => {
+        setGame(game);
+        setLoading(false);
+      });
+    } else {
       setLoading(false);
-    });
+    }
   }, [gameId, casino]);
 
   useEffect(() => {
-    function onCompleteGame(winner) {
-      const equal = (address) => address.toLowerCase() === winner.toLowerCase();
+    function onCompleteGame(winner: string) {
+      const equal = (address: string) =>
+        address.toLowerCase() === winner.toLowerCase();
       const result = isEmptyAddress(winner) ? 0 : accounts.find(equal) ? 1 : -1;
       navigate(`/result/${result > 0 ? "win" : result < 0 ? "lose" : "equal"}`);
     }

@@ -1,11 +1,16 @@
 import { useState, useContext } from "react";
 
+import { eventEmitter, Events } from "../../event";
+
 import { connectWallet } from "../../utils";
 import { getGameName, GameIcon } from "..";
 import { WalletContext } from "../../contexts/WalletContext";
 import { Address } from "../../components/Address";
 
-function GameForm({ game, currencySymbol, onSubmit }) {
+const SELLECTION = ["Rock", "Paper", "Scissors"];
+
+function GameForm({ game, currencySymbol, onSubmit }: any) {
+  const [betSelection, setBetSelection] = useState(1);
   return (
     <div className="container">
       <div className="row">
@@ -24,14 +29,34 @@ function GameForm({ game, currencySymbol, onSubmit }) {
           <p className="lead">
             Amount: {game.betAmount} {currencySymbol}
           </p>
-          <p className="lead">
-            On: {game.player1BetNumber < 6 ? "Small" : "Big"}
-          </p>
         </div>
       </div>
       <div className="row">
         <div className="col">
-          <form onSubmit={onSubmit}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit(betSelection);
+            }}
+          >
+            <div className="mb-3">
+              <div className="btn-group">
+                {SELLECTION.map((sellection, index) => (
+                  <button
+                    key={sellection}
+                    className={
+                      "btn btn-outline-primary " +
+                      (index + 1 === betSelection ? "active" : "") +
+                      " px-4"
+                    }
+                    type="button"
+                    onClick={() => setBetSelection(index + 1)}
+                  >
+                    {sellection}
+                  </button>
+                ))}
+              </div>
+            </div>
             <button type="submit" className="btn btn-primary">
               Play with it
             </button>
@@ -42,28 +67,29 @@ function GameForm({ game, currencySymbol, onSubmit }) {
   );
 }
 
-export function Game({ game }) {
+export function Game({ game }: any) {
   const { accounts, casino, chain } = useContext(WalletContext);
-  const currencySymbol = chain.info.nativeCurrency.symbol;
+  const currencySymbol = chain === null ? "" : chain.info.nativeCurrency.symbol;
+
   const [playing, setPlaying] = useState(false);
 
-  async function onSubmit(e) {
-    e.preventDefault();
+  async function onSubmit(selection: number) {
     setPlaying(true);
     try {
       const amount = game.betAmount.toString();
-
       if (accounts.length < 1) {
         await connectWallet();
       }
-      await casino.playGame(
-        amount,
-        game.id,
-        game.player1BetNumber === 6 ? 1 : 6
-      );
+      if (casino === null) {
+        throw new Error("Contract not exist");
+      }
+      const receipt = await casino.playGame(amount, game.id, selection);
+      const winner = casino.parseWinnerFromEvent(receipt);
+      eventEmitter.dispatch(Events.COMPLETE_GAME, winner);
     } catch (error) {
-      setPlaying(false);
       throw error;
+    } finally {
+      setPlaying(false);
     }
   }
 

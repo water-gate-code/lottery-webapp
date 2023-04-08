@@ -4,7 +4,7 @@ import { Game as GameDice } from "./Dice/GameDice";
 import { Game as GameRps } from "./RockPaperScissors/GameRps";
 
 const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
-export const isEmptyAddress = (address) => {
+export const isEmptyAddress = (address: string) => {
   return address.toLowerCase() === EMPTY_ADDRESS;
 };
 
@@ -13,7 +13,7 @@ export const GameType = {
   Rps: 2,
 };
 
-export const getGameName = (gameType) => {
+export const getGameName = (gameType: number) => {
   switch (gameType) {
     case GameType.Dice:
       return "Dice";
@@ -24,7 +24,7 @@ export const getGameName = (gameType) => {
   }
 };
 
-export const GameIcon = ({ gameType }) => {
+export const GameIcon = ({ gameType }: any) => {
   switch (gameType) {
     case GameType.Dice:
       return <i className="bi bi-dice-5-fill"></i>;
@@ -35,7 +35,7 @@ export const GameIcon = ({ gameType }) => {
   }
 };
 
-export const CreateGameRenderer = ({ gameType }) => {
+export const CreateGameRenderer = ({ gameType }: any) => {
   switch (gameType) {
     case GameType.Dice:
       return <CreateGameDice />;
@@ -46,7 +46,7 @@ export const CreateGameRenderer = ({ gameType }) => {
   }
 };
 
-export const GameRenderer = ({ game }) => {
+export const GameRenderer = ({ game }: any) => {
   switch (game.type) {
     case GameType.Dice:
       return <GameDice game={game} />;

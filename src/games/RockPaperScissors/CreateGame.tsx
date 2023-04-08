@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, FormEvent } from "react";
 
 import { connectWallet } from "../../utils";
 import { GameType, getGameName } from "../";
@@ -9,8 +9,9 @@ const SELLECTION = ["Rock", "Paper", "Scissors"];
 
 export function CreateGame() {
   const { accounts, casino, chain } = useContext(WalletContext);
-  const currency = chain.info.nativeCurrency.symbol;
-  const amountScales = [1, 2, 5, 8, 10].map((n) => n * chain.nativeMinScale);
+  const currency = chain === null ? "" : chain.info.nativeCurrency.symbol;
+  const amountScales =
+    chain === null ? [] : [1, 2, 5, 8, 10].map((n) => n * chain.nativeMinScale);
   const [betAmount, setBetAmount] = useState(amountScales[0]);
   const [betSelection, setBetSelection] = useState(1);
   const [creating, setCreating] = useState(false);
@@ -21,7 +22,9 @@ export function CreateGame() {
       if (accounts.length < 1) {
         await connectWallet();
       }
-
+      if (casino === null) {
+        throw new Error("Contract not exist");
+      }
       const receipt = await casino.createGame(
         betAmount,
         GameType.Rps,
@@ -35,7 +38,7 @@ export function CreateGame() {
     }
   }
 
-  function onSubmit(e) {
+  function onSubmit(e: FormEvent) {
     e.preventDefault();
     create();
   }

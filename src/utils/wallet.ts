@@ -1,4 +1,4 @@
-import type { ChainInfo } from "../chains";
+import type { ChainInfo } from "./chains";
 
 const { ethereum } = window;
 const { ethers } = window;

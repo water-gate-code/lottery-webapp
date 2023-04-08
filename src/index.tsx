@@ -7,7 +7,10 @@ import { Provider } from "react-redux";
 
 import { App } from "./App";
 import { NeedMetamask } from "./components/NeedMetamask";
-import { reportWebVitals, sendToGoogleAnalytics } from "./reportWebVitals";
+import {
+  reportWebVitals,
+  sendToGoogleAnalytics,
+} from "./utils/reportWebVitals";
 import { metamaskInstalled } from "./utils/wallet";
 import { store } from "./store";
 

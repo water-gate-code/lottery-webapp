@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../../store";
-import { ChainConfig, ChainInfo, chains, supportChainIds } from "../../chains";
+import {
+  ChainConfig,
+  ChainInfo,
+  chains,
+  supportChainIds,
+} from "../../utils/chains";
 import { Casino } from "../../utils/casino";
 
 interface ChainStateNull {

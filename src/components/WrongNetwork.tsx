@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { supportChainIds, chains, ChainInfo } from "../chains";
+import { supportChainIds, chains, ChainInfo } from "../utils/chains";
 import { switchNetwork, addToNetwork, connectWallet } from "../utils/wallet";
 import { useAppSelector } from "../hooks";
 import { selectUser } from "../store/slices/user";

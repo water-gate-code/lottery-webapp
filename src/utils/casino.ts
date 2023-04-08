@@ -17,6 +17,44 @@ interface RawChainGameGame {
   wager: number;
   gamblers: RawChainGambler[];
 }
+enum RawChainGameType {
+  dice = 1,
+  rps = 2,
+}
+export enum GameType {
+  dice,
+  rps,
+}
+
+export interface DiceGame {
+  gameType: GameType.dice;
+  id: string;
+  wager: string;
+  playerA: string;
+  playerB: string;
+  finished: boolean;
+}
+export interface RpsGame {
+  gameType: GameType.rps;
+  id: string;
+  wager: string;
+  playerA: string;
+  playerB: string;
+  finished: boolean;
+}
+
+export type Game = DiceGame | RpsGame;
+
+const rawChainGameTypeMap = (rawGameType: number): GameType => {
+  switch (rawGameType) {
+    case RawChainGameType.dice:
+      return GameType.dice;
+    case RawChainGameType.rps:
+      return GameType.rps;
+    default:
+      throw new Error("Unknow game type");
+  }
+};
 
 const formatGame = (game: RawChainGameGame) => {
   const { id, gameType, wager, gamblers } = game;

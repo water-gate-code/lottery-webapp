@@ -2,12 +2,14 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import { userReducer } from "./slices/user";
 import { chainReducer } from "./slices/chain";
 import { appReducer } from "./slices/app";
+import { gameReducer } from "./slices/game";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     chain: chainReducer,
     app: appReducer,
+    game: gameReducer,
   },
 });
 

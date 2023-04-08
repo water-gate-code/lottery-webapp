@@ -9,15 +9,18 @@ import { selectChain } from "../store/slices/chain";
 export function Topbar() {
   const user = useAppSelector(selectUser);
   const chain = useAppSelector(selectChain);
+  const supportChain = chain.id !== null && chain.support;
 
   const accountInfo = user.authed ? (
     <>
-      <span className="navbar-text me-3" title={user.balance.toString()}>
-        <i className="bi bi-wallet-fill me-2"></i>
-        <span className="text-primary">
-          {parseFloat(user.balance).toFixed(4)}
+      {user.balance !== undefined ? (
+        <span className="navbar-text me-3" title={user.balance}>
+          <i className="bi bi-wallet-fill me-2"></i>
+          <span className="text-primary">
+            {parseFloat(user.balance).toFixed(4)}
+          </span>
         </span>
-      </span>
+      ) : null}
       <span className="navbar-text me-3">
         <i className="bi bi-person-fill me-2"></i>
         <Address address={user.address} />
@@ -51,7 +54,7 @@ export function Topbar() {
         <div>
           {accountInfo}
 
-          {chain.id !== null && chain.support ? (
+          {supportChain ? (
             <>
               <span className="navbar-brand me-2">
                 <img

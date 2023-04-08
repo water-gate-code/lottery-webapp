@@ -8,7 +8,7 @@ interface UserStateUnauth {
 interface UserStateAuthed {
   authed: true;
   address: string;
-  balance: string;
+  balance?: string;
 }
 
 type UserState = UserStateAuthed | UserStateUnauth;
@@ -28,20 +28,22 @@ export const userSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    auth: (
-      state,
-      action: PayloadAction<{ address: string; balance: string }>
-    ) => {
+    auth: (state, action: PayloadAction<string>) => {
       return {
         authed: true,
-        address: action.payload.address,
-        balance: action.payload.balance,
+        address: action.payload,
+      };
+    },
+    setBalance: (state, action: PayloadAction<string | undefined>) => {
+      return {
+        ...state,
+        balance: action.payload,
       };
     },
   },
 });
 
-export const { auth } = userSlice.actions;
+export const { auth, setBalance } = userSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectUser = (state: RootState) => state.user;

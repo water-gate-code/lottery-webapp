@@ -1,14 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
-import { ErrorPage } from "./components/ErrorPage";
-import { Game } from "./components/Game";
-import { CreateGame } from "./components/CreateGame";
-import { Layout } from "./components/Layout";
-import { Result } from "./components/Result";
+import { ErrorPage } from "./ErrorPage";
+import { Game } from "./Game";
+import { CreateGame } from "./CreateGame";
+import { Result } from "./Result";
+import { App } from "./App";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: <App />,
     errorElement: <ErrorPage />,
     children: [
       {

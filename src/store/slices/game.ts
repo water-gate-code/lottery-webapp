@@ -1,47 +1,34 @@
-// import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-// import type { RootState } from "../../store";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import type { RootState } from "../../store";
+import { Game } from "../../utils/casino";
 
-// interface DiceGame {}
+interface GamePlay {
+  game: Game;
+  status: "idle" | "loading" | "finished";
+  result: "win" | "lose" | "equal";
+}
+interface GameState {
+  gameList: Game[];
+  currentGamePlay?: GamePlay;
+}
 
-// interface GameState {
-//   authed: true;
-//   address: string;
-//   balance: string;
-// }
+const initialState = {
+  gameList: [],
+} as GameState;
 
-// type UserState = UserStateAuthed | UserStateUnauth;
+export const gameSlice = createSlice({
+  name: "game",
+  initialState,
+  reducers: {
+    setGameList: (state, action: PayloadAction<Game[]>) => {
+      state.gameList = action.payload;
+    },
+  },
+});
 
-// /*
-// createSlice Discriminated unions
-// Is possible to use an typescript Union type for the state of a Redux Toolkit Slice?
-// https://stackoverflow.com/questions/72185233/is-is-possible-to-use-an-typescript-union-type-for-the-state-of-a-redux-toolkit
-// https://redux-toolkit.js.org/usage/usage-with-typescript#defining-the-initial-state-type
-// */
-// const initialState = {
-//   authed: false,
-// } as UserState;
+export const { setGameList } = gameSlice.actions;
 
-// export const userSlice = createSlice({
-//   name: "user",
-//   // `createSlice` will infer the state type from the `initialState` argument
-//   initialState,
-//   reducers: {
-//     auth: (
-//       state,
-//       action: PayloadAction<{ address: string; balance: string }>
-//     ) => {
-//       return {
-//         authed: true,
-//         address: action.payload.address,
-//         balance: action.payload.balance,
-//       };
-//     },
-//   },
-// });
+// Other code such as selectors can use the imported `RootState` type
+export const selectGame = (state: RootState) => state.game;
 
-// export const { auth } = userSlice.actions;
-
-// // Other code such as selectors can use the imported `RootState` type
-// export const selectUser = (state: RootState) => state.user;
-
-// export const userReducer = userSlice.reducer;
+export const gameReducer = gameSlice.reducer;

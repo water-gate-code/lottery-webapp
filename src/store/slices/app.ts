@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, nanoid } from "@reduxjs/toolkit";
 
 import type { RootState } from "../../store";
+import { metamaskInstalled } from "../../utils/wallet";
 
 export enum NotificationType {
   info = "info",
@@ -16,6 +17,7 @@ interface Notification {
 
 interface AppState {
   initialized: boolean;
+  metamaskInstalled: boolean;
   notifications: Notification[];
 }
 
@@ -27,7 +29,11 @@ export function newNotification(
   return { id, type, title };
 }
 
-const initialState = { initialized: false, notifications: [] } as AppState;
+const initialState = {
+  initialized: false,
+  metamaskInstalled: metamaskInstalled(),
+  notifications: [],
+} as AppState;
 
 export const appSlice = createSlice({
   name: "app",

@@ -86,7 +86,6 @@ export function GameList() {
         "Loading Games..."
       );
       dispatch(notify(notification));
-
       return () => dispatch(clearNotify(notification));
     }
 

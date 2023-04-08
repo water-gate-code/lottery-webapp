@@ -39,7 +39,7 @@ async function setWallet() {
   store.dispatch(initialize());
 }
 const onWalletChange = (...args: any[]) => {
-  console.log("[wallet.event]:", args);
+  console.log(`[wallet.event] ${args[0]}:`, args);
   setWallet();
 };
 
@@ -48,11 +48,11 @@ console.log("process.env.NODE_ENV", process.env.NODE_ENV);
 window.addEventListener("error", errorHandler);
 window.addEventListener("unhandledrejection", errorHandler);
 
-ethereum.on("connect", onWalletChange);
-ethereum.on("disconnect", onWalletChange);
-ethereum.on("accountsChanged", onWalletChange);
-ethereum.on("chainChanged", onWalletChange);
-ethereum.on("message", onWalletChange);
+ethereum.on("connect", onWalletChange.bind(this, "connect"));
+ethereum.on("disconnect", onWalletChange.bind(this, "disconnect"));
+ethereum.on("accountsChanged", onWalletChange.bind(this, "accountsChanged"));
+ethereum.on("chainChanged", onWalletChange.bind(this, "chainChanged"));
+ethereum.on("message", onWalletChange.bind(this, "message"));
 
 reportWebVitals(sendToGoogleAnalytics);
 setWallet();

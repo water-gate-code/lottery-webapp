@@ -16,8 +16,16 @@ import {
   newNotification,
   notify,
 } from "./store/slices/app";
-import { setChain } from "./store/slices/chain";
+import { selectCasino, setChain } from "./store/slices/chain";
 import { errorEventParser } from "./utils/tools";
+import { addGame, fetchGames } from "./store/slices/game";
+import {
+  CREATEGAME_EVENT,
+  Game,
+  RawChainGame,
+  formatGame,
+  getCasino,
+} from "./utils/casino";
 
 const { ethereum } = window;
 
@@ -33,9 +41,26 @@ function errorHandler(errorEvent: any) {
 }
 
 async function updateChainId() {
+  // TODO: very ugly apply, need to refactor ASAP
+  const onCreate = (game: RawChainGame) => {
+    store.dispatch(addGame(formatGame(game)));
+  };
+  const preCasino = selectCasino(store.getState());
+
+  if (preCasino !== null) {
+    preCasino.off(CREATEGAME_EVENT, onCreate);
+  }
+
   const chainId = await getChainId();
   store.dispatch(setChain(chainId));
+
+  const casino = getCasino(chainId);
+  if (casino !== null) {
+    store.dispatch(fetchGames(casino));
+    casino.on(CREATEGAME_EVENT, onCreate);
+  }
 }
+
 async function updateBalance(address: string) {
   const balance = await getBalance(address);
   store.dispatch(setBalance(balance));
@@ -54,6 +79,7 @@ async function setWallet() {
   await updateAuth();
   store.dispatch(initialize());
 }
+
 const onWalletChange = (...args: any[]) => {
   console.log(`[wallet.event] ${args[0]}:`, args);
   setWallet();

@@ -1,17 +1,17 @@
-import type { ChainConfig } from "./chains";
+import { ChainConfig, chains } from "./chains";
 
 const { ethereum } = window;
 const { ethers } = window;
 
-const CREATEGAME_EVENT = "CreateGame_Event";
-const COMPLETEGAME_EVENT = "CompleteGame_Event";
+export const CREATEGAME_EVENT = "CreateGame_Event";
+export const COMPLETEGAME_EVENT = "CompleteGame_Event";
 
 interface RawChainGambler {
   id: string;
   choice: number;
 }
 
-interface RawChainGameGame {
+export interface RawChainGame {
   id: string;
   gameType: number;
   wager: number;
@@ -26,24 +26,31 @@ export enum GameType {
   rps,
 }
 
-export interface DiceGame {
-  gameType: GameType.dice;
-  id: string;
-  wager: string;
-  playerA: string;
-  playerB: string;
-  finished: boolean;
-}
-export interface RpsGame {
-  gameType: GameType.rps;
-  id: string;
-  wager: string;
-  playerA: string;
-  playerB: string;
-  finished: boolean;
-}
+// interface DiceGame {
+//   gameType: GameType.dice;
+//   id: string;
+//   wager: string;
+//   playerA: string;
+//   playerB: string;
+//   finished: boolean;
+// }
+// interface RpsGame {
+//   gameType: GameType.rps;
+//   id: string;
+//   wager: string;
+//   playerA: string;
+//   playerB: string;
+//   finished: boolean;
+// }
 
-export type Game = DiceGame | RpsGame;
+export type Game = {
+  id: string;
+  type: RawChainGameType;
+  player1: string;
+  betAmount: string;
+  player1BetNumber: string;
+  isActive: boolean;
+};
 
 const rawChainGameTypeMap = (rawGameType: number): GameType => {
   switch (rawGameType) {
@@ -56,7 +63,7 @@ const rawChainGameTypeMap = (rawGameType: number): GameType => {
   }
 };
 
-const formatGame = (game: RawChainGameGame) => {
+export const formatGame = (game: RawChainGame): Game => {
   const { id, gameType, wager, gamblers } = game;
 
   return {
@@ -91,7 +98,7 @@ export class Casino {
     this.#contract.off(event, callback);
   }
 
-  async getGames() {
+  async getGames(): Promise<Game[]> {
     const games = await this.#contract.getGames();
     return games.map(formatGame);
   }
@@ -129,3 +136,15 @@ export class Casino {
     return completeGameEvent.args.winner;
   }
 }
+
+export const getCasino = (function () {
+  const casinoCache: { [chainId: number]: Casino } = {};
+  return (chainId: number | undefined | null) => {
+    if (!chainId) return null;
+    const chain = chains[chainId];
+    if (!chain) return null;
+
+    if (!casinoCache[chainId]) casinoCache[chainId] = new Casino(chain);
+    return casinoCache[chainId];
+  };
+})();

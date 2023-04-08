@@ -6,7 +6,7 @@ import {
   chains,
   supportChainIds,
 } from "../../utils/chains";
-import { Casino } from "../../utils/casino";
+import { getCasino } from "../../utils/casino";
 
 interface ChainStateNull {
   id: null;
@@ -53,19 +53,5 @@ export const chainSlice = createSlice({
 
 export const { setChain } = chainSlice.actions;
 export const selectChain = (state: RootState) => state.chain;
-export const selectSupport = (state: RootState) =>
-  state.chain.id !== null && state.chain.support;
-export const selectCasino = (function () {
-  const casinoCache: { [chainId: number]: Casino } = {};
-  return (state: RootState) => {
-    const { chain } = state;
-    if (chain.id !== null && chain.support) {
-      if (!casinoCache[chain.id])
-        casinoCache[chain.id] = new Casino(chain.config);
-
-      return casinoCache[chain.id];
-    }
-    return null;
-  };
-})();
+export const selectCasino = (state: RootState) => getCasino(state.chain.id);
 export const chainReducer = chainSlice.reducer;

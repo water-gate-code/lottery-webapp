@@ -1,6 +1,6 @@
 import { useState, FormEvent } from "react";
 
-import { connectWallet } from "../../utils";
+import { connectWallet } from "../../utils/wallet";
 import { GameType, getGameName } from "../";
 import { eventEmitter, Events } from "../../event";
 import { useAppSelector } from "../../hooks";

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { eventEmitter, Events } from "../../event";
 
-import { connectWallet } from "../../utils";
+import { connectWallet } from "../../utils/wallet";
 import { getGameName, GameIcon } from "..";
 import { Address } from "../../components/Address";
 import { useAppSelector } from "../../hooks";

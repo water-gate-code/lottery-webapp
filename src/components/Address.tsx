@@ -1,4 +1,4 @@
-import { shortenAddress } from "../utils";
+import { shortenAddress } from "../utils/tools";
 
 export function Address({ address }: { address: string }) {
   return (

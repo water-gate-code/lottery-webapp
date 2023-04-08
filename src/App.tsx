@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 
-import { getAccounts, getChainId, getBalance } from "./utils";
+import { getAccounts, getChainId, getBalance } from "./utils/wallet";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { auth } from "./store/slices/user";
 import {
@@ -12,7 +12,7 @@ import {
   notify,
   selectApp,
 } from "./store/slices/app";
-import { setChain } from "./store/slices/chain";
+import { selectChain, setChain } from "./store/slices/chain";
 import { eventEmitter, Events } from "./event";
 
 import { router } from "./router";
@@ -109,6 +109,7 @@ function useInitializeApp() {
 export function App() {
   useInitializeApp();
   const { initialized } = useAppSelector(selectApp);
+  const chain = useAppSelector(selectChain);
 
   if (!initialized)
     return (
@@ -116,5 +117,10 @@ export function App() {
         <div className="spinner-border text-primary m-5" role="status"></div>
       </div>
     );
-  return <RouterProvider router={router} />;
+  return (
+    <RouterProvider
+      router={router}
+      key={chain.id !== null ? chain.id.toString() : "null"}
+    />
+  );
 }

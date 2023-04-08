@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 import { useAppSelector } from "../hooks";
 import { selectUser } from "../store/slices/user";
-import { connectWallet } from "../utils";
+import { connectWallet } from "../utils/wallet";
 import { Address } from "./Address";
 import { selectChain } from "../store/slices/chain";
 

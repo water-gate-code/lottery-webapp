@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import { eventEmitter, Events } from "../event";
 import { Topbar } from "./Topbar";
@@ -8,8 +8,6 @@ import { WrongNetwork } from "./WrongNetwork";
 import { Notification } from "./Notification";
 import { useAppSelector } from "../hooks";
 import { selectCasino, selectChain } from "../store/slices/chain";
-
-const { ethereum } = window;
 
 function GameScreen() {
   return (
@@ -35,16 +33,7 @@ function GameScreen() {
 export function Layout() {
   const chain = useAppSelector(selectChain);
   const casino = useAppSelector(selectCasino);
-  const navigate = useNavigate();
   const supportNetwork = chain.id !== null && chain.support;
-
-  useEffect(() => {
-    const onChainChanged = () => navigate("/");
-    ethereum.on("chainChanged", onChainChanged);
-    return () => {
-      ethereum.removeListener("chainChanged", onChainChanged);
-    };
-  }, [navigate]);
 
   useEffect(() => {
     function onCompleteGame(winner: string) {

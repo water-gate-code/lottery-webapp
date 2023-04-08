@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import { App } from "./App";
 import { NeedMetamask } from "./components/NeedMetamask";
 import { reportWebVitals, sendToGoogleAnalytics } from "./reportWebVitals";
-import { metamaskInstalled } from "./utils";
+import { metamaskInstalled } from "./utils/wallet";
 import { store } from "./store";
 
 console.log("process.env.NODE_ENV", process.env.NODE_ENV);

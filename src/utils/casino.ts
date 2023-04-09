@@ -1,24 +1,22 @@
-import type { Listener } from "ethers";
-import { formatEther, BrowserProvider, parseEther, Contract } from "ethers";
+import { formatEther, BrowserProvider, parseEther } from "ethers";
 import { ChainConfig, chains } from "./chains";
-import CasinoArtifact from "./contracts/Casino.json";
+import { Casino__factory } from "./types";
+import {
+  CreateGame_EventEvent,
+  CompleteGame_EventEvent,
+  DisplayInfoStructOutput,
+} from "./types/Casino";
+import { TypedListener } from "./types/common";
 
 const { ethereum } = window;
 
-export const CREATEGAME_EVENT = "CreateGame_Event";
-export const COMPLETEGAME_EVENT = "CompleteGame_Event";
-
-interface RawChainGambler {
-  id: string;
-  choice: number;
+enum CasinoEvent {
+  CompleteGame_Event = "CompleteGame_Event",
+  CreateGame_Event = "CreateGame_Event",
+  RandomRequestTest_Event = "RandomRequestTest_Event",
+  RandomResultTest_Event = "RandomResultTest_Event",
 }
 
-export interface RawChainGame {
-  id: string;
-  gameType: number;
-  wager: number;
-  gamblers: RawChainGambler[];
-}
 enum RawChainGameType {
   dice = 1,
   rps = 2,
@@ -90,7 +88,7 @@ const getRawGameType = (gameType: GameType): RawChainGameType => {
   }
 };
 
-export const formatGame = (rawChainGame: RawChainGame): Game => {
+export const formatGame = (rawChainGame: DisplayInfoStructOutput): Game => {
   const { id, gameType, wager, gamblers } = rawChainGame;
 
   return {
@@ -106,19 +104,31 @@ export const formatGame = (rawChainGame: RawChainGame): Game => {
 export class Casino {
   #chain;
   #contract;
+  #signedContract: any;
   #provider;
   constructor(chain: ChainConfig) {
     if (!chain) throw new Error("Chain is required!");
     this.#chain = chain;
     const { address } = this.#chain.contracts.Casino;
     this.#provider = new BrowserProvider(ethereum);
-    this.#contract = new Contract(address, CasinoArtifact.abi, this.#provider);
+    this.#contract = Casino__factory.connect(address, this.#provider);
   }
 
-  on(event: string, callback: Listener) {
+  onCreateGame(callback: TypedListener<CreateGame_EventEvent.Event>) {
+    const event = this.#contract.getEvent(CasinoEvent.CreateGame_Event);
     this.#contract.on(event, callback);
   }
-  off(event: string, callback: Listener) {
+  offCreateGame(callback: TypedListener<CreateGame_EventEvent.Event>) {
+    const event = this.#contract.getEvent(CasinoEvent.CreateGame_Event);
+    this.#contract.off(event, callback);
+  }
+
+  onCompleteGame(callback: TypedListener<CompleteGame_EventEvent.Event>) {
+    const event = this.#contract.getEvent(CasinoEvent.CompleteGame_Event);
+    this.#contract.on(event, callback);
+  }
+  offCompleteGame(callback: TypedListener<CompleteGame_EventEvent.Event>) {
+    const event = this.#contract.getEvent(CasinoEvent.CompleteGame_Event);
     this.#contract.off(event, callback);
   }
 
@@ -131,9 +141,13 @@ export class Casino {
     return formatGame(game);
   }
   async signedContract() {
-    const signer = await this.#provider.getSigner();
-    const { address } = this.#chain.contracts.Casino;
-    return new Contract(address, CasinoArtifact.abi, signer);
+    if (!this.#signedContract) {
+      const signer = await this.#provider.getSigner();
+      const { address } = this.#chain.contracts.Casino;
+
+      this.#signedContract = Casino__factory.connect(address, signer);
+    }
+    return this.#signedContract;
   }
   async createGame(amount: number, gameType: GameType, bet: number) {
     const signedContract = await this.signedContract();
@@ -148,7 +162,7 @@ export class Casino {
     const { events } = receipt;
 
     const createGameEvent = events.find(
-      (e: any) => e.event === CREATEGAME_EVENT
+      (e: any) => e.event === CasinoEvent.CreateGame_Event
     );
 
     return formatGame(createGameEvent.args.game);
@@ -165,7 +179,7 @@ export class Casino {
     const { events } = receipt;
 
     const completeGameEvent = events.find(
-      (e: any) => e.event === COMPLETEGAME_EVENT
+      (e: any) => e.event === CasinoEvent.CompleteGame_Event
     );
 
     return completeGameEvent.args.winner;

@@ -18,21 +18,9 @@ import {
 } from "./store/slices/app";
 import { selectCasino, setChain } from "./store/slices/chain";
 import { errorEventParser } from "./utils/tools";
-import {
-  addGame,
-  fetchGames,
-  selectGame,
-  setGameResult,
-} from "./store/slices/game";
-import {
-  COMPLETEGAME_EVENT,
-  CREATEGAME_EVENT,
-  GameResult,
-  RawChainGame,
-  formatGame,
-  getCasino,
-  isEmptyAddress,
-} from "./utils/casino";
+import { fetchGames, selectGame, setGameResult } from "./store/slices/game";
+import { GameResult, getCasino, isEmptyAddress } from "./utils/casino";
+import { DisplayInfoStructOutput } from "./utils/types/Casino";
 
 const { ethereum } = window;
 
@@ -48,8 +36,8 @@ function errorHandler(errorEvent: any) {
 }
 
 // TODO: very ugly apply, need to refactor ASAP
-const onCreate = (game: RawChainGame) => {
-  store.dispatch(addGame(formatGame(game)));
+const onCreate = (game: DisplayInfoStructOutput) => {
+  // store.dispatch(addGame(formatGame(game)));
 };
 const onComplete = (winner: string) => {
   const isWinner = (a: string) => a.toLowerCase() === winner.toLowerCase();
@@ -68,8 +56,8 @@ async function updateChainId() {
   const preCasino = selectCasino(store.getState());
 
   if (preCasino !== null) {
-    preCasino.off(CREATEGAME_EVENT, onCreate);
-    preCasino.off(COMPLETEGAME_EVENT, onComplete);
+    preCasino.offCreateGame(onCreate);
+    preCasino.offCompleteGame(onComplete);
   }
 
   const chainId = await getChainId();
@@ -79,8 +67,8 @@ async function updateChainId() {
   if (casino !== null) {
     store.dispatch(fetchGames({ casino }));
 
-    casino.on(CREATEGAME_EVENT, onCreate);
-    casino.on(COMPLETEGAME_EVENT, onComplete);
+    casino.onCreateGame(onCreate);
+    casino.onCompleteGame(onComplete);
   }
 }
 

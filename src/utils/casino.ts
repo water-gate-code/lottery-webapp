@@ -1,7 +1,8 @@
+import type { Listener } from "ethers";
+import { formatEther, BrowserProvider, parseEther, Contract } from "ethers";
 import { ChainConfig, chains } from "./chains";
 
 const { ethereum } = window;
-const { ethers } = window;
 
 export const CREATEGAME_EVENT = "CreateGame_Event";
 export const COMPLETEGAME_EVENT = "CompleteGame_Event";
@@ -95,7 +96,7 @@ export const formatGame = (rawChainGame: RawChainGame): Game => {
     id: id.toString(),
     type: getGameType(gameType),
     player1: gamblers[0].id.toString(),
-    betAmount: ethers.utils.formatEther(wager),
+    betAmount: formatEther(wager),
     player1BetNumber: gamblers[0].choice.toString(),
     isActive: gamblers.length < 2,
   };
@@ -104,22 +105,19 @@ export const formatGame = (rawChainGame: RawChainGame): Game => {
 export class Casino {
   #chain;
   #contract;
-  #signedContract;
   #provider;
   constructor(chain: ChainConfig) {
     if (!chain) throw new Error("Chain is required!");
     this.#chain = chain;
     const { address, abi } = this.#chain.contracts.Casino;
-    this.#provider = new ethers.providers.Web3Provider(ethereum);
-    this.#contract = new ethers.Contract(address, abi, this.#provider);
-    const signer = this.#provider.getSigner();
-    this.#signedContract = new ethers.Contract(address, abi, signer);
+    this.#provider = new BrowserProvider(ethereum);
+    this.#contract = new Contract(address, abi, this.#provider);
   }
 
-  on(event: string, callback: Function) {
+  on(event: string, callback: Listener) {
     this.#contract.on(event, callback);
   }
-  off(event: string, callback: Function) {
+  off(event: string, callback: Listener) {
     this.#contract.off(event, callback);
   }
 
@@ -131,12 +129,18 @@ export class Casino {
     const game = await this.#contract.getGame(gameId);
     return formatGame(game);
   }
+  async signedContract() {
+    const signer = await this.#provider.getSigner();
+    const { address, abi } = this.#chain.contracts.Casino;
+    return new Contract(address, abi, signer);
+  }
   async createGame(amount: number, gameType: GameType, bet: number) {
-    const response = await this.#signedContract.createGame(
+    const signedContract = await this.signedContract();
+    const response = await signedContract.createGame(
       getRawGameType(gameType),
       bet,
       {
-        value: ethers.utils.parseEther(amount.toString()),
+        value: parseEther(amount.toString()),
       }
     );
     const receipt = await response.wait();
@@ -149,8 +153,9 @@ export class Casino {
     return formatGame(createGameEvent.args.game);
   }
   async playGame(amount: number, gameId: string, bet: number) {
-    const response = await this.#signedContract.playGame(gameId, bet, {
-      value: ethers.utils.parseEther(amount.toString()),
+    const signedContract = await this.signedContract();
+    const response = await signedContract.playGame(gameId, bet, {
+      value: parseEther(amount.toString()),
     });
 
     return await response.wait();

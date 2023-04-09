@@ -1,3 +1,4 @@
+import { InterfaceAbi } from "ethers";
 import { CASINO } from "./contracts";
 
 export const supportChainIds: number[] = [137, 80001, 1337];
@@ -27,7 +28,7 @@ export interface ChainInfo {
 }
 export interface ChainContract {
   address: string;
-  abi: object;
+  abi: InterfaceAbi;
 }
 export interface ChainConfig {
   info: ChainInfo;

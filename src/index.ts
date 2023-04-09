@@ -8,7 +8,7 @@ import {
 } from "./utils/reportWebVitals";
 import { store } from "./store";
 import { getAccounts, getBalance, getChainId } from "./utils/wallet";
-import { auth, setBalance } from "./store/slices/user";
+import { auth, selectUser, setBalance } from "./store/slices/user";
 import {
   NotificationType,
   clearNotify,
@@ -18,12 +18,20 @@ import {
 } from "./store/slices/app";
 import { selectCasino, setChain } from "./store/slices/chain";
 import { errorEventParser } from "./utils/tools";
-import { addGame, fetchGames } from "./store/slices/game";
 import {
+  addGame,
+  fetchGames,
+  selectGame,
+  setGameResult,
+} from "./store/slices/game";
+import {
+  COMPLETEGAME_EVENT,
   CREATEGAME_EVENT,
+  GameResult,
   RawChainGame,
   formatGame,
   getCasino,
+  isEmptyAddress,
 } from "./utils/casino";
 
 const { ethereum } = window;
@@ -44,10 +52,24 @@ async function updateChainId() {
   const onCreate = (game: RawChainGame) => {
     store.dispatch(addGame(formatGame(game)));
   };
+  const onComplete = (winner: string) => {
+    const isWinner = (a: string) => a.toLowerCase() === winner.toLowerCase();
+    const user = selectUser(store.getState());
+    const game = selectGame(store.getState());
+    const gameId = game.currentGamePlay.game.value?.id;
+    const result = isEmptyAddress(winner)
+      ? GameResult.draw
+      : user.authed && isWinner(user.address)
+      ? GameResult.win
+      : GameResult.lose;
+    store.dispatch(setGameResult({ gameId: gameId ?? "unknow", result }));
+    // navigate(`/result/${result > 0 ? "win" : result < 0 ? "lose" : "equal"}`);
+  };
   const preCasino = selectCasino(store.getState());
 
   if (preCasino !== null) {
     preCasino.off(CREATEGAME_EVENT, onCreate);
+    preCasino.off(COMPLETEGAME_EVENT, onComplete);
   }
 
   const chainId = await getChainId();
@@ -56,7 +78,9 @@ async function updateChainId() {
   const casino = getCasino(chainId);
   if (casino !== null) {
     store.dispatch(fetchGames({ casino }));
+
     casino.on(CREATEGAME_EVENT, onCreate);
+    casino.on(COMPLETEGAME_EVENT, onComplete);
   }
 }
 

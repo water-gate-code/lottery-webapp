@@ -1,20 +1,21 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../";
-import { Casino, Game } from "../../utils/casino";
+import { Casino, Game, GameResult } from "../../utils/casino";
 
 interface RemoteData<T> {
-  value: T;
+  value: T | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error?: any;
 }
 interface GamePlay {
   game: RemoteData<Game>;
-  status: "idle" | "loading" | "finished";
-  result: "win" | "lose" | "equal";
+  result: GameResult | null;
 }
+// interface GameResultMap{[gameId: string]: GameResult} ;
 interface GameState {
   gameList: RemoteData<Game[]>;
-  currentGamePlay?: GamePlay;
+  currentGamePlay: GamePlay;
+  gameResults: { [gameId: string]: GameResult };
 }
 
 const initialState = {
@@ -22,6 +23,14 @@ const initialState = {
     value: [],
     status: "idle",
   },
+  currentGamePlay: {
+    game: {
+      value: null,
+      status: "idle",
+    },
+    result: null,
+  },
+  gameResults: {},
 } as GameState;
 
 export const gameSlice = createSlice({
@@ -29,13 +38,30 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     addGame: (state, action: PayloadAction<Game>) => {
+      const newGameList =
+        state.gameList.value !== null
+          ? [...state.gameList.value, action.payload]
+          : [action.payload];
       return {
         ...state,
         gameList: {
           ...state.gameList,
-          value: [...state.gameList.value, action.payload],
+          value: newGameList,
         },
       };
+    },
+    setGameResult: (
+      state,
+      action: PayloadAction<{ gameId: string; result: GameResult }>
+    ) => {
+      const { gameId, result } = action.payload;
+      state.gameResults[gameId] = result;
+      const finishedIndex = state.gameList.value?.findIndex(
+        (g) => g.id === gameId
+      );
+      if (finishedIndex && finishedIndex >= 0) {
+        state.gameList.value?.splice(finishedIndex, 1);
+      }
     },
   },
   extraReducers(builder) {
@@ -50,6 +76,20 @@ export const gameSlice = createSlice({
       .addCase(fetchGames.rejected, (state, action) => {
         state.gameList.status = "failed";
         state.gameList.error = action.error;
+        throw action.error;
+      });
+
+    builder
+      .addCase(fetchGame.pending, (state) => {
+        state.currentGamePlay.game.status = "loading";
+      })
+      .addCase(fetchGame.fulfilled, (state, action) => {
+        state.currentGamePlay.game.status = "succeeded";
+        state.currentGamePlay.game.value = action.payload;
+      })
+      .addCase(fetchGame.rejected, (state, action) => {
+        state.currentGamePlay.game.status = "failed";
+        state.currentGamePlay.game.error = action.error;
         throw action.error;
       });
   },
@@ -69,7 +109,7 @@ export const fetchGame = createAsyncThunk(
     return game;
   }
 );
-export const { addGame } = gameSlice.actions;
+export const { addGame, setGameResult } = gameSlice.actions;
 export const selectGame = (state: RootState) => state.game;
 
 export const gameReducer = gameSlice.reducer;

@@ -25,6 +25,16 @@ export enum GameType {
   dice = "dice",
   rps = "rps",
 }
+export enum GameResult {
+  win,
+  lose,
+  draw,
+}
+
+const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
+export const isEmptyAddress = (address: string) => {
+  return address.toLowerCase() === EMPTY_ADDRESS;
+};
 
 export const getGameName = (gameType: GameType) => {
   switch (gameType) {

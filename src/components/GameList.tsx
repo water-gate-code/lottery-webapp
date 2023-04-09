@@ -66,6 +66,7 @@ export function GameList() {
   const currencySymbol = chain.info.nativeCurrency.symbol;
   const { gameId } = useParams();
 
+  if (gameList.value === null) throw new Error("Invalid game list");
   return (
     <List
       games={gameList.value.filter((g: any) => g.isActive)}

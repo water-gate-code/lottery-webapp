@@ -4,11 +4,6 @@ import { Game as GameDice } from "./Dice/GameDice";
 import { Game as GameRps } from "./RockPaperScissors/GameRps";
 import { GameType } from "../utils/casino";
 
-const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
-export const isEmptyAddress = (address: string) => {
-  return address.toLowerCase() === EMPTY_ADDRESS;
-};
-
 export const GameIcon = ({ gameType }: any) => {
   switch (gameType) {
     case GameType.dice:

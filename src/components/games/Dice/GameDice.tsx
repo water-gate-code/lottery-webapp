@@ -1,17 +1,14 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 
-import { connectWallet } from "../../utils/wallet";
+import { connectWallet } from "../../../utils/wallet";
 import { GameIcon } from "..";
-import { Address } from "../../components/Address";
-import { useAppSelector } from "../../hooks";
-import { selectCasino, selectChain } from "../../store/slices/chain";
-import { selectUser } from "../../store/slices/user";
-import { getGameName } from "../../utils/casino";
-
-const SELLECTION = ["Rock", "Paper", "Scissors"];
+import { Address } from "../../Address";
+import { useAppSelector } from "../../../hooks";
+import { selectCasino, selectChain } from "../../../store/slices/chain";
+import { selectUser } from "../../../store/slices/user";
+import { getGameName } from "../../../utils/casino";
 
 function GameForm({ game, currencySymbol, onSubmit }: any) {
-  const [betSelection, setBetSelection] = useState(1);
   return (
     <div className="container">
       <div className="row">
@@ -30,34 +27,14 @@ function GameForm({ game, currencySymbol, onSubmit }: any) {
           <p className="lead">
             Amount: {game.betAmount} {currencySymbol}
           </p>
+          <p className="lead">
+            On: {game.player1BetNumber < 6 ? "Small" : "Big"}
+          </p>
         </div>
       </div>
       <div className="row">
         <div className="col">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              onSubmit(betSelection);
-            }}
-          >
-            <div className="mb-3">
-              <div className="btn-group">
-                {SELLECTION.map((sellection, index) => (
-                  <button
-                    key={sellection}
-                    className={
-                      "btn btn-outline-primary " +
-                      (index + 1 === betSelection ? "active" : "") +
-                      " px-4"
-                    }
-                    type="button"
-                    onClick={() => setBetSelection(index + 1)}
-                  >
-                    {sellection}
-                  </button>
-                ))}
-              </div>
-            </div>
+          <form onSubmit={onSubmit}>
             <button type="submit" className="btn btn-primary">
               Play with it
             </button>
@@ -77,10 +54,10 @@ export function Game({ game }: any) {
     throw new Error("Invalid chain");
   }
   const currencySymbol = chain.info.nativeCurrency.symbol;
-
   const [playing, setPlaying] = useState(false);
 
-  async function onSubmit(selection: number) {
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
     setPlaying(true);
     try {
       const amount = game.betAmount.toString();
@@ -90,7 +67,11 @@ export function Game({ game }: any) {
       if (casino === null) {
         throw new Error("Contract not exist");
       }
-      await casino.playGame(amount, game.id, selection);
+      await casino.playGame(
+        amount,
+        game.id,
+        game.player1BetNumber === 6 ? 1 : 6
+      );
     } catch (error) {
       setPlaying(false);
       throw error;

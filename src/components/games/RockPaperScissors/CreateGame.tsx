@@ -1,13 +1,13 @@
 import { useState, FormEvent, useEffect } from "react";
 
-import { connectWallet } from "../../utils/wallet";
+import { connectWallet } from "../../../utils/wallet";
 
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { selectCasino, selectChain } from "../../store/slices/chain";
-import { selectUser } from "../../store/slices/user";
-import { Game, GameType, getGameName } from "../../utils/casino";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { selectCasino, selectChain } from "../../../store/slices/chain";
+import { selectUser } from "../../../store/slices/user";
+import { Game, GameType, getGameName } from "../../../utils/casino";
 import { nanoid } from "@reduxjs/toolkit";
-import { createGame, selectGame } from "../../store/slices/game";
+import { createGame, selectGame } from "../../../store/slices/game";
 
 const SELLECTION = ["Rock", "Paper", "Scissors"];
 

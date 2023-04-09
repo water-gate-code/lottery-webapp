@@ -1,12 +1,12 @@
 import { useState, FormEvent, useEffect } from "react";
 
-import { connectWallet } from "../../utils/wallet";
+import { connectWallet } from "../../../utils/wallet";
 
-import { selectCasino, selectChain } from "../../store/slices/chain";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { selectUser } from "../../store/slices/user";
-import { Game, GameType, getGameName } from "../../utils/casino";
-import { createGame, selectGame } from "../../store/slices/game";
+import { selectCasino, selectChain } from "../../../store/slices/chain";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { selectUser } from "../../../store/slices/user";
+import { Game, GameType, getGameName } from "../../../utils/casino";
+import { createGame, selectGame } from "../../../store/slices/game";
 import { nanoid } from "@reduxjs/toolkit";
 
 const Option: { [option: string]: number } = {

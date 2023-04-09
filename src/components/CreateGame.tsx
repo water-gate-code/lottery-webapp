@@ -1,6 +1,6 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 
-import { CreateGameRenderer } from "../games";
+import { CreateGameRenderer } from "./games";
 import { Game, GameType, getGameName, parseGameType } from "../utils/casino";
 
 const Tab = ({ isActive, type }: { isActive: boolean; type: GameType }) => {

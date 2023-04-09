@@ -90,7 +90,6 @@ export const gameSlice = createSlice({
       .addCase(fetchGames.rejected, (state, action) => {
         state.gameList.status = "failed";
         state.gameList.error = action.error;
-        throw action.error;
       });
 
     builder
@@ -104,7 +103,6 @@ export const gameSlice = createSlice({
       .addCase(fetchGame.rejected, (state, action) => {
         state.currentGamePlay.game.status = "failed";
         state.currentGamePlay.game.error = action.error;
-        throw action.error;
       });
 
     builder
@@ -134,7 +132,7 @@ export const gameSlice = createSlice({
 
         state.createGames[creationId].game.status = "failed";
         state.createGames[creationId].game.error = action.error;
-        throw action.error;
+        // TODO: cant throw error here, need to show error to user later some how
       });
   },
 });

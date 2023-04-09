@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 
-import { GameIcon } from "../games";
+import { GameIcon } from "./games";
 import { useAppSelector } from "../hooks";
 import { selectChain } from "../store/slices/chain";
 import { selectGame } from "../store/slices/game";

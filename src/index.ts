@@ -47,24 +47,24 @@ function errorHandler(errorEvent: any) {
   }
 }
 
+// TODO: very ugly apply, need to refactor ASAP
+const onCreate = (game: RawChainGame) => {
+  store.dispatch(addGame(formatGame(game)));
+};
+const onComplete = (winner: string) => {
+  const isWinner = (a: string) => a.toLowerCase() === winner.toLowerCase();
+  const user = selectUser(store.getState());
+  const game = selectGame(store.getState());
+  const gameId = game.currentGamePlay.game.value?.id;
+  const result = isEmptyAddress(winner)
+    ? GameResult.draw
+    : user.authed && isWinner(user.address)
+    ? GameResult.win
+    : GameResult.lose;
+  store.dispatch(setGameResult({ gameId: gameId ?? "unknow", result }));
+  // navigate(`/result/${result > 0 ? "win" : result < 0 ? "lose" : "equal"}`);
+};
 async function updateChainId() {
-  // TODO: very ugly apply, need to refactor ASAP
-  const onCreate = (game: RawChainGame) => {
-    store.dispatch(addGame(formatGame(game)));
-  };
-  const onComplete = (winner: string) => {
-    const isWinner = (a: string) => a.toLowerCase() === winner.toLowerCase();
-    const user = selectUser(store.getState());
-    const game = selectGame(store.getState());
-    const gameId = game.currentGamePlay.game.value?.id;
-    const result = isEmptyAddress(winner)
-      ? GameResult.draw
-      : user.authed && isWinner(user.address)
-      ? GameResult.win
-      : GameResult.lose;
-    store.dispatch(setGameResult({ gameId: gameId ?? "unknow", result }));
-    // navigate(`/result/${result > 0 ? "win" : result < 0 ? "lose" : "equal"}`);
-  };
   const preCasino = selectCasino(store.getState());
 
   if (preCasino !== null) {

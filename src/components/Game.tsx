@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { GameRenderer } from "../games";
+import { GameRenderer } from "./games";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { selectCasino } from "../store/slices/chain";
 import { fetchGame, selectGame } from "../store/slices/game";

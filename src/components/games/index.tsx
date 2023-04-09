@@ -2,7 +2,7 @@ import { CreateGame as CreateGameDice } from "./Dice/CreateGame";
 import { CreateGame as CreateGameRps } from "./RockPaperScissors/CreateGame";
 import { Game as GameDice } from "./Dice/GameDice";
 import { Game as GameRps } from "./RockPaperScissors/GameRps";
-import { Game, GameType } from "../utils/casino";
+import { Game, GameType } from "../../utils/casino";
 
 export const GameIcon = ({ gameType }: any) => {
   switch (gameType) {

@@ -1,15 +1,14 @@
-import { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
-import { eventEmitter, Events } from "../event";
 import { CreateGameRenderer } from "../games";
-import { GameType, getGameName, parseGameType } from "../utils/casino";
+import { Game, GameType, getGameName, parseGameType } from "../utils/casino";
 
 const Tab = ({ isActive, type }: { isActive: boolean; type: GameType }) => {
   const className = `nav-link ${isActive ? "active" : ""}`;
+  const gameTypeKey = GameType[type];
   return (
     <li className="nav-item">
-      <Link className={className} to={`/create/${type}`}>
+      <Link className={className} to={`/create/${gameTypeKey}`}>
         {getGameName(type)}
       </Link>
     </li>
@@ -17,20 +16,15 @@ const Tab = ({ isActive, type }: { isActive: boolean; type: GameType }) => {
 };
 
 export function CreateGame() {
-  const { gameType } = useParams();
+  const { gameType: gameTypeKey } = useParams();
   const navigate = useNavigate();
 
-  const activeType = gameType ? parseGameType(gameType) : GameType.dice;
+  const activeType = gameTypeKey ? parseGameType(gameTypeKey) : GameType.dice;
 
-  useEffect(() => {
-    function onCreateGame(game: any) {
-      navigate(`/games/${game.id}`);
-    }
-    eventEmitter.on(Events.CREATE_GAME, onCreateGame);
-    return () => {
-      eventEmitter.removeListener(Events.CREATE_GAME, onCreateGame);
-    };
-  }, [navigate]);
+  function onCreateGameSuccess(game: Game) {
+    navigate(`/games/${game.id}`);
+  }
+
   return (
     <div className="container">
       <div className="row">
@@ -43,7 +37,10 @@ export function CreateGame() {
       </div>
       <div className="row">
         <div className="col">
-          <CreateGameRenderer gameType={activeType} />
+          <CreateGameRenderer
+            onCreateGameSuccess={onCreateGameSuccess}
+            gameType={activeType}
+          />
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { CreateGame as CreateGameDice } from "./Dice/CreateGame";
 import { CreateGame as CreateGameRps } from "./RockPaperScissors/CreateGame";
 import { Game as GameDice } from "./Dice/GameDice";
 import { Game as GameRps } from "./RockPaperScissors/GameRps";
-import { GameType } from "../utils/casino";
+import { Game, GameType } from "../utils/casino";
 
 export const GameIcon = ({ gameType }: any) => {
   switch (gameType) {
@@ -15,12 +15,18 @@ export const GameIcon = ({ gameType }: any) => {
   }
 };
 
-export const CreateGameRenderer = ({ gameType }: { gameType: GameType }) => {
+export const CreateGameRenderer = ({
+  gameType,
+  onCreateGameSuccess,
+}: {
+  gameType: GameType;
+  onCreateGameSuccess: (game: Game) => void;
+}) => {
   switch (gameType) {
     case GameType.dice:
-      return <CreateGameDice />;
+      return <CreateGameDice onCreateGameSuccess={onCreateGameSuccess} />;
     case GameType.rps:
-      return <CreateGameRps />;
+      return <CreateGameRps onCreateGameSuccess={onCreateGameSuccess} />;
     default:
       throw new Error(`Invalid Game Type (type="${gameType}")`);
   }

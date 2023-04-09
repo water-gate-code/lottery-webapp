@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-import { eventEmitter, Events } from "../../event";
-
 import { connectWallet } from "../../utils/wallet";
 import { GameIcon } from "..";
 import { Address } from "../../components/Address";
@@ -92,13 +90,10 @@ export function Game({ game }: any) {
       if (casino === null) {
         throw new Error("Contract not exist");
       }
-      const receipt = await casino.playGame(amount, game.id, selection);
-      const winner = casino.parseWinnerFromEvent(receipt);
-      eventEmitter.dispatch(Events.COMPLETE_GAME, winner);
+      await casino.playGame(amount, game.id, selection);
     } catch (error) {
-      throw error;
-    } finally {
       setPlaying(false);
+      throw error;
     }
   }
 

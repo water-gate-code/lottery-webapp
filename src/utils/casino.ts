@@ -22,8 +22,8 @@ enum RawChainGameType {
   rps = 2,
 }
 export enum GameType {
-  dice = "dice",
-  rps = "rps",
+  dice,
+  rps,
 }
 export enum GameResult {
   win,
@@ -46,32 +46,16 @@ export const getGameName = (gameType: GameType) => {
       throw new Error(`Invalid Game Type (type="${gameType}")`);
   }
 };
-export function parseGameType(gameType: string) {
-  switch (gameType) {
-    case GameType.dice:
+export function parseGameType(gameTypeKey: string) {
+  switch (gameTypeKey) {
+    case GameType[GameType.dice]:
       return GameType.dice;
-    case GameType.rps:
+    case GameType[GameType.rps]:
       return GameType.rps;
     default:
-      throw new Error(`Invalid game type: ${gameType}`);
+      throw new Error(`Invalid game type: ${gameTypeKey}`);
   }
 }
-// interface DiceGame {
-//   gameType: GameType.dice;
-//   id: string;
-//   wager: string;
-//   playerA: string;
-//   playerB: string;
-//   finished: boolean;
-// }
-// interface RpsGame {
-//   gameType: GameType.rps;
-//   id: string;
-//   wager: string;
-//   playerA: string;
-//   playerB: string;
-//   finished: boolean;
-// }
 
 export type Game = {
   id: string;

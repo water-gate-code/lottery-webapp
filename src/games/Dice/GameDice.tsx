@@ -61,7 +61,6 @@ export function Game({ game }: any) {
     setPlaying(true);
     try {
       const amount = game.betAmount.toString();
-
       if (!user.authed) {
         await connectWallet();
       }

@@ -1,19 +1,26 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 
 import { connectWallet } from "../../utils/wallet";
 
-import { eventEmitter, Events } from "../../event";
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { selectCasino, selectChain } from "../../store/slices/chain";
 import { selectUser } from "../../store/slices/user";
-import { GameType, getGameName } from "../../utils/casino";
+import { Game, GameType, getGameName } from "../../utils/casino";
+import { nanoid } from "@reduxjs/toolkit";
+import { createGame, selectGame } from "../../store/slices/game";
 
 const SELLECTION = ["Rock", "Paper", "Scissors"];
 
-export function CreateGame() {
+export function CreateGame({
+  onCreateGameSuccess,
+}: {
+  onCreateGameSuccess: (game: Game) => void;
+}) {
+  const dispacth = useAppDispatch();
   const casino = useAppSelector(selectCasino);
   const user = useAppSelector(selectUser);
   const chain = useAppSelector(selectChain);
+  const { createGames } = useAppSelector(selectGame);
   const supportChain = chain.id !== null && chain.support;
   if (!supportChain) {
     throw new Error("Invalid chain");
@@ -26,27 +33,46 @@ export function CreateGame() {
   const [betAmount, setBetAmount] = useState(amountScales[0]);
   const [betSelection, setBetSelection] = useState(1);
   const [creating, setCreating] = useState(false);
+  const [creationId, setCreationId] = useState(nanoid());
+
+  useEffect(() => {
+    const request = createGames[creationId];
+
+    if (request && request.game.status === "loading") {
+      !creating && setCreating(true);
+    } else {
+      creating && setCreating(false);
+    }
+
+    if (request && request.game.status === "succeeded") {
+      setCreationId(nanoid());
+      if (request.game.value === null)
+        throw new Error("Empty data after creation");
+      onCreateGameSuccess && onCreateGameSuccess(request.game.value);
+    } else if (request && request.game.status === "failed") {
+      setCreationId(nanoid());
+    }
+  }, [creating, setCreating, createGames, creationId, onCreateGameSuccess]);
 
   async function create() {
-    setCreating(true);
-    try {
-      if (!user.authed) {
-        await connectWallet();
-      }
-      if (casino === null) {
-        throw new Error("Contract not exist");
-      }
-      const receipt = await casino.createGame(
-        betAmount,
-        GameType.rps,
-        betSelection
-      );
-      eventEmitter.dispatch(Events.CREATE_GAME, receipt);
-    } catch (error) {
-      throw error;
-    } finally {
-      setCreating(false);
+    if (!user.authed) {
+      await connectWallet();
     }
+    if (casino === null) {
+      throw new Error("Contract not exist");
+    }
+    const type = GameType.rps;
+    const wager = betAmount;
+    const choice = betSelection;
+    dispacth(
+      createGame({
+        casino,
+        creationId,
+        type,
+        wager,
+        choice,
+      })
+    );
   }
 
   function onSubmit(e: FormEvent) {

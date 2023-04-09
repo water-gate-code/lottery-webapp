@@ -23,19 +23,7 @@ export function Game() {
     if (gameId) {
       const result = gameResults[gameId] ?? null;
       if (result !== null) {
-        switch (result) {
-          case GameResult.win:
-            navigate(`/result/win`);
-            break;
-          case GameResult.lose:
-            navigate(`/result/lose`);
-            break;
-          case GameResult.draw:
-            navigate(`/result/draw`);
-            break;
-          default:
-            break;
-        }
+        navigate(`/result/${GameResult[result]}`);
       }
     }
   });

@@ -1,12 +1,12 @@
 import { formatEther, BrowserProvider, parseEther } from "ethers";
 import { ChainConfig, chains } from "./chains";
-import { Casino__factory } from "./types";
+import { Casino__factory } from "./contracts";
 import {
   CreateGame_EventEvent,
   CompleteGame_EventEvent,
   DisplayInfoStructOutput,
-} from "./types/Casino";
-import { TypedListener } from "./types/common";
+} from "./contracts/Casino";
+import { TypedListener } from "./contracts/common";
 
 const { ethereum } = window;
 

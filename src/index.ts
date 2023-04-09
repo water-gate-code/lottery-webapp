@@ -20,7 +20,7 @@ import { selectCasino, setChain } from "./store/slices/chain";
 import { errorEventParser } from "./utils/tools";
 import { fetchGames, selectGame, setGameResult } from "./store/slices/game";
 import { GameResult, getCasino, isEmptyAddress } from "./utils/casino";
-import { DisplayInfoStructOutput } from "./utils/types/Casino";
+import { DisplayInfoStructOutput } from "./utils/contracts/Casino";
 
 const { ethereum } = window;
 

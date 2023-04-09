@@ -1,11 +1,12 @@
 import { useState, FormEvent } from "react";
 
 import { connectWallet } from "../../utils/wallet";
-import { GameType, getGameName } from "../";
+
 import { eventEmitter, Events } from "../../event";
 import { useAppSelector } from "../../hooks";
 import { selectCasino, selectChain } from "../../store/slices/chain";
 import { selectUser } from "../../store/slices/user";
+import { GameType, getGameName } from "../../utils/casino";
 
 const SELLECTION = ["Rock", "Paper", "Scissors"];
 
@@ -37,7 +38,7 @@ export function CreateGame() {
       }
       const receipt = await casino.createGame(
         betAmount,
-        GameType.Rps,
+        GameType.rps,
         betSelection
       );
       eventEmitter.dispatch(Events.CREATE_GAME, receipt);
@@ -63,7 +64,7 @@ export function CreateGame() {
       <div className="row">
         <div className="col">
           <h6 className="display-6 mt-3 mb-5">
-            Create a new {getGameName(GameType.Rps)} game
+            Create a new {getGameName(GameType.rps)} game
           </h6>
         </div>
       </div>

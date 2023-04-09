@@ -22,10 +22,30 @@ enum RawChainGameType {
   rps = 2,
 }
 export enum GameType {
-  dice,
-  rps,
+  dice = "dice",
+  rps = "rps",
 }
 
+export const getGameName = (gameType: GameType) => {
+  switch (gameType) {
+    case GameType.dice:
+      return "Dice";
+    case GameType.rps:
+      return "Rock Paper Scissors";
+    default:
+      throw new Error(`Invalid Game Type (type="${gameType}")`);
+  }
+};
+export function parseGameType(gameType: string) {
+  switch (gameType) {
+    case GameType.dice:
+      return GameType.dice;
+    case GameType.rps:
+      return GameType.rps;
+    default:
+      throw new Error(`Invalid game type: ${gameType}`);
+  }
+}
 // interface DiceGame {
 //   gameType: GameType.dice;
 //   id: string;
@@ -45,30 +65,41 @@ export enum GameType {
 
 export type Game = {
   id: string;
-  type: RawChainGameType;
+  type: GameType;
   player1: string;
   betAmount: string;
   player1BetNumber: string;
   isActive: boolean;
 };
 
-const rawChainGameTypeMap = (rawGameType: number): GameType => {
-  switch (rawGameType) {
+const getGameType = (rawGameType: any): GameType => {
+  const parseedRawGameType: RawChainGameType = parseInt(rawGameType);
+  switch (parseedRawGameType) {
     case RawChainGameType.dice:
       return GameType.dice;
     case RawChainGameType.rps:
       return GameType.rps;
     default:
-      throw new Error("Unknow game type");
+      throw new Error(`Unknow raw game type: ${rawGameType}`);
+  }
+};
+const getRawGameType = (gameType: GameType): RawChainGameType => {
+  switch (gameType) {
+    case GameType.dice:
+      return RawChainGameType.dice;
+    case GameType.rps:
+      return RawChainGameType.rps;
+    default:
+      throw new Error(`Unknow game type: ${gameType}`);
   }
 };
 
-export const formatGame = (game: RawChainGame): Game => {
-  const { id, gameType, wager, gamblers } = game;
+export const formatGame = (rawChainGame: RawChainGame): Game => {
+  const { id, gameType, wager, gamblers } = rawChainGame;
 
   return {
     id: id.toString(),
-    type: parseInt(gameType.toString()),
+    type: getGameType(gameType),
     player1: gamblers[0].id.toString(),
     betAmount: ethers.utils.formatEther(wager),
     player1BetNumber: gamblers[0].choice.toString(),
@@ -102,14 +133,18 @@ export class Casino {
     const games = await this.#contract.getGames();
     return games.map(formatGame);
   }
-  async getGame(gameId: string) {
+  async getGame(gameId: string): Promise<Game> {
     const game = await this.#contract.getGame(gameId);
     return formatGame(game);
   }
-  async createGame(amount: number, gameType: number, bet: number) {
-    const response = await this.#signedContract.createGame(gameType, bet, {
-      value: ethers.utils.parseEther(amount.toString()),
-    });
+  async createGame(amount: number, gameType: GameType, bet: number) {
+    const response = await this.#signedContract.createGame(
+      getRawGameType(gameType),
+      bet,
+      {
+        value: ethers.utils.parseEther(amount.toString()),
+      }
+    );
     const receipt = await response.wait();
     const { events } = receipt;
 

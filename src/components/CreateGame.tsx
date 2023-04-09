@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
 import { eventEmitter, Events } from "../event";
-import { GameType, getGameName, CreateGameRenderer } from "../games";
+import { CreateGameRenderer } from "../games";
+import { GameType, getGameName, parseGameType } from "../utils/casino";
 
-const Tab = ({ isActive, type }: { isActive: boolean; type: number }) => {
+const Tab = ({ isActive, type }: { isActive: boolean; type: GameType }) => {
   const className = `nav-link ${isActive ? "active" : ""}`;
   return (
     <li className="nav-item">
@@ -19,7 +20,7 @@ export function CreateGame() {
   const { gameType } = useParams();
   const navigate = useNavigate();
 
-  const activeType = gameType ? parseInt(gameType) : GameType.Dice;
+  const activeType = gameType ? parseGameType(gameType) : GameType.dice;
 
   useEffect(() => {
     function onCreateGame(game: any) {
@@ -35,8 +36,8 @@ export function CreateGame() {
       <div className="row">
         <div className="col">
           <ul className="nav nav-tabs  justify-content-center">
-            <Tab type={GameType.Dice} isActive={activeType === GameType.Dice} />
-            <Tab type={GameType.Rps} isActive={activeType === GameType.Rps} />
+            <Tab type={GameType.dice} isActive={activeType === GameType.dice} />
+            <Tab type={GameType.rps} isActive={activeType === GameType.rps} />
           </ul>
         </div>
       </div>

@@ -21,7 +21,6 @@ import { errorEventParser } from "./utils/tools";
 import { addGame, fetchGames } from "./store/slices/game";
 import {
   CREATEGAME_EVENT,
-  Game,
   RawChainGame,
   formatGame,
   getCasino,
@@ -56,7 +55,7 @@ async function updateChainId() {
 
   const casino = getCasino(chainId);
   if (casino !== null) {
-    store.dispatch(fetchGames(casino));
+    store.dispatch(fetchGames({ casino }));
     casino.on(CREATEGAME_EVENT, onCreate);
   }
 }

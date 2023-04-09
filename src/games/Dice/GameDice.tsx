@@ -1,11 +1,12 @@
 import { useState, FormEvent } from "react";
 
 import { connectWallet } from "../../utils/wallet";
-import { getGameName, GameIcon } from "..";
+import { GameIcon } from "..";
 import { Address } from "../../components/Address";
 import { useAppSelector } from "../../hooks";
 import { selectCasino, selectChain } from "../../store/slices/chain";
 import { selectUser } from "../../store/slices/user";
+import { getGameName } from "../../utils/casino";
 
 function GameForm({ game, currencySymbol, onSubmit }: any) {
   return (

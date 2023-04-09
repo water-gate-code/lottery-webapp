@@ -5,6 +5,7 @@ import { Casino, Game } from "../../utils/casino";
 interface RemoteData<T> {
   value: T;
   status: "idle" | "loading" | "succeeded" | "failed";
+  error?: any;
 }
 interface GamePlay {
   game: RemoteData<Game>;
@@ -45,15 +46,27 @@ export const gameSlice = createSlice({
       .addCase(fetchGames.fulfilled, (state, action) => {
         state.gameList.status = "succeeded";
         state.gameList.value = action.payload;
+      })
+      .addCase(fetchGames.rejected, (state, action) => {
+        state.gameList.status = "failed";
+        state.gameList.error = action.error;
+        throw action.error;
       });
   },
 });
 
 export const fetchGames = createAsyncThunk(
   "game/fetchGames",
-  async (casino: Casino) => {
-    const response = await casino.getGames();
-    return response;
+  async ({ casino }: { casino: Casino }) => {
+    const games = await casino.getGames();
+    return games;
+  }
+);
+export const fetchGame = createAsyncThunk(
+  "game/fetchGame",
+  async ({ casino, gameId }: { casino: Casino; gameId: string }) => {
+    const game = await casino.getGame(gameId);
+    return game;
   }
 );
 export const { addGame } = gameSlice.actions;

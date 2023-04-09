@@ -1,6 +1,3 @@
-import { InterfaceAbi } from "ethers";
-import { CASINO } from "./contracts";
-
 export const supportChainIds: number[] = [137, 80001, 1337];
 
 export interface ChainNativeCurrency {
@@ -28,7 +25,6 @@ export interface ChainInfo {
 }
 export interface ChainContract {
   address: string;
-  abi: InterfaceAbi;
 }
 export interface ChainConfig {
   info: ChainInfo;
@@ -61,7 +57,6 @@ export const chains: { [chainId: number]: ChainConfig } = {
     contracts: {
       Casino: {
         address: "0xD8b07B81b127F649402d4ACaB23b881e466dE881",
-        abi: CASINO.abi,
       },
     },
   },
@@ -91,7 +86,6 @@ export const chains: { [chainId: number]: ChainConfig } = {
     contracts: {
       Casino: {
         address: "0x8eac226eCadA790A7B7e03E8187c805bdeAE1e71",
-        abi: CASINO.abi,
       },
     },
   },
@@ -129,7 +123,6 @@ export const chains: { [chainId: number]: ChainConfig } = {
     contracts: {
       Casino: {
         address: "0xbB851Ddf38EE7Dd30737EbD5A30EAd463E508d3C",
-        abi: CASINO.abi,
       },
     },
   },

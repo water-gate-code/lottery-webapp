@@ -23,14 +23,17 @@ function Item({ game, currencySymbol, isActive }: any) {
 }
 
 function List({ games, currencySymbol, activeGameId, isLoading }: any) {
-  const gameItems = games.map((game: any) => (
-    <Item
-      key={game.id}
-      game={game}
-      currencySymbol={currencySymbol}
-      isActive={game.id === activeGameId}
-    />
-  ));
+  const gameItems =
+    games.length > 0
+      ? games.map((game: any) => (
+          <Item
+            key={game.id}
+            game={game}
+            currencySymbol={currencySymbol}
+            isActive={game.id === activeGameId}
+          />
+        ))
+      : null;
   const activeClassName = !activeGameId ? " active" : "";
   return (
     <div className="list-group">

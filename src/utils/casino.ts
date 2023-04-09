@@ -1,6 +1,7 @@
 import type { Listener } from "ethers";
 import { formatEther, BrowserProvider, parseEther, Contract } from "ethers";
 import { ChainConfig, chains } from "./chains";
+import CasinoArtifact from "./contracts/Casino.json";
 
 const { ethereum } = window;
 
@@ -109,9 +110,9 @@ export class Casino {
   constructor(chain: ChainConfig) {
     if (!chain) throw new Error("Chain is required!");
     this.#chain = chain;
-    const { address, abi } = this.#chain.contracts.Casino;
+    const { address } = this.#chain.contracts.Casino;
     this.#provider = new BrowserProvider(ethereum);
-    this.#contract = new Contract(address, abi, this.#provider);
+    this.#contract = new Contract(address, CasinoArtifact.abi, this.#provider);
   }
 
   on(event: string, callback: Listener) {
@@ -131,8 +132,8 @@ export class Casino {
   }
   async signedContract() {
     const signer = await this.#provider.getSigner();
-    const { address, abi } = this.#chain.contracts.Casino;
-    return new Contract(address, abi, signer);
+    const { address } = this.#chain.contracts.Casino;
+    return new Contract(address, CasinoArtifact.abi, signer);
   }
   async createGame(amount: number, gameType: GameType, bet: number) {
     const signedContract = await this.signedContract();

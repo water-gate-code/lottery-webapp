@@ -32,31 +32,38 @@ export type GamblerStructOutput = [id: string, choice: bigint] & {
 
 export type DisplayInfoStruct = {
   id: AddressLike;
-  wager: BigNumberish;
+  host: AddressLike;
   gameType: BigNumberish;
+  wager: BigNumberish;
+  isActive: boolean;
   gamblers: GamblerStruct[];
 };
 
 export type DisplayInfoStructOutput = [
   id: string,
-  wager: bigint,
+  host: string,
   gameType: bigint,
+  wager: bigint,
+  isActive: boolean,
   gamblers: GamblerStructOutput[]
 ] & {
   id: string;
-  wager: bigint;
+  host: string;
   gameType: bigint;
+  wager: bigint;
+  isActive: boolean;
   gamblers: GamblerStructOutput[];
 };
 
 export interface CasinoInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "bankrollGetBalance"
       | "createGame"
-      | "getActiveGames"
       | "getGame"
       | "getGames"
       | "playGame"
+      | "playGameWithDefaultHost"
       | "rawFulfillRandomWords"
       | "requestRandom"
   ): FunctionFragment;
@@ -65,17 +72,17 @@ export interface CasinoInterface extends Interface {
     nameOrSignatureOrTopic:
       | "CompleteGame_Event"
       | "CreateGame_Event"
-      | "RandomRequestTest_Event"
-      | "RandomResultTest_Event"
+      | "VrfRequest_Event"
+      | "VrfResponse_Event"
   ): EventFragment;
 
   encodeFunctionData(
-    functionFragment: "createGame",
-    values: [BigNumberish, BigNumberish]
+    functionFragment: "bankrollGetBalance",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getActiveGames",
-    values?: undefined
+    functionFragment: "createGame",
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getGame",
@@ -87,6 +94,10 @@ export interface CasinoInterface extends Interface {
     values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "playGameWithDefaultHost",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "rawFulfillRandomWords",
     values: [BigNumberish, BigNumberish[]]
   ): string;
@@ -95,14 +106,18 @@ export interface CasinoInterface extends Interface {
     values: [AddressLike]
   ): string;
 
-  decodeFunctionResult(functionFragment: "createGame", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getActiveGames",
+    functionFragment: "bankrollGetBalance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "createGame", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getGame", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getGames", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "playGame", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "playGameWithDefaultHost",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "rawFulfillRandomWords",
     data: BytesLike
@@ -114,9 +129,10 @@ export interface CasinoInterface extends Interface {
 }
 
 export namespace CompleteGame_EventEvent {
-  export type InputTuple = [winner: AddressLike];
-  export type OutputTuple = [winner: string];
+  export type InputTuple = [game: AddressLike, winner: AddressLike];
+  export type OutputTuple = [game: string, winner: string];
   export interface OutputObject {
+    game: string;
     winner: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
@@ -137,10 +153,11 @@ export namespace CreateGame_EventEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace RandomRequestTest_EventEvent {
-  export type InputTuple = [requestId: BigNumberish];
-  export type OutputTuple = [requestId: bigint];
+export namespace VrfRequest_EventEvent {
+  export type InputTuple = [game: AddressLike, requestId: BigNumberish];
+  export type OutputTuple = [game: string, requestId: bigint];
   export interface OutputObject {
+    game: string;
     requestId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
@@ -149,7 +166,7 @@ export namespace RandomRequestTest_EventEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace RandomResultTest_EventEvent {
+export namespace VrfResponse_EventEvent {
   export type InputTuple = [
     requestId: BigNumberish,
     randomWords: BigNumberish[]
@@ -209,13 +226,13 @@ export interface Casino extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  bankrollGetBalance: TypedContractMethod<[], [bigint], "view">;
+
   createGame: TypedContractMethod<
     [gameType: BigNumberish, choice: BigNumberish],
     [void],
     "payable"
   >;
-
-  getActiveGames: TypedContractMethod<[], [DisplayInfoStructOutput[]], "view">;
 
   getGame: TypedContractMethod<
     [targetGame: AddressLike],
@@ -227,6 +244,12 @@ export interface Casino extends BaseContract {
 
   playGame: TypedContractMethod<
     [targetGame: AddressLike, choice: BigNumberish],
+    [void],
+    "payable"
+  >;
+
+  playGameWithDefaultHost: TypedContractMethod<
+    [gameType: BigNumberish, choice: BigNumberish],
     [void],
     "payable"
   >;
@@ -248,15 +271,15 @@ export interface Casino extends BaseContract {
   ): T;
 
   getFunction(
+    nameOrSignature: "bankrollGetBalance"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "createGame"
   ): TypedContractMethod<
     [gameType: BigNumberish, choice: BigNumberish],
     [void],
     "payable"
   >;
-  getFunction(
-    nameOrSignature: "getActiveGames"
-  ): TypedContractMethod<[], [DisplayInfoStructOutput[]], "view">;
   getFunction(
     nameOrSignature: "getGame"
   ): TypedContractMethod<
@@ -271,6 +294,13 @@ export interface Casino extends BaseContract {
     nameOrSignature: "playGame"
   ): TypedContractMethod<
     [targetGame: AddressLike, choice: BigNumberish],
+    [void],
+    "payable"
+  >;
+  getFunction(
+    nameOrSignature: "playGameWithDefaultHost"
+  ): TypedContractMethod<
+    [gameType: BigNumberish, choice: BigNumberish],
     [void],
     "payable"
   >;
@@ -300,22 +330,22 @@ export interface Casino extends BaseContract {
     CreateGame_EventEvent.OutputObject
   >;
   getEvent(
-    key: "RandomRequestTest_Event"
+    key: "VrfRequest_Event"
   ): TypedContractEvent<
-    RandomRequestTest_EventEvent.InputTuple,
-    RandomRequestTest_EventEvent.OutputTuple,
-    RandomRequestTest_EventEvent.OutputObject
+    VrfRequest_EventEvent.InputTuple,
+    VrfRequest_EventEvent.OutputTuple,
+    VrfRequest_EventEvent.OutputObject
   >;
   getEvent(
-    key: "RandomResultTest_Event"
+    key: "VrfResponse_Event"
   ): TypedContractEvent<
-    RandomResultTest_EventEvent.InputTuple,
-    RandomResultTest_EventEvent.OutputTuple,
-    RandomResultTest_EventEvent.OutputObject
+    VrfResponse_EventEvent.InputTuple,
+    VrfResponse_EventEvent.OutputTuple,
+    VrfResponse_EventEvent.OutputObject
   >;
 
   filters: {
-    "CompleteGame_Event(address)": TypedContractEvent<
+    "CompleteGame_Event(address,address)": TypedContractEvent<
       CompleteGame_EventEvent.InputTuple,
       CompleteGame_EventEvent.OutputTuple,
       CompleteGame_EventEvent.OutputObject
@@ -337,26 +367,26 @@ export interface Casino extends BaseContract {
       CreateGame_EventEvent.OutputObject
     >;
 
-    "RandomRequestTest_Event(uint256)": TypedContractEvent<
-      RandomRequestTest_EventEvent.InputTuple,
-      RandomRequestTest_EventEvent.OutputTuple,
-      RandomRequestTest_EventEvent.OutputObject
+    "VrfRequest_Event(address,uint256)": TypedContractEvent<
+      VrfRequest_EventEvent.InputTuple,
+      VrfRequest_EventEvent.OutputTuple,
+      VrfRequest_EventEvent.OutputObject
     >;
-    RandomRequestTest_Event: TypedContractEvent<
-      RandomRequestTest_EventEvent.InputTuple,
-      RandomRequestTest_EventEvent.OutputTuple,
-      RandomRequestTest_EventEvent.OutputObject
+    VrfRequest_Event: TypedContractEvent<
+      VrfRequest_EventEvent.InputTuple,
+      VrfRequest_EventEvent.OutputTuple,
+      VrfRequest_EventEvent.OutputObject
     >;
 
-    "RandomResultTest_Event(uint256,uint256[])": TypedContractEvent<
-      RandomResultTest_EventEvent.InputTuple,
-      RandomResultTest_EventEvent.OutputTuple,
-      RandomResultTest_EventEvent.OutputObject
+    "VrfResponse_Event(uint256,uint256[])": TypedContractEvent<
+      VrfResponse_EventEvent.InputTuple,
+      VrfResponse_EventEvent.OutputTuple,
+      VrfResponse_EventEvent.OutputObject
     >;
-    RandomResultTest_Event: TypedContractEvent<
-      RandomResultTest_EventEvent.InputTuple,
-      RandomResultTest_EventEvent.OutputTuple,
-      RandomResultTest_EventEvent.OutputObject
+    VrfResponse_Event: TypedContractEvent<
+      VrfResponse_EventEvent.InputTuple,
+      VrfResponse_EventEvent.OutputTuple,
+      VrfResponse_EventEvent.OutputObject
     >;
   };
 }

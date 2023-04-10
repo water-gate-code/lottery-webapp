@@ -89,7 +89,7 @@ const getRawGameType = (gameType: GameType): RawChainGameType => {
 };
 
 export const formatGame = (rawChainGame: DisplayInfoStructOutput): Game => {
-  const { id, gameType, wager, gamblers } = rawChainGame;
+  const {id, host, gameType, wager, isActive, gamblers} = rawChainGame;
 
   return {
     id: id.toString(),
@@ -152,7 +152,7 @@ export class Casino {
   async createGame(amount: number, gameType: GameType, bet: number) {
     const signedContract = await this.signedContract();
 
-    const response = await signedContract.createGame(
+    const response = await signedContract?.playGameWithDefaultHost(
       getRawGameType(gameType),
       bet,
       {

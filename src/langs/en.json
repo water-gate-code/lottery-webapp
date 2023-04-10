@@ -3,6 +3,7 @@
   "connectWallet": "Connect Your Wallet",
   "needInstallMetamask": "You need to install Metamask before play",
   "installMetamask": "Install Metamask",
+  "languageChanged": "Language changed!",
   "wrongNetwork": {
     "change": "Change Network",
     "notSupport": "We don't support <0>{{networkName}}</0> yet!",

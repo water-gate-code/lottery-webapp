@@ -32,13 +32,13 @@ function GameForm({
             {t(getGameNameKey(game.type))}
           </h6>
           <p className="lead">
-            {t("gameId")}: <Address address={game.id} />
+            {t("game.gameId")}: <Address address={game.id} />
           </p>
           <p className="lead">
-            {t("player")}: <Address address={game.player1} />
+            {t("game.player")}: <Address address={game.player1} />
           </p>
           <p className="lead">
-            {t("amount")}: {game.betAmount} {currencySymbol}
+            {t("game.amount")}: {game.betAmount} {currencySymbol}
           </p>
         </div>
       </div>

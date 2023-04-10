@@ -109,8 +109,8 @@ ethereum.on("chainChanged", onWalletChange.bind(this, "chainChanged"));
 ethereum.on("message", onWalletChange.bind(this, "message"));
 
 reportWebVitals(sendToGoogleAnalytics);
-setWallet();
-initI18next();
+
+initI18next().then(setWallet);
 
 const rootDom = document.getElementById("root");
 if (rootDom !== null) mountApp(rootDom);

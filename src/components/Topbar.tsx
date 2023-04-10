@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import i18n from "i18next";
 import { useTranslation } from "react-i18next";
 
 import { useAppSelector } from "../hooks";
@@ -6,6 +7,7 @@ import { selectUser } from "../store/slices/user";
 import { connectWallet } from "../utils/wallet";
 import { Address } from "./Address";
 import { selectChain } from "../store/slices/chain";
+import { changeLanguage } from "../initI18next";
 
 export function Topbar() {
   const { t } = useTranslation();
@@ -54,6 +56,25 @@ export function Topbar() {
         </Link>
 
         <div>
+          <span className="navbar-text me-3">
+            <button
+              type="button"
+              className="btn btn-primary button"
+              onClick={changeLanguage.bind(null, "en")}
+            >
+              en
+            </button>
+          </span>
+          <span className="navbar-text me-3">
+            <button
+              type="button"
+              className="btn btn-primary button"
+              onClick={changeLanguage.bind(null, "ar")}
+            >
+              ar
+            </button>
+          </span>
+
           {accountInfo}
 
           {supportChain ? (

@@ -1,17 +1,18 @@
 import { useState, FormEvent, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import { connectWallet } from "../../../utils/wallet";
 
 import { selectCasino, selectChain } from "../../../store/slices/chain";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { selectUser } from "../../../store/slices/user";
-import { Game, GameType, getGameName } from "../../../utils/casino";
+import { Game, GameType, getGameNameKey } from "../../../utils/casino";
 import { createGame, selectGame } from "../../../store/slices/game";
 import { nanoid } from "@reduxjs/toolkit";
 
-const Option: { [option: string]: number } = {
-  Small: 1,
-  Big: 6,
+const Choice: { [choice: string]: number } = {
+  small: 1,
+  big: 6,
 };
 
 export function CreateGame({
@@ -19,6 +20,7 @@ export function CreateGame({
 }: {
   onCreateGameSuccess: (game: Game) => void;
 }) {
+  const { t } = useTranslation();
   const dispacth = useAppDispatch();
   const casino = useAppSelector(selectCasino);
   const user = useAppSelector(selectUser);
@@ -37,7 +39,7 @@ export function CreateGame({
           (n * chain.config.nativeMinScale).toString()
         );
   const [betAmount, setBetAmount] = useState(amountScales[0]);
-  const [betSelection, setBetSelection] = useState(Option.Small);
+  const [betSelection, setBetSelection] = useState(Choice.small);
   const [creating, setCreating] = useState(false);
   const [creationId, setCreationId] = useState(nanoid());
 
@@ -96,7 +98,9 @@ export function CreateGame({
       <div className="row">
         <div className="col">
           <h6 className="display-6 mt-3 mb-5">
-            Create a new {getGameName(GameType.dice)} game
+            {t("game.createTitle", {
+              gameName: t(getGameNameKey(GameType.dice)),
+            })}
           </h6>
         </div>
       </div>
@@ -123,26 +127,26 @@ export function CreateGame({
             </div>
             <div className="mb-3">
               <div className="btn-group">
-                {Object.keys(Option).map((symble) => (
+                {Object.keys(Choice).map((choice) => (
                   <button
-                    key={Option[symble]}
+                    key={Choice[choice]}
                     className={
                       "btn btn-outline-primary " +
-                      (Option[symble] === betSelection ? "active" : "") +
+                      (Choice[choice] === betSelection ? "active" : "") +
                       " px-4"
                     }
                     type="button"
                     onClick={(e) => {
-                      setBetSelection(Option[symble]);
+                      setBetSelection(Choice[choice]);
                     }}
                   >
-                    {symble}
+                    {t(`game.dice.choice.${choice}`)}
                   </button>
                 ))}
               </div>
             </div>
             <button type="submit" className="btn btn-primary">
-              Create
+              {t("game.create")}
             </button>
           </form>
         </div>

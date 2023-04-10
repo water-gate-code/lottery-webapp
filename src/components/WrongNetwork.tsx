@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation, Trans } from "react-i18next";
 
 import { supportChainIds, chains, ChainInfo } from "../utils/chains";
 import { switchNetwork, addToNetwork, connectWallet } from "../utils/wallet";
@@ -50,6 +51,7 @@ function ChainItem({
   chain: ChainInfo;
   onClick: Function;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="card m-3">
       <div className="card-body">
@@ -59,7 +61,7 @@ function ChainItem({
           className="btn btn-primary"
           onClick={() => onClick && onClick()}
         >
-          Change Network
+          {t("wrongNetwork.change")}
         </button>
       </div>
     </div>
@@ -67,6 +69,7 @@ function ChainItem({
 }
 
 export function WrongNetwork() {
+  const { t } = useTranslation();
   const [fullChainList, setFullChainList] = useState<ChainInfo[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -80,12 +83,7 @@ export function WrongNetwork() {
   }, []);
 
   const selectedNetwork = fullChainList.find(
-    (c: ChainInfo) => c.chainId === chain.id
-  );
-  const network = selectedNetwork ? (
-    <span className="text-primary">{`{${selectedNetwork.name}}`}</span>
-  ) : (
-    "the selected network"
+    (c: ChainInfo) => c.chainId === chain.id && false
   );
 
   return (
@@ -93,9 +91,17 @@ export function WrongNetwork() {
       {loading ? (
         <h6 className="display-6 my-5">&nbsp;</h6>
       ) : (
-        <h6 className="display-6 my-5">We don't support {network} yet!</h6>
+        <h6 className="display-6 my-5">
+          <Trans components={[<span className="text-primary" />]}>
+            {t("wrongNetwork.notSupport", {
+              networkName: `{${
+                selectedNetwork?.name ?? t("wrongNetwork.selected")
+              }}`,
+            })}
+          </Trans>
+        </h6>
       )}
-      <p className="lead">Please select the supported network below</p>
+      <p className="lead">{t("wrongNetwork.pleaseSelect")}</p>
       <div className="d-flex flex-row justify-content-center">
         {supportChainIds
           .filter((id) => !chains[id].local)

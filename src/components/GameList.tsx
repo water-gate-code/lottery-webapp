@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { GameIcon } from "./games";
 import { useAppSelector } from "../hooks";
@@ -15,6 +16,7 @@ function Item({
   currencySymbol: string;
   isActive: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <Link
       className={
@@ -26,7 +28,11 @@ function Item({
         <GameIcon gameType={game.type} />
       </span>
       &nbsp;&nbsp;
-      {game.betAmount} {currencySymbol} on {game.player1BetNumber}
+      {t("game.shortGameTitle", {
+        wager: game.betAmount,
+        currency: currencySymbol,
+        choice: game.player1BetNumber,
+      })}
     </Link>
   );
 }
@@ -42,6 +48,7 @@ function List({
   activeGameId: string | undefined;
   isLoading: boolean;
 }) {
+  const { t } = useTranslation();
   const gameItems =
     games.length > 0
       ? games.map((game: Game) => (
@@ -60,7 +67,7 @@ function List({
         className={"list-group-item list-group-item-action" + activeClassName}
         to={`/`}
       >
-        Create
+        {t("game.create")}
       </Link>
       {!isLoading ? (
         gameItems

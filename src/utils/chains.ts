@@ -85,7 +85,7 @@ export const chains: { [chainId: number]: ChainConfig } = {
     nativeMinScale: 0.01,
     contracts: {
       Casino: {
-        address: "0xcE464CE6eABE393dEE864dfe39f9d5a85F078Aa8",
+        address: "0xa0e51fd6bd5c006fc0f188fe8d656b0768c92b73",
       },
     },
   },

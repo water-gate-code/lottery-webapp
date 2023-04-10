@@ -55,10 +55,33 @@ export type DisplayInfoStructOutput = [
   gamblers: GamblerStructOutput[];
 };
 
+export type RecordStruct = {
+  from: AddressLike;
+  to: AddressLike;
+  game: AddressLike;
+  value: BigNumberish;
+  recordType: BigNumberish;
+};
+
+export type RecordStructOutput = [
+  from: string,
+  to: string,
+  game: string,
+  value: bigint,
+  recordType: bigint
+] & {
+  from: string;
+  to: string;
+  game: string;
+  value: bigint;
+  recordType: bigint;
+};
+
 export interface CasinoInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "bankrollGetBalance"
+      | "bankrollGetTransactionRecords"
       | "createGame"
       | "getGame"
       | "getGames"
@@ -78,6 +101,10 @@ export interface CasinoInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "bankrollGetBalance",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "bankrollGetTransactionRecords",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -108,6 +135,10 @@ export interface CasinoInterface extends Interface {
 
   decodeFunctionResult(
     functionFragment: "bankrollGetBalance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "bankrollGetTransactionRecords",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "createGame", data: BytesLike): Result;
@@ -228,6 +259,12 @@ export interface Casino extends BaseContract {
 
   bankrollGetBalance: TypedContractMethod<[], [bigint], "view">;
 
+  bankrollGetTransactionRecords: TypedContractMethod<
+    [],
+    [RecordStructOutput[]],
+    "view"
+  >;
+
   createGame: TypedContractMethod<
     [gameType: BigNumberish, choice: BigNumberish],
     [void],
@@ -273,6 +310,9 @@ export interface Casino extends BaseContract {
   getFunction(
     nameOrSignature: "bankrollGetBalance"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "bankrollGetTransactionRecords"
+  ): TypedContractMethod<[], [RecordStructOutput[]], "view">;
   getFunction(
     nameOrSignature: "createGame"
   ): TypedContractMethod<

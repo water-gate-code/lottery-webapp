@@ -29,7 +29,9 @@ export function CreateGame({
   const amountScales =
     chain === null
       ? []
-      : [1, 2, 5, 8, 10].map((n) => n * chain.config.nativeMinScale);
+      : [1, 2, 5, 8, 10].map((n) =>
+          (n * chain.config.nativeMinScale).toString()
+        );
   const [betAmount, setBetAmount] = useState(amountScales[0]);
   const [betSelection, setBetSelection] = useState(1);
   const [creating, setCreating] = useState(false);

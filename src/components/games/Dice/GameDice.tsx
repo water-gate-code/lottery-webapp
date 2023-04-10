@@ -6,9 +6,17 @@ import { Address } from "../../Address";
 import { useAppSelector } from "../../../hooks";
 import { selectCasino, selectChain } from "../../../store/slices/chain";
 import { selectUser } from "../../../store/slices/user";
-import { getGameName } from "../../../utils/casino";
+import { Game as IGame, getGameName } from "../../../utils/casino";
 
-function GameForm({ game, currencySymbol, onSubmit }: any) {
+function GameForm({
+  game,
+  currencySymbol,
+  onSubmit,
+}: {
+  game: IGame;
+  currencySymbol: string;
+  onSubmit: (e: FormEvent) => void;
+}) {
   return (
     <div className="container">
       <div className="row">
@@ -28,7 +36,7 @@ function GameForm({ game, currencySymbol, onSubmit }: any) {
             Amount: {game.betAmount} {currencySymbol}
           </p>
           <p className="lead">
-            On: {game.player1BetNumber < 6 ? "Small" : "Big"}
+            On: {BigInt(game.player1BetNumber) < 6 ? "Small" : "Big"}
           </p>
         </div>
       </div>
@@ -45,7 +53,7 @@ function GameForm({ game, currencySymbol, onSubmit }: any) {
   );
 }
 
-export function Game({ game }: any) {
+export function Game({ game }: { game: IGame }) {
   const casino = useAppSelector(selectCasino);
   const user = useAppSelector(selectUser);
   const chain = useAppSelector(selectChain);
@@ -60,7 +68,7 @@ export function Game({ game }: any) {
     e.preventDefault();
     setPlaying(true);
     try {
-      const amount = game.betAmount.toString();
+      const amount = game.betAmount;
       if (!user.authed) {
         await connectWallet();
       }
@@ -70,7 +78,7 @@ export function Game({ game }: any) {
       await casino.playGame(
         amount,
         game.id,
-        game.player1BetNumber === 6 ? 1 : 6
+        BigInt(game.player1BetNumber) === BigInt(6) ? 1 : 6
       );
     } catch (error) {
       setPlaying(false);

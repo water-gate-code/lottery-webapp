@@ -6,7 +6,7 @@ import { GameType } from "../../utils/casino";
 interface RemoteData<T> {
   value: T | null;
   status: "idle" | "loading" | "succeeded" | "failed";
-  error?: any;
+  error?: unknown;
 }
 interface GamePlay {
   game: RemoteData<Game>;
@@ -163,7 +163,7 @@ export const createGame = createAsyncThunk(
     casino: Casino;
     creationId: string;
     type: GameType;
-    wager: number;
+    wager: string;
     choice: number;
   }) => {
     const game = await casino.createGame(wager, type, choice);

@@ -33,7 +33,9 @@ export function CreateGame({
   const amountScales =
     chain === null
       ? []
-      : [1, 2, 5, 8, 10].map((n) => n * chain.config.nativeMinScale);
+      : [1, 2, 5, 8, 10].map((n) =>
+          (n * chain.config.nativeMinScale).toString()
+        );
   const [betAmount, setBetAmount] = useState(amountScales[0]);
   const [betSelection, setBetSelection] = useState(Option.Small);
   const [creating, setCreating] = useState(false);
@@ -58,7 +60,7 @@ export function CreateGame({
     }
   }, [creating, setCreating, createGames, creationId, onCreateGameSuccess]);
 
-  async function create(betAmount: number, betSelection: number) {
+  async function create(betAmount: string, betSelection: number) {
     if (!user.authed) {
       await connectWallet();
     }

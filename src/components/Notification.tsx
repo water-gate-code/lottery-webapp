@@ -1,23 +1,29 @@
 import { useAppSelector } from "../hooks";
-import { NotificationType, selectApp } from "../store/slices/app";
+import {
+  NotificationType,
+  selectApp,
+  Notification as INotification,
+} from "../store/slices/app";
 
-const Item = ({ type, title }: any) => {
+const Item = ({ notification }: { notification: INotification }) => {
+  const { type, title } = notification;
   const iconStyle = {
     width: "0.9em",
     height: "0.9em",
     verticalAlign: "-0.125em",
     fill: "currentcolor",
   };
+  const typeName = NotificationType[type];
   return (
     <div
-      className={`alert alert-${type} d-flex align-items-center px-3 py-2 mb-3`}
+      className={`alert alert-${typeName} d-flex align-items-center px-3 py-2 mb-3`}
       role="alert"
       style={{ fontSize: "0.9em" }}
     >
       <svg
         className="bi flex-shrink-0 me-2"
         role="img"
-        aria-label={`${type.charAt(0).toUpperCase() + type.slice(1)}:`}
+        aria-label={`${typeName.charAt(0).toUpperCase() + typeName.slice(1)}:`}
         style={iconStyle}
       >
         <use xlinkHref={`#${type}-fill`} />
@@ -30,7 +36,7 @@ const Item = ({ type, title }: any) => {
 export function Notification() {
   const { notifications } = useAppSelector(selectApp);
   const items = notifications.map((n) => {
-    return <Item key={n.id} type={n.type} title={n.title} />;
+    return <Item key={n.id} notification={n} />;
   });
   return (
     <div className="position-absolute top-0 start-50 translate-middle-x pt-2">

@@ -6,11 +6,19 @@ import { Address } from "../../Address";
 import { useAppSelector } from "../../../hooks";
 import { selectCasino, selectChain } from "../../../store/slices/chain";
 import { selectUser } from "../../../store/slices/user";
-import { getGameName } from "../../../utils/casino";
+import { Game as IGame, getGameName } from "../../../utils/casino";
 
 const SELLECTION = ["Rock", "Paper", "Scissors"];
 
-function GameForm({ game, currencySymbol, onSubmit }: any) {
+function GameForm({
+  game,
+  currencySymbol,
+  onSubmit,
+}: {
+  game: IGame;
+  currencySymbol: string;
+  onSubmit: (selection: number) => void;
+}) {
   const [betSelection, setBetSelection] = useState(1);
   return (
     <div className="container">
@@ -68,7 +76,7 @@ function GameForm({ game, currencySymbol, onSubmit }: any) {
   );
 }
 
-export function Game({ game }: any) {
+export function Game({ game }: { game: IGame }) {
   const casino = useAppSelector(selectCasino);
   const user = useAppSelector(selectUser);
   const chain = useAppSelector(selectChain);

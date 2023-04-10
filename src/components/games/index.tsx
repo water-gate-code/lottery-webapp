@@ -4,7 +4,7 @@ import { Game as GameDice } from "./Dice/GameDice";
 import { Game as GameRps } from "./RockPaperScissors/GameRps";
 import { Game, GameType } from "../../utils/casino";
 
-export const GameIcon = ({ gameType }: any) => {
+export const GameIcon = ({ gameType }: { gameType: GameType }) => {
   switch (gameType) {
     case GameType.dice:
       return <i className="bi bi-dice-5-fill"></i>;
@@ -32,7 +32,7 @@ export const CreateGameRenderer = ({
   }
 };
 
-export const GameRenderer = ({ game }: any) => {
+export const GameRenderer = ({ game }: { game: Game }) => {
   switch (game.type) {
     case GameType.dice:
       return <GameDice game={game} />;

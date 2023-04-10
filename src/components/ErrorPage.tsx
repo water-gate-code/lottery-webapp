@@ -3,8 +3,6 @@ import { Topbar } from "./Topbar";
 
 export function ErrorPage() {
   const error: any = useRouteError();
-  console.error(error);
-
   return (
     <div>
       <Topbar />

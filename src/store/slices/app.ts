@@ -4,12 +4,12 @@ import type { RootState } from "../";
 import { metamaskInstalled } from "../../utils/wallet";
 
 export enum NotificationType {
-  info = "info",
-  warning = "warning",
-  success = "success",
-  danger = "danger",
+  info,
+  warning,
+  success,
+  danger,
 }
-interface Notification {
+export interface Notification {
   id: string;
   type: NotificationType;
   title: string;

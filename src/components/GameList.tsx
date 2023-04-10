@@ -4,8 +4,17 @@ import { GameIcon } from "./games";
 import { useAppSelector } from "../hooks";
 import { selectChain } from "../store/slices/chain";
 import { selectGame } from "../store/slices/game";
+import { Game } from "../utils/casino";
 
-function Item({ game, currencySymbol, isActive }: any) {
+function Item({
+  game,
+  currencySymbol,
+  isActive,
+}: {
+  game: Game;
+  currencySymbol: string;
+  isActive: boolean;
+}) {
   return (
     <Link
       className={
@@ -22,10 +31,20 @@ function Item({ game, currencySymbol, isActive }: any) {
   );
 }
 
-function List({ games, currencySymbol, activeGameId, isLoading }: any) {
+function List({
+  games,
+  currencySymbol,
+  activeGameId,
+  isLoading,
+}: {
+  games: Game[];
+  currencySymbol: string;
+  activeGameId: string | undefined;
+  isLoading: boolean;
+}) {
   const gameItems =
     games.length > 0
-      ? games.map((game: any) => (
+      ? games.map((game: Game) => (
           <Item
             key={game.id}
             game={game}
@@ -72,7 +91,7 @@ export function GameList() {
   if (gameList.value === null) throw new Error("Invalid game list");
   return (
     <List
-      games={gameList.value.filter((g: any) => g.isActive)}
+      games={gameList.value.filter((g: Game) => g.isActive)}
       currencySymbol={currencySymbol}
       activeGameId={gameId}
       isLoading={gameList.status === "loading"}

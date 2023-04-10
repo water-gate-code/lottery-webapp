@@ -1,6 +1,6 @@
 import { formatEther, BrowserProvider, parseEther } from "ethers";
 import { ChainConfig, chains } from "./chains";
-import { Casino__factory } from "./contracts";
+import { Casino__factory, Casino as CasinoContract } from "./contracts";
 import {
   CreateGame_EventEvent,
   CompleteGame_EventEvent,
@@ -66,8 +66,8 @@ export type Game = {
   isActive: boolean;
 };
 
-const getGameType = (rawGameType: any): GameType => {
-  const parseedRawGameType: RawChainGameType = parseInt(rawGameType);
+const getGameType = (rawGameType: bigint): GameType => {
+  const parseedRawGameType: RawChainGameType = parseInt(rawGameType.toString());
   switch (parseedRawGameType) {
     case RawChainGameType.dice:
       return GameType.dice;
@@ -103,8 +103,8 @@ export const formatGame = (rawChainGame: DisplayInfoStructOutput): Game => {
 
 export class Casino {
   #chain;
-  #contract;
-  #signedContract: any;
+  #contract: CasinoContract;
+  #signedContract: CasinoContract | undefined;
   #provider;
   constructor(chain: ChainConfig) {
     if (!chain) throw new Error("Chain is required!");
@@ -141,7 +141,7 @@ export class Casino {
     return formatGame(game);
   }
   async signedContract() {
-    if (!this.#signedContract) {
+    if (this.#signedContract === undefined) {
       const signer = await this.#provider.getSigner();
       const { address } = this.#chain.contracts.Casino;
 
@@ -151,6 +151,7 @@ export class Casino {
   }
   async createGame(amount: number, gameType: GameType, bet: number) {
     const signedContract = await this.signedContract();
+
     const response = await signedContract.createGame(
       getRawGameType(gameType),
       bet,
@@ -159,12 +160,24 @@ export class Casino {
       }
     );
     const receipt = await response.wait();
-    const { events } = receipt;
+    if (receipt === null) throw new Error("Receipt is null");
 
-    const createGameEvent = events.find(
-      (e: any) => e.event === CasinoEvent.CreateGame_Event
-    );
-
+    let createGameEvent = null;
+    for (const log of receipt.logs || []) {
+      if (log !== null) {
+        const parsedLog = signedContract.interface.parseLog({
+          topics: log.topics,
+          data: log.data,
+        } as any);
+        if (parsedLog !== null) {
+          const eventName = parsedLog.name;
+          if (eventName === CasinoEvent.CreateGame_Event) {
+            createGameEvent = parsedLog;
+          }
+        }
+      }
+    }
+    if (!createGameEvent) throw new Error("Create game event not found");
     return formatGame(createGameEvent.args.game);
   }
   async playGame(amount: number, gameId: string, bet: number) {

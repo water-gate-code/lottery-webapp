@@ -1,3 +1,6 @@
+import i18n from "i18next";
+import { useTranslation } from "react-i18next";
+
 import { useAppSelector } from "../hooks";
 import {
   NotificationType,
@@ -6,6 +9,7 @@ import {
 } from "../store/slices/app";
 
 const Item = ({ notification }: { notification: INotification }) => {
+  const { t } = useTranslation();
   const { type, title } = notification;
   const iconStyle = {
     width: "0.9em",
@@ -28,7 +32,7 @@ const Item = ({ notification }: { notification: INotification }) => {
       >
         <use xlinkHref={`#${type}-fill`} />
       </svg>
-      <div>{title}</div>
+      <div>{i18n.exists(title) ? t(title) : title}</div>
     </div>
   );
 };

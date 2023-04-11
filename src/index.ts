@@ -21,6 +21,7 @@ import { errorEventParser } from "./utils/tools";
 import { fetchGames, selectGame, setGameResult } from "./store/slices/game";
 import { GameResult, getCasino, isEmptyAddress } from "./utils/casino";
 import { DisplayInfoStructOutput } from "./utils/contracts/Casino";
+import { initI18next } from "./initI18next";
 
 const { ethereum } = window;
 
@@ -108,7 +109,8 @@ ethereum.on("chainChanged", onWalletChange.bind(this, "chainChanged"));
 ethereum.on("message", onWalletChange.bind(this, "message"));
 
 reportWebVitals(sendToGoogleAnalytics);
-setWallet();
+
+initI18next().then(setWallet);
 
 const rootDom = document.getElementById("root");
 if (rootDom !== null) mountApp(rootDom);

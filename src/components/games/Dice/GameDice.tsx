@@ -1,4 +1,5 @@
 import { useState, FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 import { connectWallet } from "../../../utils/wallet";
 import { GameIcon } from "..";
@@ -6,7 +7,7 @@ import { Address } from "../../Address";
 import { useAppSelector } from "../../../hooks";
 import { selectCasino, selectChain } from "../../../store/slices/chain";
 import { selectUser } from "../../../store/slices/user";
-import { Game as IGame, getGameName } from "../../../utils/casino";
+import { Game as IGame, getGameNameKey } from "../../../utils/casino";
 
 function GameForm({
   game,
@@ -17,6 +18,7 @@ function GameForm({
   currencySymbol: string;
   onSubmit: (e: FormEvent) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="container">
       <div className="row">
@@ -24,19 +26,22 @@ function GameForm({
           <h6 className="display-6">
             <GameIcon gameType={game.type} />
             &nbsp;&nbsp;
-            {getGameName(game.type)}
+            {t(getGameNameKey(game.type))}
           </h6>
           <p className="lead">
-            Game Id: <Address address={game.id} />
+            {t("game.gameId")}: <Address address={game.id} />
           </p>
           <p className="lead">
-            Player: <Address address={game.player1} />
+            {t("game.player")}: <Address address={game.player1} />
           </p>
           <p className="lead">
-            Amount: {game.betAmount} {currencySymbol}
+            {t("game.amount")}: {game.betAmount} {currencySymbol}
           </p>
           <p className="lead">
-            On: {BigInt(game.player1BetNumber) < 6 ? "Small" : "Big"}
+            {t("game.on")}:{" "}
+            {BigInt(game.player1BetNumber) < 6
+              ? t("game.dice.choice.small")
+              : t("game.dice.choice.big")}
           </p>
         </div>
       </div>
@@ -44,7 +49,7 @@ function GameForm({
         <div className="col">
           <form onSubmit={onSubmit}>
             <button type="submit" className="btn btn-primary">
-              Play with it
+              {t("game.play")}
             </button>
           </form>
         </div>

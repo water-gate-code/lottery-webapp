@@ -1,21 +1,23 @@
 import { useState, FormEvent, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import { connectWallet } from "../../../utils/wallet";
 
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { selectCasino, selectChain } from "../../../store/slices/chain";
 import { selectUser } from "../../../store/slices/user";
-import { Game, GameType, getGameName } from "../../../utils/casino";
+import { Game, GameType, getGameNameKey } from "../../../utils/casino";
 import { nanoid } from "@reduxjs/toolkit";
 import { createGame, selectGame } from "../../../store/slices/game";
 
-const SELLECTION = ["Rock", "Paper", "Scissors"];
+const Choice = ["rock", "paper", "scissors"];
 
 export function CreateGame({
   onCreateGameSuccess,
 }: {
   onCreateGameSuccess: (game: Game) => void;
 }) {
+  const { t } = useTranslation();
   const dispacth = useAppDispatch();
   const casino = useAppSelector(selectCasino);
   const user = useAppSelector(selectUser);
@@ -92,7 +94,9 @@ export function CreateGame({
       <div className="row">
         <div className="col">
           <h6 className="display-6 mt-3 mb-5">
-            Create a new {getGameName(GameType.rps)} game
+            {t("game.createTitle", {
+              gameName: t(getGameNameKey(GameType.rps)),
+            })}
           </h6>
         </div>
       </div>
@@ -119,9 +123,9 @@ export function CreateGame({
             </div>
             <div className="mb-3">
               <div className="btn-group">
-                {SELLECTION.map((sellection, index) => (
+                {Choice.map((choice, index) => (
                   <button
-                    key={sellection}
+                    key={choice}
                     className={
                       "btn btn-outline-primary " +
                       (index + 1 === betSelection ? "active" : "") +
@@ -132,13 +136,13 @@ export function CreateGame({
                       setBetSelection(index + 1);
                     }}
                   >
-                    {sellection}
+                    {t(`game.rps.choice.${choice}`)}
                   </button>
                 ))}
               </div>
             </div>
             <button type="submit" className="btn btn-primary">
-              Create
+              {t("game.create")}
             </button>
           </form>
         </div>

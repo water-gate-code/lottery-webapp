@@ -1,15 +1,17 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { CreateGameRenderer } from "./games";
-import { Game, GameType, getGameName, parseGameType } from "../utils/casino";
+import { Game, GameType, getGameNameKey, parseGameType } from "../utils/casino";
 
 const Tab = ({ isActive, type }: { isActive: boolean; type: GameType }) => {
+  const { t } = useTranslation();
   const className = `nav-link ${isActive ? "active" : ""}`;
   const gameTypeKey = GameType[type];
   return (
     <li className="nav-item">
       <Link className={className} to={`/create/${gameTypeKey}`}>
-        {getGameName(type)}
+        {t(getGameNameKey(type))}
       </Link>
     </li>
   );

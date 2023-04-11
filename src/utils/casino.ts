@@ -41,12 +41,12 @@ export const isEmptyAddress = (address: string) => {
   return address.toLowerCase() === EMPTY_ADDRESS;
 };
 
-export const getGameName = (gameType: GameType) => {
+export const getGameNameKey = (gameType: GameType) => {
   switch (gameType) {
     case GameType.dice:
-      return "Dice";
+      return "game.dice.name";
     case GameType.rps:
-      return "Rock Paper Scissors";
+      return "game.rps.name";
     default:
       throw new Error(`Invalid Game Type (type="${gameType}")`);
   }

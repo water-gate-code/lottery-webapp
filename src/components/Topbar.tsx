@@ -1,12 +1,16 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { useAppSelector } from "../hooks";
 import { selectUser } from "../store/slices/user";
 import { connectWallet } from "../utils/wallet";
 import { Address } from "./Address";
 import { selectChain } from "../store/slices/chain";
+import { changeLanguage } from "../initI18next";
+import { langs } from "../langs";
 
 export function Topbar() {
+  const { t } = useTranslation();
   const user = useAppSelector(selectUser);
   const chain = useAppSelector(selectChain);
   const supportChain = chain.id !== null && chain.support;
@@ -33,7 +37,7 @@ export function Topbar() {
         className="btn btn-primary button"
         onClick={connectWallet}
       >
-        Connect Your Wallet
+        {t("connectWallet")}
       </button>
     </span>
   );
@@ -48,10 +52,22 @@ export function Topbar() {
             height="24"
             className="d-inline-block align-text-top me-2"
           />
-          Barsino
+          {t("appName")}
         </Link>
 
         <div>
+          {Object.keys(langs).map((lang) => (
+            <span className="navbar-text me-3" key={lang}>
+              <button
+                type="button"
+                className="btn btn-primary button"
+                onClick={changeLanguage.bind(null, lang)}
+              >
+                {langs[lang].displayName}
+              </button>
+            </span>
+          ))}
+
           {accountInfo}
 
           {supportChain ? (

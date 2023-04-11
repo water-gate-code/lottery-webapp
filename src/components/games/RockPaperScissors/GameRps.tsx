@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { connectWallet } from "../../../utils/wallet";
 import { GameIcon } from "..";
@@ -6,9 +7,9 @@ import { Address } from "../../Address";
 import { useAppSelector } from "../../../hooks";
 import { selectCasino, selectChain } from "../../../store/slices/chain";
 import { selectUser } from "../../../store/slices/user";
-import { Game as IGame, getGameName } from "../../../utils/casino";
+import { Game as IGame, getGameNameKey } from "../../../utils/casino";
 
-const SELLECTION = ["Rock", "Paper", "Scissors"];
+const Choice = ["rock", "paper", "scissors"];
 
 function GameForm({
   game,
@@ -19,6 +20,7 @@ function GameForm({
   currencySymbol: string;
   onSubmit: (selection: number) => void;
 }) {
+  const { t } = useTranslation();
   const [betSelection, setBetSelection] = useState(1);
   return (
     <div className="container">
@@ -27,16 +29,16 @@ function GameForm({
           <h6 className="display-6">
             <GameIcon gameType={game.type} />
             &nbsp;&nbsp;
-            {getGameName(game.type)}
+            {t(getGameNameKey(game.type))}
           </h6>
           <p className="lead">
-            Game Id: <Address address={game.id} />
+            {t("game.gameId")}: <Address address={game.id} />
           </p>
           <p className="lead">
-            Player: <Address address={game.player1} />
+            {t("game.player")}: <Address address={game.player1} />
           </p>
           <p className="lead">
-            Amount: {game.betAmount} {currencySymbol}
+            {t("game.amount")}: {game.betAmount} {currencySymbol}
           </p>
         </div>
       </div>
@@ -50,9 +52,9 @@ function GameForm({
           >
             <div className="mb-3">
               <div className="btn-group">
-                {SELLECTION.map((sellection, index) => (
+                {Choice.map((choice, index) => (
                   <button
-                    key={sellection}
+                    key={choice}
                     className={
                       "btn btn-outline-primary " +
                       (index + 1 === betSelection ? "active" : "") +
@@ -61,13 +63,13 @@ function GameForm({
                     type="button"
                     onClick={() => setBetSelection(index + 1)}
                   >
-                    {sellection}
+                    {t(`game.rps.choice.${choice}`)}
                   </button>
                 ))}
               </div>
             </div>
             <button type="submit" className="btn btn-primary">
-              Play with it
+              {t("game.play")}
             </button>
           </form>
         </div>

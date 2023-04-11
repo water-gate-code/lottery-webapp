@@ -18,8 +18,13 @@ import {
 } from "./store/slices/app";
 import { selectCasino, setChain } from "./store/slices/chain";
 import { errorEventParser } from "./utils/tools";
-import { fetchGames, selectGame, setGameResult } from "./store/slices/game";
-import { GameResult, getCasino, isEmptyAddress } from "./utils/casino";
+import { addGame, fetchGames, setGameResult } from "./store/slices/game";
+import {
+  GameResult,
+  formatGame,
+  getCasino,
+  isEmptyAddress,
+} from "./utils/casino";
 import { DisplayInfoStructOutput } from "./utils/contracts/Casino";
 import { initI18next } from "./initI18next";
 
@@ -38,20 +43,17 @@ function errorHandler(errorEvent: any) {
 
 // TODO: very ugly apply, need to refactor ASAP
 const onCreate = (game: DisplayInfoStructOutput) => {
-  // store.dispatch(addGame(formatGame(game)));
+  store.dispatch(addGame(formatGame(game)));
 };
-const onComplete = (winner: string) => {
+const onComplete = (gameId: string, winner: string) => {
   const isWinner = (a: string) => a.toLowerCase() === winner.toLowerCase();
   const user = selectUser(store.getState());
-  const game = selectGame(store.getState());
-  const gameId = game.currentGamePlay.game.value?.id;
   const result = isEmptyAddress(winner)
     ? GameResult.draw
     : user.authed && isWinner(user.address)
     ? GameResult.win
     : GameResult.lose;
-  store.dispatch(setGameResult({ gameId: gameId ?? "unknow", result }));
-  // navigate(`/result/${result > 0 ? "win" : result < 0 ? "lose" : "equal"}`);
+  store.dispatch(setGameResult({ gameId: gameId, result }));
 };
 async function updateChainId() {
   const preCasino = selectCasino(store.getState());

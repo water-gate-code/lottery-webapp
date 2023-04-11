@@ -37,5 +37,5 @@ jobs:
       - name: Deploy app build to S3 bucket
         run: aws s3 sync ./build/ s3://dev.barsino.io --acl public-read --delete
 
-      # - name: Clear index.html cache
-      #   run: aws cloudfront create-invalidation --distribution-id E2M1ZHKPS12AWC --paths "/"
+      - name: Clear index.html cache
+        run: aws cloudfront create-invalidation --distribution-id E1AKWP0IW2I2V6 --paths "/"

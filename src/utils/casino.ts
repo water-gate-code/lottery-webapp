@@ -94,7 +94,7 @@ const getRawGameType = (gameType: GameType): RawChainGameType => {
 };
 
 export const formatGame = (rawChainGame: DisplayInfoStructOutput): Game => {
-  const { id, gameType, wager, gamblers } = rawChainGame;
+  const { id, host, gameType, wager, isActive, gamblers } = rawChainGame;
   if (gamblers.length < 1) throw new Error("Invalid gamblers");
   const game: Game = {
     id,

@@ -2,10 +2,8 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 
-import en from "./langs/en.json";
-import ar from "./langs/ar.json";
-
 import { store } from "./store";
+import { langs } from "./langs";
 import {
   NotificationType,
   newNotification,
@@ -35,14 +33,7 @@ export const initI18next = () => {
     .use(LanguageDetector)
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({
-      resources: {
-        en: {
-          translation: en,
-        },
-        ar: {
-          translation: ar,
-        },
-      },
+      resources: langs,
       fallbackLng: "en",
       detection: {
         // keys or params to lookup language from

@@ -1,0 +1,43 @@
+{
+  "appName": "Barsino",
+  "connectWallet": "Sambungkan Dompet Anda",
+  "needInstallMetamask": "Anda perlu memasang Metamask sebelum bermain",
+  "installMetamask": "Pasang Metamask",
+  "languageChanged": "Bahasa telah diubah!",
+  "wrongNetwork": {
+    "change": "Tukar Rangkaian",
+    "notSupport": "Kami belum menyokong <0>{{networkName}}</0>!",
+    "selected": "Rangkaian Terpilih",
+    "pleaseSelect": "Sila pilih rangkaian yang disokong di bawah"
+  },
+  "errorPage": {
+    "title": "Alamak!",
+    "sorry": "Maaf, ralat tidak dijangka telah berlaku."
+  },
+  "game": {
+    "create": "Cipta",
+    "shortGameTitle": "{{wager}} {{currency}} pada {{choice}}",
+    "result": "Anda {{result}}",
+    "createTitle": "Cipta permainan {{gameName}} baru",
+    "gameId": "Id Permainan",
+    "player": "Pemain",
+    "amount": "Jumlah",
+    "on": "Pada",
+    "play": "Bermain dengannya",
+    "dice": {
+      "name": "Dadu",
+      "choice": {
+        "small": "Kecil",
+        "big": "Besar"
+      }
+    },
+    "rps": {
+      "name": "Batu Kertas Gunting",
+      "choice": {
+        "rock": "Batu",
+        "paper": "Kertas",
+        "scissors": "Gunting"
+      }
+    }
+  }
+}

@@ -6,8 +6,8 @@ import { selectUser } from "../store/slices/user";
 import { connectWallet } from "../utils/wallet";
 import { Address } from "./Address";
 import { selectChain } from "../store/slices/chain";
-import { changeLanguage } from "../initI18next";
-import { langs } from "../langs";
+// import { changeLanguage } from "../initI18next";
+// import { langs } from "../langs";
 
 export function Topbar() {
   const { t } = useTranslation();
@@ -56,7 +56,7 @@ export function Topbar() {
         </Link>
 
         <div>
-          {Object.keys(langs).map((lang) => (
+          {/* {Object.keys(langs).map((lang) => (
             <span className="navbar-text me-3" key={lang}>
               <button
                 type="button"
@@ -66,7 +66,7 @@ export function Topbar() {
                 {langs[lang].displayName}
               </button>
             </span>
-          ))}
+          ))} */}
 
           {accountInfo}
 

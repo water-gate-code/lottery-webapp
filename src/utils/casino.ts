@@ -18,8 +18,6 @@ const { ethereum } = window;
 enum CasinoEvent {
   CompleteGame_Event = "CompleteGame_Event",
   CreateGame_Event = "CreateGame_Event",
-  RandomRequestTest_Event = "RandomRequestTest_Event",
-  RandomResultTest_Event = "RandomResultTest_Event",
 }
 
 enum RawChainGameType {
@@ -36,9 +34,44 @@ export enum GameResult {
   draw,
 }
 
+interface Choice {
+  [choice: string]: number;
+}
+
+export const DiceChoice: Choice = {
+  small: 1,
+  big: 6,
+};
+export const RpsChoice: Choice = {
+  rock: 1,
+  paper: 2,
+  scissors: 3,
+};
+
+export type Game = {
+  id: string;
+  type: GameType;
+  player1: string;
+  betAmount: string;
+  player1BetNumber: string;
+  isActive: boolean;
+  host: string;
+};
+
 const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 export const isEmptyAddress = (address: string) => {
   return address.toLowerCase() === EMPTY_ADDRESS;
+};
+
+export const getGameChioce = (gameType: GameType) => {
+  switch (gameType) {
+    case GameType.dice:
+      return DiceChoice;
+    case GameType.rps:
+      return RpsChoice;
+    default:
+      throw new Error(`Invalid Game Type (type="${gameType}")`);
+  }
 };
 
 export const getGameNameKey = (gameType: GameType) => {
@@ -61,15 +94,6 @@ export function parseGameType(gameTypeKey: string) {
       throw new Error(`Invalid game type: ${gameTypeKey}`);
   }
 }
-
-export type Game = {
-  id: string;
-  type: GameType;
-  player1: string;
-  betAmount: string;
-  player1BetNumber: string;
-  isActive: boolean;
-};
 
 const getGameType = (rawGameType: bigint): GameType => {
   const parseedRawGameType: RawChainGameType = parseInt(rawGameType.toString());
@@ -94,15 +118,16 @@ const getRawGameType = (gameType: GameType): RawChainGameType => {
 };
 
 export const formatGame = (rawChainGame: DisplayInfoStructOutput): Game => {
-  const { id, gameType, wager, gamblers } = rawChainGame;
+  const { id, host, gameType, wager, isActive, gamblers } = rawChainGame;
   if (gamblers.length < 1) throw new Error("Invalid gamblers");
   const game: Game = {
     id,
+    host,
     type: getGameType(gameType),
     betAmount: formatEther(wager),
     player1: gamblers[0].id,
     player1BetNumber: gamblers[0].choice.toString(),
-    isActive: gamblers.length < 2,
+    isActive: isActive,
   };
   return game;
 };
@@ -153,6 +178,40 @@ export class Casino {
       this.#signedContract = Casino__factory.connect(address, signer);
     }
     return this.#signedContract;
+  }
+  // const response = await signedContract?.playGameWithDefaultHost(
+  async playGameWithDefaultHost(
+    amount: string,
+    gameType: GameType,
+    choice: number
+  ) {
+    const contract = await this.signedContract();
+    const type = getRawGameType(gameType);
+    const value = parseEther(amount);
+
+    const response = await contract.createGame(type, choice, {
+      value,
+    });
+    const receipt = await response.wait();
+    if (receipt === null) throw new Error("Receipt is null");
+
+    let createGameEvent = null;
+    for (const log of receipt.logs || []) {
+      if (log !== null) {
+        const parsedLog = contract.interface.parseLog({
+          topics: log.topics,
+          data: log.data,
+        } as { topics: Array<string>; data: string });
+        if (parsedLog !== null) {
+          const eventName = parsedLog.name;
+          if (eventName === CasinoEvent.CreateGame_Event) {
+            createGameEvent = parsedLog;
+          }
+        }
+      }
+    }
+    if (!createGameEvent) throw new Error("Create game event not found");
+    return formatGame(createGameEvent.args.game);
   }
   async createGame(amount: string, gameType: GameType, choice: number) {
     const contract = await this.signedContract();

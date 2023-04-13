@@ -134,6 +134,36 @@ export const gameSlice = createSlice({
         state.createGames[creationId].game.error = action.error;
         // TODO: cant throw error here, need to show error to user later some how
       });
+
+    builder
+      .addCase(playGameWithDefaultHost.pending, (state, action) => {
+        const creationId = action.meta.arg.creationId;
+        if (!state.createGames[creationId]) {
+          state.createGames[creationId] = {
+            game: {
+              value: null,
+              status: "loading",
+            },
+          };
+        }
+      })
+      .addCase(playGameWithDefaultHost.fulfilled, (state, action) => {
+        const creationId = action.meta.arg.creationId;
+        if (!state.createGames[creationId])
+          throw new Error("Invalid request id");
+
+        state.createGames[creationId].game.status = "succeeded";
+        state.createGames[creationId].game.value = action.payload;
+      })
+      .addCase(playGameWithDefaultHost.rejected, (state, action) => {
+        const creationId = action.meta.arg.creationId;
+        if (!state.createGames[creationId])
+          throw new Error("Invalid request id");
+
+        state.createGames[creationId].game.status = "failed";
+        state.createGames[creationId].game.error = action.error;
+        // TODO: cant throw error here, need to show error to user later some how
+      });
   },
 });
 
@@ -167,6 +197,26 @@ export const createGame = createAsyncThunk(
     choice: number;
   }) => {
     const game = await casino.createGame(wager, type, choice);
+    return game;
+  }
+);
+
+export const playGameWithDefaultHost = createAsyncThunk(
+  "game/playGameWithDefaultHost",
+  async ({
+    casino,
+    creationId,
+    type,
+    wager,
+    choice,
+  }: {
+    casino: Casino;
+    creationId: string;
+    type: GameType;
+    wager: string;
+    choice: number;
+  }) => {
+    const game = await casino.playGameWithDefaultHost(wager, type, choice);
     return game;
   }
 );

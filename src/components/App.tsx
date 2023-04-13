@@ -5,7 +5,6 @@ import { NeedMetamask } from "./NeedMetamask";
 import { Topbar } from "./Topbar";
 import { WrongNetwork } from "./WrongNetwork";
 import { Notification } from "./Notification";
-import { GameList } from "./GameList";
 import { Outlet } from "react-router-dom";
 
 export function App() {
@@ -37,10 +36,7 @@ export function App() {
       <Topbar />
       <div className="container-fluid mt-3">
         <div className="row">
-          <div className="col-2">
-            <GameList />
-          </div>
-          <div className="col-10">
+          <div className="col">
             <div className="App container">
               <Outlet />
             </div>

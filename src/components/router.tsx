@@ -4,6 +4,8 @@ import { Game } from "./Game";
 import { CreateGame } from "./CreateGame";
 import { Result } from "./Result";
 import { App } from "./App";
+import { Home } from "./Home";
+import { GamePlay } from "./GamePlay";
 
 export const router = createBrowserRouter([
   {
@@ -13,11 +15,15 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <CreateGame />,
+        element: <Home />,
       },
       {
         path: "/create/:gameType",
         element: <CreateGame />,
+      },
+      {
+        path: "/play/:gameType",
+        element: <GamePlay />,
       },
       {
         path: "/result/:result",

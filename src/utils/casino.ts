@@ -34,9 +34,44 @@ export enum GameResult {
   draw,
 }
 
+interface Choice {
+  [choice: string]: number;
+}
+
+export const DiceChoice: Choice = {
+  small: 1,
+  big: 6,
+};
+export const RpsChoice: Choice = {
+  rock: 1,
+  paper: 2,
+  scissors: 3,
+};
+
+export type Game = {
+  id: string;
+  type: GameType;
+  player1: string;
+  betAmount: string;
+  player1BetNumber: string;
+  isActive: boolean;
+  host: string;
+};
+
 const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 export const isEmptyAddress = (address: string) => {
   return address.toLowerCase() === EMPTY_ADDRESS;
+};
+
+export const getGameChioce = (gameType: GameType) => {
+  switch (gameType) {
+    case GameType.dice:
+      return DiceChoice;
+    case GameType.rps:
+      return RpsChoice;
+    default:
+      throw new Error(`Invalid Game Type (type="${gameType}")`);
+  }
 };
 
 export const getGameNameKey = (gameType: GameType) => {
@@ -59,16 +94,6 @@ export function parseGameType(gameTypeKey: string) {
       throw new Error(`Invalid game type: ${gameTypeKey}`);
   }
 }
-
-export type Game = {
-  id: string;
-  type: GameType;
-  player1: string;
-  betAmount: string;
-  player1BetNumber: string;
-  isActive: boolean;
-  host: string;
-};
 
 const getGameType = (rawGameType: bigint): GameType => {
   const parseedRawGameType: RawChainGameType = parseInt(rawGameType.toString());

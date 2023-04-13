@@ -7,8 +7,13 @@ import {
   sendToGoogleAnalytics,
 } from "./utils/reportWebVitals";
 import { store } from "./store";
-import { getAccounts, getBalance, getChainId } from "./utils/wallet";
-import { auth, selectUser, setBalance } from "./store/slices/user";
+import { getAccounts, getChainId } from "./utils/wallet";
+import {
+  auth,
+  clearBalance,
+  selectUser,
+  updateBalance,
+} from "./store/slices/user";
 import {
   NotificationType,
   clearNotify,
@@ -18,14 +23,8 @@ import {
 } from "./store/slices/app";
 import { selectCasino, setChain } from "./store/slices/chain";
 import { errorEventParser } from "./utils/tools";
-import { addGame, fetchGames, setGameResult } from "./store/slices/game";
-import {
-  GameResult,
-  formatGame,
-  getCasino,
-  isEmptyAddress,
-} from "./utils/casino";
-import { DisplayInfoStructOutput } from "./utils/contracts/Casino";
+import { setGameResult } from "./store/slices/game";
+import { GameResult, getCasino, isEmptyAddress } from "./utils/casino";
 import { initI18next } from "./initI18next";
 
 const { ethereum } = window;
@@ -41,10 +40,6 @@ function errorHandler(errorEvent: any) {
   }
 }
 
-// TODO: very ugly apply, need to refactor ASAP
-const onCreate = (game: DisplayInfoStructOutput) => {
-  store.dispatch(addGame(formatGame(game)));
-};
 const onComplete = (gameId: string, winner: string) => {
   const isWinner = (a: string) => a.toLowerCase() === winner.toLowerCase();
   const user = selectUser(store.getState());
@@ -59,7 +54,6 @@ async function updateChainId() {
   const preCasino = selectCasino(store.getState());
 
   if (preCasino !== null) {
-    preCasino.offCreateGame(onCreate);
     preCasino.offCompleteGame(onComplete);
   }
 
@@ -68,26 +62,20 @@ async function updateChainId() {
 
   const casino = getCasino(chainId);
   if (casino !== null) {
-    store.dispatch(fetchGames({ casino }));
-
-    casino.onCreateGame(onCreate);
     casino.onCompleteGame(onComplete);
   }
 }
 
-async function updateBalance(address: string) {
-  const balance = await getBalance(address);
-  store.dispatch(setBalance(balance));
-}
 async function updateAuth() {
-  store.dispatch(setBalance(undefined));
+  store.dispatch(clearBalance());
   const accounts = await getAccounts();
   if (accounts.length > 0) {
     const address = accounts[0];
     store.dispatch(auth(address));
-    updateBalance(address);
+    store.dispatch(updateBalance(address));
   }
 }
+
 async function setWallet() {
   await updateChainId();
   await updateAuth();

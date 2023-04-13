@@ -5,32 +5,60 @@ import { connectWallet } from "../utils/wallet";
 
 import { selectCasino, selectChain } from "../store/slices/chain";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { selectUser } from "../store/slices/user";
+import { selectUser, updateBalance } from "../store/slices/user";
 import {
+  Game,
+  GameResult,
   GameType,
   getGameChioce,
   getGameNameKey,
   parseGameType,
 } from "../utils/casino";
-import { createGame, selectGame } from "../store/slices/game";
-import { nanoid } from "@reduxjs/toolkit";
 import { useParams } from "react-router-dom";
+import { selectGame } from "../store/slices/game";
 
-// const Choice: { [choice: string]: number } = {
-//   small: 1,
-//   big: 6,
-// };
+enum GamePlayStatus {
+  idle,
+  creating,
+  waitingResult,
+  finished,
+}
+
+interface GamePlayIdle {
+  status: GamePlayStatus.idle;
+}
+
+interface GamePlayCreating {
+  status: GamePlayStatus.creating;
+}
+
+interface GamePlayWaitingResult {
+  status: GamePlayStatus.waitingResult;
+  game: Game;
+}
+
+interface GamePlayFinished {
+  status: GamePlayStatus.finished;
+  game: Game;
+  result: GameResult;
+}
+
+type GamePlayState =
+  | GamePlayIdle
+  | GamePlayCreating
+  | GamePlayWaitingResult
+  | GamePlayFinished;
 
 export function GamePlay() {
   const { t } = useTranslation();
   const { gameType: gameTypeKey } = useParams();
   if (gameTypeKey === undefined) throw new Error("Invalid game type");
   const gameType = parseGameType(gameTypeKey);
-  const dispacth = useAppDispatch();
+  const dispatch = useAppDispatch();
   const casino = useAppSelector(selectCasino);
   const user = useAppSelector(selectUser);
-  // const { createGames } = useAppSelector(selectGame);
   const chain = useAppSelector(selectChain);
+  const { gameResults } = useAppSelector(selectGame);
   if (chain.id === null || !chain.support) {
     throw new Error("Invalid chain");
   }
@@ -43,27 +71,26 @@ export function GamePlay() {
 
   const choices = getGameChioce(gameType);
   const [choice, setChoice] = useState(choices[Object.keys(choices)[0]]);
-  //   const [creating, setCreating] = useState(false);
-  const [creationId, setCreationId] = useState(nanoid());
 
-  //   useEffect(() => {
-  //     const request = createGames[creationId];
+  const [gamePlay, setGamePlay] = useState<GamePlayState>({
+    status: GamePlayStatus.idle,
+  });
 
-  //     if (request && request.game.status === "loading") {
-  //       !creating && setCreating(true);
-  //     } else {
-  //       creating && setCreating(false);
-  //     }
-
-  //     if (request && request.game.status === "succeeded") {
-  //       setCreationId(nanoid());
-  //       if (request.game.value === null)
-  //         throw new Error("Empty data after creation");
-  //       //   onCreateGameSuccess && onCreateGameSuccess(request.game.value);
-  //     } else if (request && request.game.status === "failed") {
-  //       setCreationId(nanoid());
-  //     }
-  //   }, [creating, setCreating, createGames, creationId]);
+  useEffect(() => {
+    if (gamePlay.status === GamePlayStatus.waitingResult) {
+      const result = gameResults[gamePlay.game.id];
+      if (result !== undefined) {
+        setGamePlay({
+          ...gamePlay,
+          status: GamePlayStatus.finished,
+          result,
+        });
+        if (user.authed) {
+          dispatch(updateBalance(user.address));
+        }
+      }
+    }
+  }, [gameResults, gamePlay, user, dispatch]);
 
   async function create() {
     if (!user.authed) {
@@ -72,36 +99,58 @@ export function GamePlay() {
     if (casino === null) {
       throw new Error("Contract not exist");
     }
+    setGamePlay({
+      status: GamePlayStatus.creating,
+    });
+
     const type = GameType.dice;
-    dispacth(
-      createGame({
-        casino,
-        creationId,
-        type,
-        wager,
-        choice,
-      })
-    );
+    const game = await casino.playGameWithDefaultHost(wager, type, choice);
+
+    if (user.authed) {
+      dispatch(updateBalance(user.address));
+    }
+    setGamePlay({
+      ...gamePlay,
+      status: GamePlayStatus.waitingResult,
+      game,
+    });
   }
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
     create();
   }
-  //   if (creating)
-  //     return (
-  //       <div className="d-flex justify-content-center">
-  //         <div className="spinner-border text-primary m-5" role="status"></div>
-  //       </div>
-  //     );
+  if (gamePlay.status === GamePlayStatus.creating)
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-border text-primary m-5" role="status"></div>
+        <div>creating</div>
+      </div>
+    );
+  if (gamePlay.status === GamePlayStatus.waitingResult)
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-border text-primary m-5" role="status"></div>
+        <div>waitingResult {gamePlay.game.id}</div>
+      </div>
+    );
+  if (gamePlay.status === GamePlayStatus.finished)
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-border text-primary m-5" role="status"></div>
+        <div>
+          finished {gamePlay.game.id}: {gamePlay.result}
+        </div>
+      </div>
+    );
 
   return (
-    <div className="container">
+    <div className="col-8 offset-2">
       <div className="row">
         <div className="col">
           <h6 className="display-6 mt-3 mb-5">
             {t("game.createTitle", {
-              gameName: t(gameTypeKey),
+              gameName: t(getGameNameKey(gameType)),
             })}
           </h6>
         </div>

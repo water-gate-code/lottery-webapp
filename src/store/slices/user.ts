@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../";
+import { getBalance } from "../../utils/wallet";
 
 // Define a type for the slice state
 interface UserStateUnauth {
@@ -34,16 +35,30 @@ export const userSlice = createSlice({
         address: action.payload,
       };
     },
-    setBalance: (state, action: PayloadAction<string | undefined>) => {
-      return {
-        ...state,
-        balance: action.payload,
-      };
+    clearBalance: (state) => {
+      if (state.authed) {
+        state.balance = undefined;
+      }
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(updateBalance.fulfilled, (state, action) => {
+      if (state.authed) {
+        state.balance = action.payload;
+      }
+    });
   },
 });
 
-export const { auth, setBalance } = userSlice.actions;
+export const { auth, clearBalance } = userSlice.actions;
+
+export const updateBalance = createAsyncThunk(
+  "user/updateBalance",
+  async (address: string) => {
+    const balance = await getBalance(address);
+    return balance;
+  }
+);
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectUser = (state: RootState) => state.user;

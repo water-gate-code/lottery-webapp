@@ -119,6 +119,9 @@ class Casino {
   private provider: BrowserProvider;
   private contract: CasinoContract;
   private signedContract: CasinoContract | undefined;
+  private completeListener:
+    | TypedListener<CompleteGame_EventEvent.Event>
+    | undefined;
 
   constructor(chainId: number) {
     this.chainId = chainId;
@@ -130,12 +133,16 @@ class Casino {
   }
 
   onCompleteGame(callback: TypedListener<CompleteGame_EventEvent.Event>) {
+    if (this.completeListener !== undefined) return;
+    this.completeListener = callback;
     const event = this.contract.getEvent(CasinoEvent.CompleteGame_Event);
-    this.contract.on(event, callback);
+    this.contract.on(event, this.completeListener);
   }
   offCompleteGame(callback: TypedListener<CompleteGame_EventEvent.Event>) {
+    if (this.completeListener === undefined) return;
     const event = this.contract.getEvent(CasinoEvent.CompleteGame_Event);
-    this.contract.off(event, callback);
+    this.contract.off(event, this.completeListener);
+    this.completeListener = undefined;
   }
 
   async signe(): Promise<CasinoContract> {

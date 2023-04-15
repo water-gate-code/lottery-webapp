@@ -61,7 +61,7 @@ async function updateChainId() {
   store.dispatch(setChain(chainId));
 
   const casino = getCasino(chainId);
-  if (casino !== null) {
+  if (casino !== null && casino !== preCasino) {
     casino.onCompleteGame(onComplete);
   }
 }

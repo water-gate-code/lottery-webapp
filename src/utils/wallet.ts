@@ -1,5 +1,5 @@
 import type { ChainInfo } from "./chains";
-import { formatEther } from "ethers";
+import { utils } from "ethers";
 
 const { ethereum } = window;
 // const { ethers } = window;
@@ -32,7 +32,7 @@ export async function getBalance(address: string): Promise<string> {
     method: "eth_getBalance",
     params: [address, "latest"],
   });
-  return formatEther(balance);
+  return utils.formatEther(balance);
 }
 export async function getChainId() {
   const chainId = await ethRequest({ method: "eth_chainId" });

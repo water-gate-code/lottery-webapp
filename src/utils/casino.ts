@@ -1,11 +1,7 @@
-import { BrowserProvider, parseEther } from "ethers";
+import { ethers, utils } from "ethers";
 import { ChainConfig, chains } from "./chains";
 import { Casino__factory, Casino as CasinoContract } from "./contracts";
-import {
-  CompleteGame_EventEvent,
-  DisplayInfoStructOutput,
-} from "./contracts/Casino";
-import { TypedListener } from "./contracts/common";
+import { DisplayInfoStructOutput } from "./contracts/Casino";
 
 const { ethereum } = window;
 
@@ -108,7 +104,7 @@ export const formatGame = (rawChainGame: DisplayInfoStructOutput): Game => {
   const { id, gameType } = rawChainGame;
   const game: Game = {
     id,
-    type: getGameType(gameType),
+    type: getGameType(gameType.toBigInt()),
   };
   return game;
 };
@@ -116,32 +112,29 @@ export const formatGame = (rawChainGame: DisplayInfoStructOutput): Game => {
 class Casino {
   private chainId: number;
   private chainConfig: ChainConfig;
-  private provider: BrowserProvider;
+  private provider: ethers.providers.Web3Provider;
   private contract: CasinoContract;
   private signedContract: CasinoContract | undefined;
-  private completeListener:
-    | TypedListener<CompleteGame_EventEvent.Event>
-    | undefined;
+  private completeListener: any;
 
   constructor(chainId: number) {
     this.chainId = chainId;
     this.chainConfig = chains[chainId];
     if (!this.chainConfig === undefined) throw new Error("Invalid chain!");
     const { address } = this.chainConfig.contracts.Casino;
-    this.provider = new BrowserProvider(ethereum);
+
+    this.provider = new ethers.providers.Web3Provider(ethereum);
     this.contract = Casino__factory.connect(address, this.provider);
   }
 
-  onCompleteGame(callback: TypedListener<CompleteGame_EventEvent.Event>) {
+  onCompleteGame(callback: any) {
     if (this.completeListener !== undefined) return;
     this.completeListener = callback;
-    const event = this.contract.getEvent(CasinoEvent.CompleteGame_Event);
-    this.contract.on(event, this.completeListener);
+    this.contract.on(CasinoEvent.CompleteGame_Event, this.completeListener);
   }
   offCompleteGame() {
     if (this.completeListener === undefined) return;
-    const event = this.contract.getEvent(CasinoEvent.CompleteGame_Event);
-    this.contract.off(event, this.completeListener);
+    this.contract.off(CasinoEvent.CompleteGame_Event, this.completeListener);
     this.completeListener = undefined;
   }
 
@@ -162,7 +155,7 @@ class Casino {
   ) {
     const contract = await this.signe();
     const type = getRawGameType(gameType);
-    const value = parseEther(amount);
+    const value = utils.parseEther(amount);
 
     const response = await contract.playGameWithDefaultHost(type, choice, {
       value,

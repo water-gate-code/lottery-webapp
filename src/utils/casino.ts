@@ -164,7 +164,7 @@ class Casino {
     const type = getRawGameType(gameType);
     const value = parseEther(amount);
 
-    const response = await contract.createGame(type, choice, {
+    const response = await contract.playGameWithDefaultHost(type, choice, {
       value,
     });
     const receipt = await response.wait();

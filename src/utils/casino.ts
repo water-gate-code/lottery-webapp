@@ -138,7 +138,7 @@ class Casino {
     const event = this.contract.getEvent(CasinoEvent.CompleteGame_Event);
     this.contract.on(event, this.completeListener);
   }
-  offCompleteGame(callback: TypedListener<CompleteGame_EventEvent.Event>) {
+  offCompleteGame() {
     if (this.completeListener === undefined) return;
     const event = this.contract.getEvent(CasinoEvent.CompleteGame_Event);
     this.contract.off(event, this.completeListener);

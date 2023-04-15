@@ -10,6 +10,7 @@ export function Home() {
           <Link to={`/play/${GameType[GameType.dice]}`}>
             <div className="card">
               <div className="card-body">
+                <img src="/img/dice.png" alt="" />
                 <h1 className="card-title">
                   {t(getGameNameKey(GameType.dice))}
                 </h1>

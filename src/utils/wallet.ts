@@ -1,8 +1,7 @@
 import type { ChainInfo } from "./chains";
-import { utils } from "ethers";
 
 const { ethereum } = window;
-// const { ethers } = window;
+const { ethers } = window;
 
 export const toHex = (num: number) => "0x" + num.toString(16);
 
@@ -32,7 +31,7 @@ export async function getBalance(address: string): Promise<string> {
     method: "eth_getBalance",
     params: [address, "latest"],
   });
-  return utils.formatEther(balance);
+  return ethers.utils.formatEther(balance);
 }
 export async function getChainId() {
   const chainId = await ethRequest({ method: "eth_chainId" });

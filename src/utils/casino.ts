@@ -1,9 +1,8 @@
-import { ethers, utils } from "ethers";
 import { ChainConfig, chains } from "./chains";
-import { Casino__factory, Casino as CasinoContract } from "./contracts";
-import { DisplayInfoStructOutput } from "./contracts/Casino";
+import { contracts } from "./contracts";
 
 const { ethereum } = window;
+const { ethers } = window;
 
 enum CasinoEvent {
   CompleteGame_Event = "CompleteGame_Event",
@@ -100,7 +99,7 @@ const getRawGameType = (gameType: GameType): RawChainGameType => {
   }
 };
 
-export const formatGame = (rawChainGame: DisplayInfoStructOutput): Game => {
+export const formatGame = (rawChainGame: any): Game => {
   const { id, gameType } = rawChainGame;
   const game: Game = {
     id,
@@ -112,9 +111,9 @@ export const formatGame = (rawChainGame: DisplayInfoStructOutput): Game => {
 class Casino {
   private chainId: number;
   private chainConfig: ChainConfig;
-  private provider: ethers.providers.Web3Provider;
-  private contract: CasinoContract;
-  private signedContract: CasinoContract | undefined;
+  private provider: any;
+  private contract: any;
+  private signedContract: any;
   private completeListener: any;
 
   constructor(chainId: number) {
@@ -122,9 +121,18 @@ class Casino {
     this.chainConfig = chains[chainId];
     if (!this.chainConfig === undefined) throw new Error("Invalid chain!");
     const { address } = this.chainConfig.contracts.Casino;
-
     this.provider = new ethers.providers.Web3Provider(ethereum);
-    this.contract = Casino__factory.connect(address, this.provider);
+    this.contract = new ethers.Contract(
+      address,
+      contracts.Casino.abi,
+      this.provider
+    );
+    const signer = this.provider.getSigner();
+    this.signedContract = new ethers.Contract(
+      address,
+      contracts.Casino.abi,
+      signer
+    );
   }
 
   onCompleteGame(callback: any) {
@@ -138,44 +146,38 @@ class Casino {
     this.completeListener = undefined;
   }
 
-  async signe(): Promise<CasinoContract> {
-    if (this.signedContract === undefined) {
-      const signer = await this.provider.getSigner();
-      const { address } = this.chainConfig.contracts.Casino;
-
-      this.signedContract = Casino__factory.connect(address, signer);
-    }
-    return this.signedContract;
-  }
   // const response = await signedContract?.playGameWithDefaultHost(
   async playGameWithDefaultHost(
     amount: string,
     gameType: GameType,
     choice: number
   ) {
-    const contract = await this.signe();
     const type = getRawGameType(gameType);
-    const value = utils.parseEther(amount);
+    const value = ethers.utils.parseEther(amount);
 
-    const response = await contract.playGameWithDefaultHost(type, choice, {
-      value,
-    });
+    const response = await this.signedContract.playGameWithDefaultHost(
+      type,
+      choice,
+      {
+        value,
+      }
+    );
     const receipt = await response.wait();
     if (receipt === null) throw new Error("Receipt is null");
 
     let createGameEvent = null;
     for (const log of receipt.logs || []) {
       if (log !== null) {
-        const parsedLog = contract.interface.parseLog({
-          topics: log.topics,
-          data: log.data,
-        } as { topics: Array<string>; data: string });
-        if (parsedLog !== null) {
-          const eventName = parsedLog.name;
-          if (eventName === CasinoEvent.CreateGame_Event) {
-            createGameEvent = parsedLog;
-          }
+        // const parsedLog = contract.interface.parseLog({
+        //   topics: log.topics,
+        //   data: log.data,
+        // } as { topics: Array<string>; data: string });
+        // if (parsedLog !== null) {
+        const eventName = log.name;
+        if (eventName === CasinoEvent.CreateGame_Event) {
+          createGameEvent = log;
         }
+        // }
       }
     }
     if (!createGameEvent) throw new Error("Create game event not found");

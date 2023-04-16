@@ -4,4 +4,5 @@
 interface Window {
   ethereum: any;
   gtag: any;
+  ethers: any;
 }

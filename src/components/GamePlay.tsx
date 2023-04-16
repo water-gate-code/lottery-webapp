@@ -137,9 +137,8 @@ export function GamePlay() {
   if (gamePlay.status === GamePlayStatus.finished)
     return (
       <div className="d-flex justify-content-center">
-        <div className="spinner-border text-primary m-5" role="status"></div>
         <div>
-          finished {gamePlay.game.id}: {gamePlay.result}
+          finished {gamePlay.game.id}: {GameResult[gamePlay.result]}
         </div>
       </div>
     );

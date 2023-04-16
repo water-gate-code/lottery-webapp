@@ -143,7 +143,6 @@ class Casino {
     this.completeListener = undefined;
   }
 
-  // const response = await signedContract?.playGameWithDefaultHost(
   async playGameWithDefaultHost(
     amount: string,
     gameType: GameType,

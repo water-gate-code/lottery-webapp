@@ -5,10 +5,10 @@ import { connectWallet } from "../../utils/wallet";
 import { selectCasino, selectChain } from "../../store/slices/chain";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { selectUser, updateBalance } from "../../store/slices/user";
-import { Game, GameResult, parseGameType } from "../../utils/casino";
+import { Game, GameResult, GameType, parseGameType } from "../../utils/casino";
 import { useParams } from "react-router-dom";
 import { selectGame } from "../../store/slices/game";
-import { GameBetData, GameWindow } from "./GameWindow";
+import { GamePlayData, GameWindow } from "./GameWindow";
 
 export enum GamePlayStatus {
   idle,
@@ -56,7 +56,13 @@ export function GamePlay() {
   }
 
   const [gamePlay, setGamePlay] = useState<GamePlayState>({
-    status: GamePlayStatus.idle,
+    status: GamePlayStatus.finished,
+    result: GameResult.draw,
+    game: {
+      id: "",
+      type: GameType.dice,
+      players: [],
+    },
   });
 
   useEffect(() => {
@@ -75,7 +81,7 @@ export function GamePlay() {
     }
   }, [gameResults, gamePlay, user, dispatch]);
 
-  async function onBet(gameBetData: GameBetData) {
+  async function play(gamePlayData: GamePlayData) {
     try {
       if (!user.authed) {
         await connectWallet();
@@ -87,7 +93,7 @@ export function GamePlay() {
         status: GamePlayStatus.creating,
       });
 
-      const { wager, type, choice } = gameBetData;
+      const { wager, type, choice } = gamePlayData;
       const game = await casino.playGameWithDefaultHost(wager, type, choice);
 
       if (user.authed) {
@@ -106,6 +112,13 @@ export function GamePlay() {
     }
   }
 
+  if (gamePlay.status === GamePlayStatus.finished) {
+    setTimeout(() => {
+      setGamePlay({
+        status: GamePlayStatus.idle,
+      });
+    }, 3000);
+  }
   return (
     <div className="col-8 offset-2">
       <div className="row">
@@ -115,7 +128,7 @@ export function GamePlay() {
             currency={chain.info.nativeCurrency.symbol}
             gameType={gameType}
             gamePlayState={gamePlay}
-            onBet={onBet}
+            onPlay={play}
           />
         </div>
       </div>

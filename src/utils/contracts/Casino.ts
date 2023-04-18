@@ -183,7 +183,7 @@ export interface CasinoInterface extends utils.Interface {
   ): Result;
 
   events: {
-    "CompleteGame_Event(address,bytes20)": EventFragment;
+    "CompleteGame_Event(address)": EventFragment;
     "CreateGame_Event(tuple)": EventFragment;
     "VrfRequest_Event(address,uint256)": EventFragment;
     "VrfResponse_Event(uint256,uint256[])": EventFragment;
@@ -197,10 +197,9 @@ export interface CasinoInterface extends utils.Interface {
 
 export interface CompleteGame_EventEventObject {
   game: string;
-  winner: string;
 }
 export type CompleteGame_EventEvent = TypedEvent<
-  [string, string],
+  [string],
   CompleteGame_EventEventObject
 >;
 
@@ -404,14 +403,8 @@ export interface Casino extends BaseContract {
   };
 
   filters: {
-    "CompleteGame_Event(address,bytes20)"(
-      game?: null,
-      winner?: null
-    ): CompleteGame_EventEventFilter;
-    CompleteGame_Event(
-      game?: null,
-      winner?: null
-    ): CompleteGame_EventEventFilter;
+    "CompleteGame_Event(address)"(game?: null): CompleteGame_EventEventFilter;
+    CompleteGame_Event(game?: null): CompleteGame_EventEventFilter;
 
     "CreateGame_Event(tuple)"(game?: null): CreateGame_EventEventFilter;
     CreateGame_Event(game?: null): CreateGame_EventEventFilter;

@@ -38,14 +38,16 @@ export const RpsChoice: GameChoice = {
   scissors: 3,
 };
 
+interface Player {
+  id: string;
+  choice: bigint;
+  isWinner: boolean;
+}
+
 export type Game = {
   id: string;
   type: GameType;
-};
-
-const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
-export const isEmptyAddress = (address: string) => {
-  return address.toLowerCase() === EMPTY_ADDRESS;
+  players: Player[];
 };
 
 export const getGameChioce = (gameType: GameType): GameChoice => {
@@ -102,9 +104,17 @@ const getRawGameType = (gameType: GameType): RawChainGameType => {
 
 export const formatGame = (rawChainGame: DisplayInfoStructOutput): Game => {
   const { id, gameType } = rawChainGame;
+
+  const players = rawChainGame.gamblers.map((gambler) => ({
+    id: gambler.id,
+    choice: gambler.choice.toBigInt(),
+    isWinner: gambler.isWinner,
+  }));
+
   const game: Game = {
     id,
     type: getGameType(gameType.toBigInt()),
+    players,
   };
   return game;
 };
@@ -141,6 +151,10 @@ class Casino {
     if (this.completeListener === undefined) return;
     this.contract.off(CasinoEvent.CompleteGame_Event, this.completeListener);
     this.completeListener = undefined;
+  }
+  async getGame(gameId: string): Promise<Game> {
+    const game = await this.contract.getGame(gameId);
+    return formatGame(game);
   }
 
   async playGameWithDefaultHost(

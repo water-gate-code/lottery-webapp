@@ -112,13 +112,6 @@ export function GamePlay() {
     }
   }
 
-  if (gamePlay.status === GamePlayStatus.finished) {
-    setTimeout(() => {
-      setGamePlay({
-        status: GamePlayStatus.idle,
-      });
-    }, 3000);
-  }
   return (
     <div className="col-8 offset-2">
       <div className="row">

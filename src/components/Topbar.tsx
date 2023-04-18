@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { useAppSelector } from "../hooks";
@@ -6,10 +6,13 @@ import { selectUser } from "../store/slices/user";
 import { connectWallet } from "../utils/wallet";
 import { Address } from "./Address";
 import { selectChain } from "../store/slices/chain";
+import { GameType, getGameNameKey } from "../utils/casino";
 // import { changeLanguage } from "../initI18next";
 // import { langs } from "../langs";
 
 export function Topbar() {
+  const { gameType: gameTypeKey } = useParams();
+
   const { t } = useTranslation();
   const user = useAppSelector(selectUser);
   const chain = useAppSelector(selectChain);
@@ -55,6 +58,26 @@ export function Topbar() {
           {t("appName")}
         </Link>
 
+        <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div className="navbar-nav">
+            <Link
+              className={`nav-link ${
+                gameTypeKey === GameType[GameType.dice] ? "active" : ""
+              }`}
+              to={`/play/${GameType[GameType.dice]}`}
+            >
+              {t(getGameNameKey(GameType.dice))}
+            </Link>
+            <Link
+              className={`nav-link ${
+                gameTypeKey === GameType[GameType.rps] ? "active" : ""
+              }`}
+              to={`/play/${GameType[GameType.rps]}`}
+            >
+              {t(getGameNameKey(GameType.rps))}
+            </Link>
+          </div>
+        </div>
         <div>
           {/* {Object.keys(langs).map((lang) => (
             <span className="navbar-text me-3" key={lang}>

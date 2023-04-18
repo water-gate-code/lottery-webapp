@@ -73,7 +73,7 @@ export const GameWindow = ({
 
   const PlayUI = (
     <>
-      <div className="d-flex justify-content-center pb-5">
+      <div className="d-flex justify-content-center">
         <h5 className="display-5">{title}</h5>
       </div>
       <div className="d-flex justify-content-evenly p-3">
@@ -122,19 +122,20 @@ export const GameWindow = ({
                     {wager + " " + currency}
                   </label>
                 </div>
-
-                <input
-                  type="range"
-                  className="form-range"
-                  min="0"
-                  max={AMOUNT_SCALES.length - 1}
-                  step="1"
-                  id="wagerRange"
-                  value={wagerStep}
-                  onChange={changeWagerStep}
-                />
+                <div className="px-3">
+                  <input
+                    type="range"
+                    className="form-range"
+                    min="0"
+                    max={AMOUNT_SCALES.length - 1}
+                    step="1"
+                    id="wagerRange"
+                    value={wagerStep}
+                    onChange={changeWagerStep}
+                  />
+                </div>
               </div>
-              <div className="py-0 px-3">
+              <div className="d-grid py-0 px-3">
                 <button
                   type="submit"
                   className="btn btn-primary"
@@ -145,7 +146,7 @@ export const GameWindow = ({
               </div>
             </div>
             <div className="col-8 ">
-              <div className="p-5">{gameCell}</div>
+              <div className="p-3">{gameCell}</div>
             </div>
           </div>
         </form>

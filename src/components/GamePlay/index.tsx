@@ -5,8 +5,7 @@ import { connectWallet } from "../../utils/wallet";
 import { selectCasino, selectChain } from "../../store/slices/chain";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { selectUser, updateBalance } from "../../store/slices/user";
-import { Game, GameResult, parseGameType } from "../../utils/casino";
-import { useParams } from "react-router-dom";
+import { Game, GameResult, GameType } from "../../utils/casino";
 import { selectGame } from "../../store/slices/game";
 import { GamePlayData, GameWindow } from "./GameWindow";
 
@@ -42,10 +41,7 @@ export type GamePlayState =
   | GamePlayWaitingResult
   | GamePlayFinished;
 
-export function GamePlay() {
-  const { gameType: gameTypeKey } = useParams();
-  if (gameTypeKey === undefined) throw new Error("Invalid game type");
-  const gameType = parseGameType(gameTypeKey);
+export function GamePlay({ gameType }: { gameType: GameType }) {
   const dispatch = useAppDispatch();
   const casino = useAppSelector(selectCasino);
   const user = useAppSelector(selectUser);

@@ -31,11 +31,13 @@ import type {
 export type GamblerStruct = {
   id: PromiseOrValue<string>;
   choice: PromiseOrValue<BigNumberish>;
+  isWinner: PromiseOrValue<boolean>;
 };
 
-export type GamblerStructOutput = [string, BigNumber] & {
+export type GamblerStructOutput = [string, BigNumber, boolean] & {
   id: string;
   choice: BigNumber;
+  isWinner: boolean;
 };
 
 export type DisplayInfoStruct = {
@@ -63,28 +65,72 @@ export type DisplayInfoStructOutput = [
   gamblers: GamblerStructOutput[];
 };
 
+export type RecordStruct = {
+  from: PromiseOrValue<string>;
+  to: PromiseOrValue<string>;
+  game: PromiseOrValue<string>;
+  value: PromiseOrValue<BigNumberish>;
+  recordType: PromiseOrValue<BigNumberish>;
+};
+
+export type RecordStructOutput = [
+  string,
+  string,
+  string,
+  BigNumber,
+  BigNumber
+] & {
+  from: string;
+  to: string;
+  game: string;
+  value: BigNumber;
+  recordType: BigNumber;
+};
+
 export interface CasinoInterface extends utils.Interface {
   functions: {
+    "bankrollDeposit()": FunctionFragment;
+    "bankrollGetBalance()": FunctionFragment;
+    "bankrollGetTransactionRecords()": FunctionFragment;
+    "bankrollWithdraw()": FunctionFragment;
     "createGame(uint256,uint256)": FunctionFragment;
     "getGame(address)": FunctionFragment;
     "getGames()": FunctionFragment;
     "playGame(address,uint256)": FunctionFragment;
     "playGameWithDefaultHost(uint256,uint256)": FunctionFragment;
     "rawFulfillRandomWords(uint256,uint256[])": FunctionFragment;
-    "requestRandom(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "bankrollDeposit"
+      | "bankrollGetBalance"
+      | "bankrollGetTransactionRecords"
+      | "bankrollWithdraw"
       | "createGame"
       | "getGame"
       | "getGames"
       | "playGame"
       | "playGameWithDefaultHost"
       | "rawFulfillRandomWords"
-      | "requestRandom"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "bankrollDeposit",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "bankrollGetBalance",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "bankrollGetTransactionRecords",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "bankrollWithdraw",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "createGame",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
@@ -106,11 +152,23 @@ export interface CasinoInterface extends utils.Interface {
     functionFragment: "rawFulfillRandomWords",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>[]]
   ): string;
-  encodeFunctionData(
-    functionFragment: "requestRandom",
-    values: [PromiseOrValue<string>]
-  ): string;
 
+  decodeFunctionResult(
+    functionFragment: "bankrollDeposit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "bankrollGetBalance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "bankrollGetTransactionRecords",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "bankrollWithdraw",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "createGame", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getGame", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getGames", data: BytesLike): Result;
@@ -123,13 +181,9 @@ export interface CasinoInterface extends utils.Interface {
     functionFragment: "rawFulfillRandomWords",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "requestRandom",
-    data: BytesLike
-  ): Result;
 
   events: {
-    "CompleteGame_Event(address,address)": EventFragment;
+    "CompleteGame_Event(address,bytes20)": EventFragment;
     "CreateGame_Event(tuple)": EventFragment;
     "VrfRequest_Event(address,uint256)": EventFragment;
     "VrfResponse_Event(uint256,uint256[])": EventFragment;
@@ -215,6 +269,20 @@ export interface Casino extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    bankrollDeposit(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    bankrollGetBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    bankrollGetTransactionRecords(
+      overrides?: CallOverrides
+    ): Promise<[RecordStructOutput[]]>;
+
+    bankrollWithdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     createGame(
       gameType: PromiseOrValue<BigNumberish>,
       choice: PromiseOrValue<BigNumberish>,
@@ -245,12 +313,21 @@ export interface Casino extends BaseContract {
       randomWords: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    requestRandom(
-      gameAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
   };
+
+  bankrollDeposit(
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  bankrollGetBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
+  bankrollGetTransactionRecords(
+    overrides?: CallOverrides
+  ): Promise<RecordStructOutput[]>;
+
+  bankrollWithdraw(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   createGame(
     gameType: PromiseOrValue<BigNumberish>,
@@ -283,12 +360,17 @@ export interface Casino extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  requestRandom(
-    gameAddress: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   callStatic: {
+    bankrollDeposit(overrides?: CallOverrides): Promise<void>;
+
+    bankrollGetBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
+    bankrollGetTransactionRecords(
+      overrides?: CallOverrides
+    ): Promise<RecordStructOutput[]>;
+
+    bankrollWithdraw(overrides?: CallOverrides): Promise<void>;
+
     createGame(
       gameType: PromiseOrValue<BigNumberish>,
       choice: PromiseOrValue<BigNumberish>,
@@ -319,15 +401,10 @@ export interface Casino extends BaseContract {
       randomWords: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<void>;
-
-    requestRandom(
-      gameAddress: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
   };
 
   filters: {
-    "CompleteGame_Event(address,address)"(
+    "CompleteGame_Event(address,bytes20)"(
       game?: null,
       winner?: null
     ): CompleteGame_EventEventFilter;
@@ -359,6 +436,20 @@ export interface Casino extends BaseContract {
   };
 
   estimateGas: {
+    bankrollDeposit(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    bankrollGetBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
+    bankrollGetTransactionRecords(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    bankrollWithdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     createGame(
       gameType: PromiseOrValue<BigNumberish>,
       choice: PromiseOrValue<BigNumberish>,
@@ -389,14 +480,25 @@ export interface Casino extends BaseContract {
       randomWords: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
-
-    requestRandom(
-      gameAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    bankrollDeposit(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    bankrollGetBalance(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    bankrollGetTransactionRecords(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    bankrollWithdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     createGame(
       gameType: PromiseOrValue<BigNumberish>,
       choice: PromiseOrValue<BigNumberish>,
@@ -425,11 +527,6 @@ export interface Casino extends BaseContract {
     rawFulfillRandomWords(
       requestId: PromiseOrValue<BigNumberish>,
       randomWords: PromiseOrValue<BigNumberish>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    requestRandom(
-      gameAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

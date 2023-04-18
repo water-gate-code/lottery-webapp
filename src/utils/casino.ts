@@ -24,15 +24,15 @@ export enum GameResult {
   draw,
 }
 
-interface Choice {
+export interface GameChoice {
   [choice: string]: number;
 }
 
-export const DiceChoice: Choice = {
+export const DiceChoice: GameChoice = {
   small: 1,
   big: 6,
 };
-export const RpsChoice: Choice = {
+export const RpsChoice: GameChoice = {
   rock: 1,
   paper: 2,
   scissors: 3,
@@ -48,7 +48,7 @@ export const isEmptyAddress = (address: string) => {
   return address.toLowerCase() === EMPTY_ADDRESS;
 };
 
-export const getGameChioce = (gameType: GameType): Choice => {
+export const getGameChioce = (gameType: GameType): GameChoice => {
   switch (gameType) {
     case GameType.dice:
       return DiceChoice;

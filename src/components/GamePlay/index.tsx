@@ -5,7 +5,7 @@ import { connectWallet } from "../../utils/wallet";
 import { selectCasino, selectChain } from "../../store/slices/chain";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { selectUser, updateBalance } from "../../store/slices/user";
-import { Game, GameResult, GameType, parseGameType } from "../../utils/casino";
+import { Game, GameResult, parseGameType } from "../../utils/casino";
 import { useParams } from "react-router-dom";
 import { selectGame } from "../../store/slices/game";
 import { GamePlayData, GameWindow } from "./GameWindow";
@@ -56,13 +56,7 @@ export function GamePlay() {
   }
 
   const [gamePlay, setGamePlay] = useState<GamePlayState>({
-    status: GamePlayStatus.finished,
-    result: GameResult.draw,
-    game: {
-      id: "",
-      type: GameType.dice,
-      players: [],
-    },
+    status: GamePlayStatus.idle,
   });
 
   useEffect(() => {

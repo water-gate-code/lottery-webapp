@@ -7,6 +7,7 @@ import { connectWallet } from "../utils/wallet";
 import { Address } from "./Address";
 import { selectChain } from "../store/slices/chain";
 import { GameType, getGameNameKey } from "../utils/casino";
+import { GameIcon } from "./GameIcon";
 // import { changeLanguage } from "../initI18next";
 // import { langs } from "../langs";
 
@@ -21,20 +22,20 @@ export function Topbar() {
   const accountInfo = user.authed ? (
     <>
       {user.balance !== undefined ? (
-        <span className="navbar-text me-3" title={user.balance}>
+        <div className="navbar-text me-3" title={user.balance}>
           <i className="bi bi-wallet-fill me-2"></i>
           <span className="text-primary">
             {parseFloat(user.balance).toFixed(4)}
           </span>
-        </span>
+        </div>
       ) : null}
-      <span className="navbar-text me-3">
+      <div className="navbar-text me-3" title={user.address}>
         <i className="bi bi-person-fill me-2"></i>
         <Address address={user.address} />
-      </span>
+      </div>
     </>
   ) : (
-    <span className="navbar-text me-3">
+    <div className="navbar-text me-3">
       <button
         type="button"
         className="btn btn-primary button"
@@ -42,7 +43,7 @@ export function Topbar() {
       >
         {t("connectWallet")}
       </button>
-    </span>
+    </div>
   );
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -66,7 +67,8 @@ export function Topbar() {
               }`}
               to={`/play/${GameType[GameType.dice]}`}
             >
-              {t(getGameNameKey(GameType.dice))}
+              <GameIcon gameType={GameType.dice} />
+              <span className="ms-1">{t(getGameNameKey(GameType.dice))}</span>
             </Link>
             <Link
               className={`nav-link ${
@@ -74,11 +76,12 @@ export function Topbar() {
               }`}
               to={`/play/${GameType[GameType.rps]}`}
             >
-              {t(getGameNameKey(GameType.rps))}
+              <GameIcon gameType={GameType.rps} />
+              <span className="ms-1">{t(getGameNameKey(GameType.rps))}</span>
             </Link>
           </div>
         </div>
-        <div>
+        <div className="d-flex flex-row">
           {/* {Object.keys(langs).map((lang) => (
             <span className="navbar-text me-3" key={lang}>
               <button
@@ -95,7 +98,7 @@ export function Topbar() {
 
           {supportChain ? (
             <>
-              <span className="navbar-brand me-2">
+              <span className="navbar-brand me-2 pt-1">
                 <img
                   src={chain.info.icon}
                   className="rounded"

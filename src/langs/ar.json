@@ -13,6 +13,7 @@
   "errorPage": { "title": "عذرا!", "sorry": "آسف، حدث خطأ غير متوقع." },
   "game": {
     "create": "إنشاء",
+    "betAmount": "مبلغ المراهنة",
     "shortGameTitle": "{{wager}} {{currency}} على {{choice}}",
     "result": "أنت {{result}}",
     "createTitle": "إنشاء لعبة {{gameName}} جديدة",
@@ -21,6 +22,12 @@
     "amount": "المبلغ",
     "on": "على",
     "play": "العب معها",
+    "waitingResult": "في انتظار نتيجة المباراة",
+    "resultText": {
+      "win": "فوز",
+      "lose": "خسارة",
+      "draw": "تعادل"
+    },
     "dice": { "name": "النرد", "choice": { "small": "صغير", "big": "كبير" } },
     "rps": {
       "name": "الحجر ورقة مقص",

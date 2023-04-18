@@ -3,6 +3,7 @@ import { FormEvent, useState } from "react";
 import { GameResult, GameType, getGameChioce } from "../../utils/casino";
 import { useTranslation } from "react-i18next";
 import { GamePlayState, GamePlayStatus } from ".";
+import { GameIcon } from "../GameIcon";
 
 export interface GamePlayData {
   wager: string;
@@ -46,7 +47,9 @@ export const GameWindow = ({
   const { t } = useTranslation();
   const [wagerStep, setWagerStep] = useState(0);
   const resultMessage = isFinished
-    ? `Result: ${GameResult[gamePlayState.result]}`
+    ? t("game.result", {
+        result: t(`game.resultText.${GameResult[gamePlayState.result]}`),
+      })
     : "";
   const [choice, setChoice] = useState(choices[Object.keys(choices)[0]]);
 
@@ -74,7 +77,10 @@ export const GameWindow = ({
   const PlayUI = (
     <>
       <div className="d-flex justify-content-center">
-        <h5 className="display-5">{title}</h5>
+        <h1 className="display-1">
+          {/* {title} */}
+          <GameIcon gameType={gameType} />
+        </h1>
       </div>
       <div className="d-flex justify-content-evenly p-3">
         {Object.keys(choices).map((c) => (
@@ -96,7 +102,7 @@ export const GameWindow = ({
   );
 
   const gameCell = gamePlaying ? (
-    <Loading message="Waiting game result..." />
+    <Loading message={t("game.waitingResult")} />
   ) : (
     PlayUI
   );
@@ -105,7 +111,10 @@ export const GameWindow = ({
     <div className="card shadow">
       <div className="card-header">
         <div className="d-flex justify-content-between">
-          <div>{title}</div>
+          <div>
+            <GameIcon gameType={gameType} />
+            <span className="ms-1">{title}</span>
+          </div>
           <div className="text-primary">{resultMessage}</div>
         </div>
       </div>
@@ -116,7 +125,7 @@ export const GameWindow = ({
               <div className="p-3">
                 <div className="d-flex justify-content-between">
                   <label htmlFor="wagerRange" className="form-label">
-                    Bet Amount:
+                    {t("game.betAmount")}:
                   </label>
                   <label htmlFor="wagerRange" className="form-label">
                     {wager + " " + currency}

@@ -16,6 +16,7 @@
   },
   "game": {
     "create": "Create",
+    "betAmount": "Bet Amount",
     "shortGameTitle": "{{wager}} {{currency}} on {{choice}}",
     "result": "You {{result}}",
     "createTitle": "Create a new {{gameName}} game",
@@ -24,6 +25,12 @@
     "amount": "Amount",
     "on": "On",
     "play": "Play with it",
+    "waitingResult": "Waiting game result...",
+    "resultText": {
+      "win": "Win",
+      "lose": "Lose",
+      "draw": "Draw"
+    },
     "dice": {
       "name": "Dice",
       "choice": {

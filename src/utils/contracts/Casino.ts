@@ -3,102 +3,122 @@
 /* eslint-disable */
 import type {
   BaseContract,
+  BigNumber,
   BigNumberish,
   BytesLike,
-  FunctionFragment,
-  Result,
-  Interface,
-  EventFragment,
-  AddressLike,
-  ContractRunner,
-  ContractMethod,
-  Listener,
+  CallOverrides,
+  ContractTransaction,
+  Overrides,
+  PayableOverrides,
+  PopulatedTransaction,
+  Signer,
+  utils,
 } from "ethers";
 import type {
-  TypedContractEvent,
-  TypedDeferredTopicFilter,
-  TypedEventLog,
-  TypedLogDescription,
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
+import type { Listener, Provider } from "@ethersproject/providers";
+import type {
+  TypedEventFilter,
+  TypedEvent,
   TypedListener,
-  TypedContractMethod,
+  OnEvent,
+  PromiseOrValue,
 } from "./common";
 
-export type GamblerStruct = { id: AddressLike; choice: BigNumberish };
+export type GamblerStruct = {
+  id: PromiseOrValue<string>;
+  choice: PromiseOrValue<BigNumberish>;
+  isWinner: PromiseOrValue<boolean>;
+};
 
-export type GamblerStructOutput = [id: string, choice: bigint] & {
+export type GamblerStructOutput = [string, BigNumber, boolean] & {
   id: string;
-  choice: bigint;
+  choice: BigNumber;
+  isWinner: boolean;
 };
 
 export type DisplayInfoStruct = {
-  id: AddressLike;
-  host: AddressLike;
-  gameType: BigNumberish;
-  wager: BigNumberish;
-  isActive: boolean;
+  id: PromiseOrValue<string>;
+  host: PromiseOrValue<string>;
+  gameType: PromiseOrValue<BigNumberish>;
+  wager: PromiseOrValue<BigNumberish>;
+  isActive: PromiseOrValue<boolean>;
   gamblers: GamblerStruct[];
 };
 
 export type DisplayInfoStructOutput = [
-  id: string,
-  host: string,
-  gameType: bigint,
-  wager: bigint,
-  isActive: boolean,
-  gamblers: GamblerStructOutput[]
+  string,
+  string,
+  BigNumber,
+  BigNumber,
+  boolean,
+  GamblerStructOutput[]
 ] & {
   id: string;
   host: string;
-  gameType: bigint;
-  wager: bigint;
+  gameType: BigNumber;
+  wager: BigNumber;
   isActive: boolean;
   gamblers: GamblerStructOutput[];
 };
 
 export type RecordStruct = {
-  from: AddressLike;
-  to: AddressLike;
-  game: AddressLike;
-  value: BigNumberish;
-  recordType: BigNumberish;
+  from: PromiseOrValue<string>;
+  to: PromiseOrValue<string>;
+  game: PromiseOrValue<string>;
+  value: PromiseOrValue<BigNumberish>;
+  recordType: PromiseOrValue<BigNumberish>;
 };
 
 export type RecordStructOutput = [
-  from: string,
-  to: string,
-  game: string,
-  value: bigint,
-  recordType: bigint
+  string,
+  string,
+  string,
+  BigNumber,
+  BigNumber
 ] & {
   from: string;
   to: string;
   game: string;
-  value: bigint;
-  recordType: bigint;
+  value: BigNumber;
+  recordType: BigNumber;
 };
 
-export interface CasinoInterface extends Interface {
+export interface CasinoInterface extends utils.Interface {
+  functions: {
+    "bankrollDeposit()": FunctionFragment;
+    "bankrollGetBalance()": FunctionFragment;
+    "bankrollGetTransactionRecords()": FunctionFragment;
+    "bankrollWithdraw()": FunctionFragment;
+    "createGame(uint256,uint256)": FunctionFragment;
+    "getGame(address)": FunctionFragment;
+    "getGames()": FunctionFragment;
+    "playGame(address,uint256)": FunctionFragment;
+    "playGameWithDefaultHost(uint256,uint256)": FunctionFragment;
+    "rawFulfillRandomWords(uint256,uint256[])": FunctionFragment;
+  };
+
   getFunction(
-    nameOrSignature:
+    nameOrSignatureOrTopic:
+      | "bankrollDeposit"
       | "bankrollGetBalance"
       | "bankrollGetTransactionRecords"
+      | "bankrollWithdraw"
       | "createGame"
       | "getGame"
       | "getGames"
       | "playGame"
       | "playGameWithDefaultHost"
       | "rawFulfillRandomWords"
-      | "requestRandom"
   ): FunctionFragment;
 
-  getEvent(
-    nameOrSignatureOrTopic:
-      | "CompleteGame_Event"
-      | "CreateGame_Event"
-      | "VrfRequest_Event"
-      | "VrfResponse_Event"
-  ): EventFragment;
-
+  encodeFunctionData(
+    functionFragment: "bankrollDeposit",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "bankrollGetBalance",
     values?: undefined
@@ -108,37 +128,45 @@ export interface CasinoInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "bankrollWithdraw",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "createGame",
-    values: [BigNumberish, BigNumberish]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getGame",
-    values: [AddressLike]
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "getGames", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "playGame",
-    values: [AddressLike, BigNumberish]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "playGameWithDefaultHost",
-    values: [BigNumberish, BigNumberish]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "rawFulfillRandomWords",
-    values: [BigNumberish, BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "requestRandom",
-    values: [AddressLike]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>[]]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "bankrollDeposit",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "bankrollGetBalance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "bankrollGetTransactionRecords",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "bankrollWithdraw",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "createGame", data: BytesLike): Result;
@@ -153,280 +181,346 @@ export interface CasinoInterface extends Interface {
     functionFragment: "rawFulfillRandomWords",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "requestRandom",
-    data: BytesLike
-  ): Result;
+
+  events: {
+    "CompleteGame_Event(address)": EventFragment;
+    "CreateGame_Event(tuple)": EventFragment;
+    "VrfRequest_Event(address,uint256)": EventFragment;
+    "VrfResponse_Event(uint256,uint256[])": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "CompleteGame_Event"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreateGame_Event"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "VrfRequest_Event"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "VrfResponse_Event"): EventFragment;
 }
 
-export namespace CompleteGame_EventEvent {
-  export type InputTuple = [game: AddressLike, winner: AddressLike];
-  export type OutputTuple = [game: string, winner: string];
-  export interface OutputObject {
-    game: string;
-    winner: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface CompleteGame_EventEventObject {
+  game: string;
 }
+export type CompleteGame_EventEvent = TypedEvent<
+  [string],
+  CompleteGame_EventEventObject
+>;
 
-export namespace CreateGame_EventEvent {
-  export type InputTuple = [game: DisplayInfoStruct];
-  export type OutputTuple = [game: DisplayInfoStructOutput];
-  export interface OutputObject {
-    game: DisplayInfoStructOutput;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
+export type CompleteGame_EventEventFilter =
+  TypedEventFilter<CompleteGame_EventEvent>;
 
-export namespace VrfRequest_EventEvent {
-  export type InputTuple = [game: AddressLike, requestId: BigNumberish];
-  export type OutputTuple = [game: string, requestId: bigint];
-  export interface OutputObject {
-    game: string;
-    requestId: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface CreateGame_EventEventObject {
+  game: DisplayInfoStructOutput;
 }
+export type CreateGame_EventEvent = TypedEvent<
+  [DisplayInfoStructOutput],
+  CreateGame_EventEventObject
+>;
 
-export namespace VrfResponse_EventEvent {
-  export type InputTuple = [
-    requestId: BigNumberish,
-    randomWords: BigNumberish[]
-  ];
-  export type OutputTuple = [requestId: bigint, randomWords: bigint[]];
-  export interface OutputObject {
-    requestId: bigint;
-    randomWords: bigint[];
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export type CreateGame_EventEventFilter =
+  TypedEventFilter<CreateGame_EventEvent>;
+
+export interface VrfRequest_EventEventObject {
+  game: string;
+  requestId: BigNumber;
 }
+export type VrfRequest_EventEvent = TypedEvent<
+  [string, BigNumber],
+  VrfRequest_EventEventObject
+>;
+
+export type VrfRequest_EventEventFilter =
+  TypedEventFilter<VrfRequest_EventEvent>;
+
+export interface VrfResponse_EventEventObject {
+  requestId: BigNumber;
+  randomWords: BigNumber[];
+}
+export type VrfResponse_EventEvent = TypedEvent<
+  [BigNumber, BigNumber[]],
+  VrfResponse_EventEventObject
+>;
+
+export type VrfResponse_EventEventFilter =
+  TypedEventFilter<VrfResponse_EventEvent>;
 
 export interface Casino extends BaseContract {
-  connect(runner?: ContractRunner | null): BaseContract;
-  attach(addressOrName: AddressLike): this;
+  connect(signerOrProvider: Signer | Provider | string): this;
+  attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
   interface: CasinoInterface;
 
-  queryFilter<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
+  queryFilter<TEvent extends TypedEvent>(
+    event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
-  queryFilter<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
+  ): Promise<Array<TEvent>>;
 
-  on<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  on<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  listeners<TEvent extends TypedEvent>(
+    eventFilter?: TypedEventFilter<TEvent>
+  ): Array<TypedListener<TEvent>>;
+  listeners(eventName?: string): Array<Listener>;
+  removeAllListeners<TEvent extends TypedEvent>(
+    eventFilter: TypedEventFilter<TEvent>
+  ): this;
+  removeAllListeners(eventName?: string): this;
+  off: OnEvent<this>;
+  on: OnEvent<this>;
+  once: OnEvent<this>;
+  removeListener: OnEvent<this>;
 
-  once<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  once<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  functions: {
+    bankrollDeposit(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  listeners<TCEvent extends TypedContractEvent>(
-    event: TCEvent
-  ): Promise<Array<TypedListener<TCEvent>>>;
-  listeners(eventName?: string): Promise<Array<Listener>>;
-  removeAllListeners<TCEvent extends TypedContractEvent>(
-    event?: TCEvent
-  ): Promise<this>;
+    bankrollGetBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-  bankrollGetBalance: TypedContractMethod<[], [bigint], "view">;
+    bankrollGetTransactionRecords(
+      overrides?: CallOverrides
+    ): Promise<[RecordStructOutput[]]>;
 
-  bankrollGetTransactionRecords: TypedContractMethod<
-    [],
-    [RecordStructOutput[]],
-    "view"
-  >;
+    bankrollWithdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  createGame: TypedContractMethod<
-    [gameType: BigNumberish, choice: BigNumberish],
-    [void],
-    "payable"
-  >;
+    createGame(
+      gameType: PromiseOrValue<BigNumberish>,
+      choice: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  getGame: TypedContractMethod<
-    [targetGame: AddressLike],
-    [DisplayInfoStructOutput],
-    "view"
-  >;
+    getGame(
+      targetGame: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[DisplayInfoStructOutput]>;
 
-  getGames: TypedContractMethod<[], [DisplayInfoStructOutput[]], "view">;
+    getGames(overrides?: CallOverrides): Promise<[DisplayInfoStructOutput[]]>;
 
-  playGame: TypedContractMethod<
-    [targetGame: AddressLike, choice: BigNumberish],
-    [void],
-    "payable"
-  >;
+    playGame(
+      targetGame: PromiseOrValue<string>,
+      choice: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  playGameWithDefaultHost: TypedContractMethod<
-    [gameType: BigNumberish, choice: BigNumberish],
-    [void],
-    "payable"
-  >;
+    playGameWithDefaultHost(
+      gameType: PromiseOrValue<BigNumberish>,
+      choice: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  rawFulfillRandomWords: TypedContractMethod<
-    [requestId: BigNumberish, randomWords: BigNumberish[]],
-    [void],
-    "nonpayable"
-  >;
+    rawFulfillRandomWords(
+      requestId: PromiseOrValue<BigNumberish>,
+      randomWords: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+  };
 
-  requestRandom: TypedContractMethod<
-    [gameAddress: AddressLike],
-    [void],
-    "nonpayable"
-  >;
+  bankrollDeposit(
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  getFunction<T extends ContractMethod = ContractMethod>(
-    key: string | FunctionFragment
-  ): T;
+  bankrollGetBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getFunction(
-    nameOrSignature: "bankrollGetBalance"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "bankrollGetTransactionRecords"
-  ): TypedContractMethod<[], [RecordStructOutput[]], "view">;
-  getFunction(
-    nameOrSignature: "createGame"
-  ): TypedContractMethod<
-    [gameType: BigNumberish, choice: BigNumberish],
-    [void],
-    "payable"
-  >;
-  getFunction(
-    nameOrSignature: "getGame"
-  ): TypedContractMethod<
-    [targetGame: AddressLike],
-    [DisplayInfoStructOutput],
-    "view"
-  >;
-  getFunction(
-    nameOrSignature: "getGames"
-  ): TypedContractMethod<[], [DisplayInfoStructOutput[]], "view">;
-  getFunction(
-    nameOrSignature: "playGame"
-  ): TypedContractMethod<
-    [targetGame: AddressLike, choice: BigNumberish],
-    [void],
-    "payable"
-  >;
-  getFunction(
-    nameOrSignature: "playGameWithDefaultHost"
-  ): TypedContractMethod<
-    [gameType: BigNumberish, choice: BigNumberish],
-    [void],
-    "payable"
-  >;
-  getFunction(
-    nameOrSignature: "rawFulfillRandomWords"
-  ): TypedContractMethod<
-    [requestId: BigNumberish, randomWords: BigNumberish[]],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "requestRandom"
-  ): TypedContractMethod<[gameAddress: AddressLike], [void], "nonpayable">;
+  bankrollGetTransactionRecords(
+    overrides?: CallOverrides
+  ): Promise<RecordStructOutput[]>;
 
-  getEvent(
-    key: "CompleteGame_Event"
-  ): TypedContractEvent<
-    CompleteGame_EventEvent.InputTuple,
-    CompleteGame_EventEvent.OutputTuple,
-    CompleteGame_EventEvent.OutputObject
-  >;
-  getEvent(
-    key: "CreateGame_Event"
-  ): TypedContractEvent<
-    CreateGame_EventEvent.InputTuple,
-    CreateGame_EventEvent.OutputTuple,
-    CreateGame_EventEvent.OutputObject
-  >;
-  getEvent(
-    key: "VrfRequest_Event"
-  ): TypedContractEvent<
-    VrfRequest_EventEvent.InputTuple,
-    VrfRequest_EventEvent.OutputTuple,
-    VrfRequest_EventEvent.OutputObject
-  >;
-  getEvent(
-    key: "VrfResponse_Event"
-  ): TypedContractEvent<
-    VrfResponse_EventEvent.InputTuple,
-    VrfResponse_EventEvent.OutputTuple,
-    VrfResponse_EventEvent.OutputObject
-  >;
+  bankrollWithdraw(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  createGame(
+    gameType: PromiseOrValue<BigNumberish>,
+    choice: PromiseOrValue<BigNumberish>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  getGame(
+    targetGame: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<DisplayInfoStructOutput>;
+
+  getGames(overrides?: CallOverrides): Promise<DisplayInfoStructOutput[]>;
+
+  playGame(
+    targetGame: PromiseOrValue<string>,
+    choice: PromiseOrValue<BigNumberish>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  playGameWithDefaultHost(
+    gameType: PromiseOrValue<BigNumberish>,
+    choice: PromiseOrValue<BigNumberish>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  rawFulfillRandomWords(
+    requestId: PromiseOrValue<BigNumberish>,
+    randomWords: PromiseOrValue<BigNumberish>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  callStatic: {
+    bankrollDeposit(overrides?: CallOverrides): Promise<void>;
+
+    bankrollGetBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
+    bankrollGetTransactionRecords(
+      overrides?: CallOverrides
+    ): Promise<RecordStructOutput[]>;
+
+    bankrollWithdraw(overrides?: CallOverrides): Promise<void>;
+
+    createGame(
+      gameType: PromiseOrValue<BigNumberish>,
+      choice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    getGame(
+      targetGame: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<DisplayInfoStructOutput>;
+
+    getGames(overrides?: CallOverrides): Promise<DisplayInfoStructOutput[]>;
+
+    playGame(
+      targetGame: PromiseOrValue<string>,
+      choice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    playGameWithDefaultHost(
+      gameType: PromiseOrValue<BigNumberish>,
+      choice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    rawFulfillRandomWords(
+      requestId: PromiseOrValue<BigNumberish>,
+      randomWords: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+  };
 
   filters: {
-    "CompleteGame_Event(address,address)": TypedContractEvent<
-      CompleteGame_EventEvent.InputTuple,
-      CompleteGame_EventEvent.OutputTuple,
-      CompleteGame_EventEvent.OutputObject
-    >;
-    CompleteGame_Event: TypedContractEvent<
-      CompleteGame_EventEvent.InputTuple,
-      CompleteGame_EventEvent.OutputTuple,
-      CompleteGame_EventEvent.OutputObject
-    >;
+    "CompleteGame_Event(address)"(game?: null): CompleteGame_EventEventFilter;
+    CompleteGame_Event(game?: null): CompleteGame_EventEventFilter;
 
-    "CreateGame_Event(tuple)": TypedContractEvent<
-      CreateGame_EventEvent.InputTuple,
-      CreateGame_EventEvent.OutputTuple,
-      CreateGame_EventEvent.OutputObject
-    >;
-    CreateGame_Event: TypedContractEvent<
-      CreateGame_EventEvent.InputTuple,
-      CreateGame_EventEvent.OutputTuple,
-      CreateGame_EventEvent.OutputObject
-    >;
+    "CreateGame_Event(tuple)"(game?: null): CreateGame_EventEventFilter;
+    CreateGame_Event(game?: null): CreateGame_EventEventFilter;
 
-    "VrfRequest_Event(address,uint256)": TypedContractEvent<
-      VrfRequest_EventEvent.InputTuple,
-      VrfRequest_EventEvent.OutputTuple,
-      VrfRequest_EventEvent.OutputObject
-    >;
-    VrfRequest_Event: TypedContractEvent<
-      VrfRequest_EventEvent.InputTuple,
-      VrfRequest_EventEvent.OutputTuple,
-      VrfRequest_EventEvent.OutputObject
-    >;
+    "VrfRequest_Event(address,uint256)"(
+      game?: null,
+      requestId?: null
+    ): VrfRequest_EventEventFilter;
+    VrfRequest_Event(
+      game?: null,
+      requestId?: null
+    ): VrfRequest_EventEventFilter;
 
-    "VrfResponse_Event(uint256,uint256[])": TypedContractEvent<
-      VrfResponse_EventEvent.InputTuple,
-      VrfResponse_EventEvent.OutputTuple,
-      VrfResponse_EventEvent.OutputObject
-    >;
-    VrfResponse_Event: TypedContractEvent<
-      VrfResponse_EventEvent.InputTuple,
-      VrfResponse_EventEvent.OutputTuple,
-      VrfResponse_EventEvent.OutputObject
-    >;
+    "VrfResponse_Event(uint256,uint256[])"(
+      requestId?: null,
+      randomWords?: null
+    ): VrfResponse_EventEventFilter;
+    VrfResponse_Event(
+      requestId?: null,
+      randomWords?: null
+    ): VrfResponse_EventEventFilter;
+  };
+
+  estimateGas: {
+    bankrollDeposit(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    bankrollGetBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
+    bankrollGetTransactionRecords(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    bankrollWithdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    createGame(
+      gameType: PromiseOrValue<BigNumberish>,
+      choice: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getGame(
+      targetGame: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getGames(overrides?: CallOverrides): Promise<BigNumber>;
+
+    playGame(
+      targetGame: PromiseOrValue<string>,
+      choice: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    playGameWithDefaultHost(
+      gameType: PromiseOrValue<BigNumberish>,
+      choice: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    rawFulfillRandomWords(
+      requestId: PromiseOrValue<BigNumberish>,
+      randomWords: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+  };
+
+  populateTransaction: {
+    bankrollDeposit(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    bankrollGetBalance(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    bankrollGetTransactionRecords(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    bankrollWithdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    createGame(
+      gameType: PromiseOrValue<BigNumberish>,
+      choice: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getGame(
+      targetGame: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getGames(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    playGame(
+      targetGame: PromiseOrValue<string>,
+      choice: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    playGameWithDefaultHost(
+      gameType: PromiseOrValue<BigNumberish>,
+      choice: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    rawFulfillRandomWords(
+      requestId: PromiseOrValue<BigNumberish>,
+      randomWords: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
   };
 }

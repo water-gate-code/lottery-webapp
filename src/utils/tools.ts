@@ -6,6 +6,7 @@ export const shortenAddress = (address: string) => {
 export function errorEventParser(errorEvent: any) {
   const message =
     errorEvent.reason?.data?.message ||
+    errorEvent.reason?.reason ||
     errorEvent.reason?.message ||
     errorEvent.message;
   return { message };

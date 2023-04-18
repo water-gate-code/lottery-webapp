@@ -24,7 +24,7 @@ import {
 import { selectCasino, setChain } from "./store/slices/chain";
 import { errorEventParser } from "./utils/tools";
 import { setGameResult } from "./store/slices/game";
-import { GameResult, getCasino, isEmptyAddress } from "./utils/casino";
+import { GameResult, getCasino } from "./utils/casino";
 import { initI18next } from "./initI18next";
 
 const { ethereum } = window;
@@ -40,12 +40,23 @@ function errorHandler(errorEvent: any) {
   }
 }
 
-const onComplete = (gameId: string, winner: string) => {
-  const isWinner = (a: string) => a.toLowerCase() === winner.toLowerCase();
+const onComplete = async (gameId: string) => {
+  const casino = selectCasino(store.getState());
+  const game = await casino?.getGame(gameId);
   const user = selectUser(store.getState());
-  const result = isEmptyAddress(winner)
+  const isEqual = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
+  let imWinner = false;
+  let isDraw = true;
+  for (const player of game?.players ?? []) {
+    if (player.isWinner) {
+      isDraw = false;
+      imWinner = user.authed && isEqual(player.id, user.address);
+    }
+  }
+
+  const result = isDraw
     ? GameResult.draw
-    : user.authed && isWinner(user.address)
+    : imWinner
     ? GameResult.win
     : GameResult.lose;
   store.dispatch(setGameResult({ gameId: gameId, result }));
@@ -54,7 +65,7 @@ async function updateChainId() {
   const preCasino = selectCasino(store.getState());
 
   if (preCasino !== null) {
-    preCasino.offCompleteGame(onComplete);
+    preCasino.offCompleteGame();
   }
 
   const chainId = await getChainId();

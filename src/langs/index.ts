@@ -1,6 +1,7 @@
 import en from "./en.json";
 import ar from "./ar.json";
 import ms from "./ms.json";
+import th from "./th.json";
 
 export const langs: {
   [lang: string]: { translation: object; displayName: string };
@@ -16,5 +17,9 @@ export const langs: {
   ar: {
     translation: ar,
     displayName: "العربية",
+  },
+  th: {
+    translation: th,
+    displayName: "ภาษาไทย",
   },
 };

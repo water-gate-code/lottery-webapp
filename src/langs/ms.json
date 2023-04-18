@@ -16,6 +16,7 @@
   },
   "game": {
     "create": "Cipta",
+    "betAmount": "Jumlah Taruhan",
     "shortGameTitle": "{{wager}} {{currency}} pada {{choice}}",
     "result": "Anda {{result}}",
     "createTitle": "Cipta permainan {{gameName}} baru",
@@ -24,6 +25,12 @@
     "amount": "Jumlah",
     "on": "Pada",
     "play": "Bermain dengannya",
+    "waitingResult": "Menunggu keputusan permainan",
+    "resultText": {
+      "win": "Menang",
+      "lose": "Kalah",
+      "draw": "Seri"
+    },
     "dice": {
       "name": "Dadu",
       "choice": {

@@ -1,0 +1,50 @@
+{
+  "appName": "Barsino",
+  "connectWallet": "เชื่อมต่อกระเป๋าเงินของคุณ",
+  "needInstallMetamask": "คุณต้องติดตั้ง Metamask ก่อนเล่น",
+  "installMetamask": "ติดตั้ง Metamask",
+  "languageChanged": "เปลี่ยนภาษาเรียบร้อย!",
+  "wrongNetwork": {
+    "change": "เปลี่ยนเครือข่าย",
+    "notSupport": "เรายังไม่สนับสนุน <0>{{networkName}}</0>!",
+    "selected": "เครือข่ายที่เลือก",
+    "pleaseSelect": "โปรดเลือกเครือข่ายที่ได้รับการสนับสนุนด้านล่าง"
+  },
+  "errorPage": {
+    "title": "อุ๊ปส์!",
+    "sorry": "ขออภัย เกิดข้อผิดพลาดที่ไม่คาดคิด"
+  },
+  "game": {
+    "create": "สร้าง",
+    "betAmount": "จำนวนเงินเดิมพัน",
+    "shortGameTitle": "{{wager}} {{currency}} บน {{choice}}",
+    "result": "คุณ {{result}}",
+    "createTitle": "สร้างเกม {{gameName}} ใหม่",
+    "gameId": "รหัสเกม",
+    "player": "ผู้เล่น",
+    "amount": "จำนวน",
+    "on": "บน",
+    "play": "เล่นกับมัน",
+    "waitingResult": "กำลังรอผลเกม...",
+    "resultText": {
+      "win": "ชนะ",
+      "lose": "แพ้",
+      "draw": "เสมอ"
+    },
+    "dice": {
+      "name": "ลูกเต๋า",
+      "choice": {
+        "small": "เล็ก",
+        "big": "ใหญ่"
+      }
+    },
+    "rps": {
+      "name": "กระดาษคัตตุรัส",
+      "choice": {
+        "rock": "คัตตุรัส",
+        "paper": "กระดาษ",
+        "scissors": "กรรไกร"
+      }
+    }
+  }
+}

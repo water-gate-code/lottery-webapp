@@ -1,0 +1,38 @@
+{
+  "appIntro": "Barsino: مركز ألعاب جديد تمامًا يعتمد على تقنية البلوكتشين!",
+  "appName": "Barsino",
+  "connectWallet": "ربط محفظتك",
+  "needInstallMetamask": "تحتاج إلى تثبيت Metamask قبل اللعب",
+  "installMetamask": "ثبت Metamask",
+  "languageChanged": "تم تحديث اللغة بنجاح!",
+  "wrongNetwork": {
+    "change": "تغيير الشبكة",
+    "notSupport": "لم نقم بدعم {{networkName}} حتى الآن!",
+    "selected": "الشبكة المختارة",
+    "pleaseSelect": "الرجاء تحديد الشبكة المدعومة أدناه"
+  },
+  "errorPage": { "title": "عذرا!", "sorry": "آسف، حدث خطأ غير متوقع." },
+  "game": {
+    "create": "إنشاء",
+    "betAmount": "مبلغ المراهنة",
+    "shortGameTitle": "{{wager}} {{currency}} على {{choice}}",
+    "result": "أنت {{result}}",
+    "createTitle": "إنشاء لعبة {{gameName}} جديدة",
+    "gameId": "معرف اللعبة",
+    "player": "لاعب",
+    "amount": "المبلغ",
+    "on": "على",
+    "play": "العب معها",
+    "waitingResult": "في انتظار نتيجة المباراة",
+    "resultText": {
+      "win": "فوز",
+      "lose": "خسارة",
+      "draw": "تعادل"
+    },
+    "dice": { "name": "النرد", "choice": { "small": "صغير", "big": "كبير" } },
+    "rps": {
+      "name": "الحجر ورقة مقص",
+      "choice": { "rock": "حجر", "paper": "ورق", "scissors": "مقص" }
+    }
+  }
+}

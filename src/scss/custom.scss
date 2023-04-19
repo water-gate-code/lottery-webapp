@@ -1,9 +1,15 @@
 // Include any default variable overrides here (though functions won't be available)
 // $white: #ffffff;
 
-@import "./_variables-barsino-dark.scss";
+// @import "./_variables-barsino-dark.scss";
 
-@import "~bootstrap/scss/bootstrap";
+// @import "~bootstrap/scss/bootstrap";
 
-// Then add additional custom code here
-@import "./theme-barsino-dark.scss";
+// // Then add additional custom code here
+// @import "./theme-barsino-dark.scss";
+
+.game-large-icon {
+  min-width: 12rem;
+  min-height: 12rem;
+  font-size: 6rem;
+}

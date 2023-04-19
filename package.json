@@ -1,28 +1,13 @@
 {
   "name": "lottery-webapp",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "private": true,
   "engines": {
     "node": ">=18.0.0 <19.0.0"
   },
-  "dependencies": {
-    "@metamask/detect-provider": "^2.0.0",
-    "@reduxjs/toolkit": "^1.9.3",
-    "@types/react": "^18.0.33",
-    "@types/react-dom": "^18.0.11",
-    "@types/react-router-dom": "^5.3.3",
-    "bootstrap": "^5.3.0-alpha1",
-    "bootstrap-icons": "^1.10.3",
-    "ethers": "^6.3.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-redux": "^8.0.5",
-    "react-router-dom": "^6.8.2",
-    "web-vitals": "^2.1.4"
-  },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "typechain": "typechain --target ethers-v6 --out-dir src/utils/contracts ../lottery-sc/artifacts/contracts/Casino.sol/Casino.json",
+    "typechain": "typechain --target ethers-v5 --out-dir src/utils/contracts ../lottery-sc/artifacts/contracts/Casino.sol/Casino.json",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -46,11 +31,30 @@
       "last 1 safari version"
     ]
   },
+  "dependencies": {
+    "@metamask/detect-provider": "^2.0.0",
+    "@reduxjs/toolkit": "^1.9.3",
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
+    "@types/react-router-dom": "^5.3.3",
+    "bootstrap": "^5.3.0-alpha1",
+    "bootstrap-icons": "^1.10.3",
+    "ethers": "^5.7.2",
+    "i18next": "^22.4.14",
+    "i18next-browser-languagedetector": "^7.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-i18next": "^12.2.0",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.8.2",
+    "web-vitals": "^2.1.4"
+  },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@typechain/ethers-v6": "^0.3.0",
+    "@typechain/ethers-v5": "^10.2.0",
+    "@types/ethereum-protocol": "^1.0.2",
     "@types/jest": "^29.5.0",
     "@types/node": "^18.15.11",
     "react-scripts": "^5.0.1",

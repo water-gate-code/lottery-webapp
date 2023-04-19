@@ -2,7 +2,6 @@
 
 TODO:
 
-- remove all any type
 - i18n
 - Worker cache
 - Test

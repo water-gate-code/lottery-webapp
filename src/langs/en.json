@@ -1,0 +1,51 @@
+{
+  "appIntro": "Barsino: A brand new blockchain based game center!",
+  "appName": "Barsino",
+  "connectWallet": "Connect Your Wallet",
+  "needInstallMetamask": "You need to install Metamask before play",
+  "installMetamask": "Install Metamask",
+  "languageChanged": "Language changed!",
+  "wrongNetwork": {
+    "change": "Change Network",
+    "notSupport": "We don't support <0>{{networkName}}</0> yet!",
+    "selected": "Selected Network",
+    "pleaseSelect": "Please select the supported network below"
+  },
+  "errorPage": {
+    "title": "Oops!",
+    "sorry": "Sorry, an unexpected error has occurred."
+  },
+  "game": {
+    "create": "Create",
+    "betAmount": "Bet Amount",
+    "shortGameTitle": "{{wager}} {{currency}} on {{choice}}",
+    "result": "You {{result}}",
+    "createTitle": "Create a new {{gameName}} game",
+    "gameId": "Game Id",
+    "player": "Player",
+    "amount": "Amount",
+    "on": "On",
+    "play": "Play with it",
+    "waitingResult": "Waiting game result...",
+    "resultText": {
+      "win": "Win",
+      "lose": "Lose",
+      "draw": "Draw"
+    },
+    "dice": {
+      "name": "Dice",
+      "choice": {
+        "small": "Small",
+        "big": "Big"
+      }
+    },
+    "rps": {
+      "name": "Rock Paper Scissors",
+      "choice": {
+        "rock": "Rock",
+        "paper": "Paper",
+        "scissors": "Scissors"
+      }
+    }
+  }
+}

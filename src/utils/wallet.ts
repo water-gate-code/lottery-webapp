@@ -5,11 +5,8 @@ const { ethereum } = window;
 
 export const toHex = (num: number) => "0x" + num.toString(16);
 
-export const metamaskInstalled = () => {
-  return !!ethereum;
-};
-
 export const ethRequest = async (args: any) => {
+  if (ethereum === undefined) throw new Error("Need metamask");
   try {
     const response = await ethereum.request(args);
     console.info(`[wallet.request]: ${args.method}:`, response);

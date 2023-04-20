@@ -1,5 +1,5 @@
 import { ethers, utils } from "ethers";
-import { ChainConfig, chains } from "./chains";
+import { ChainConfig, chains, supportChainIds } from "./chains";
 import { Casino__factory, Casino as CasinoContract } from "./contracts";
 import { DisplayInfoStructOutput } from "./contracts/Casino";
 
@@ -130,6 +130,7 @@ class Casino {
     | undefined;
 
   constructor(chainId: number) {
+    if (ethereum === undefined) throw new Error("Need metamask");
     this.chainId = chainId;
     this.chainConfig = chains[this.chainId];
     if (!this.chainConfig === undefined) throw new Error("Invalid chain!");
@@ -190,6 +191,7 @@ export const getCasino = (function () {
   const casinoCache: { [chainId: number]: Casino } = {};
   return (chainId: number | null | undefined) => {
     if (!chainId) return null;
+    if (!supportChainIds.includes(chainId)) return null;
     if (!casinoCache[chainId]) casinoCache[chainId] = new Casino(chainId);
     return casinoCache[chainId];
   };

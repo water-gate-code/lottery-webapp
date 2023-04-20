@@ -83,7 +83,7 @@ export function WrongNetwork() {
   }, []);
 
   const selectedNetwork = fullChainList.find(
-    (c: ChainInfo) => c.chainId === chain.id && false
+    (c: ChainInfo) => c.chainId === chain.id
   );
 
   return (

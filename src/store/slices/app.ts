@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction, nanoid } from "@reduxjs/toolkit";
 
 import type { RootState } from "../";
-import { metamaskInstalled } from "../../utils/wallet";
 
 export enum NotificationType {
   info,
@@ -31,7 +30,7 @@ export function newNotification(
 
 const initialState = {
   initialized: false,
-  metamaskInstalled: metamaskInstalled(),
+  metamaskInstalled: window.ethereum !== undefined,
   notifications: [],
 } as AppState;
 

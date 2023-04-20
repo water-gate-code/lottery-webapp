@@ -4,6 +4,11 @@ import { App } from "./App";
 import { Home } from "./Home";
 import { GamePlay } from "./GamePlay";
 import { parseGameType } from "../utils/casino";
+import { selectChain } from "../store/slices/chain";
+import { useAppSelector } from "../hooks";
+import { WrongNetwork } from "./WrongNetwork";
+import { selectApp } from "../store/slices/app";
+import { NeedMetamask } from "./NeedMetamask";
 
 const GamePlayWrapper = () => {
   const { gameType: gameTypeKey } = useParams();
@@ -11,6 +16,19 @@ const GamePlayWrapper = () => {
   const gameType = parseGameType(gameTypeKey);
   return <GamePlay key={gameTypeKey} gameType={gameType} />;
 };
+const ValidNetwork = ({ node }: { node: JSX.Element }) => {
+  const { metamaskInstalled } = useAppSelector(selectApp);
+  const chain = useAppSelector(selectChain);
+  const supportChain = chain.id !== null && chain.support;
+  if (!metamaskInstalled) {
+    return <NeedMetamask />;
+  }
+  if (!supportChain) {
+    return <WrongNetwork />;
+  }
+  return node;
+};
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -23,7 +41,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/play/:gameType",
-        element: <GamePlayWrapper />,
+        element: <ValidNetwork node={<GamePlayWrapper />} />,
       },
     ],
   },

@@ -2,6 +2,26 @@
 // import { EthereumProvider } from "ethereum-protocol";
 
 interface Window {
-  ethereum: any;
+  ethereum:
+    | undefined
+    | {
+        on: Function;
+        isMetaMask?: boolean;
+        isStatus?: boolean;
+        host?: string;
+        path?: string;
+        sendAsync?: (
+          request: { method: string; params?: Array<any> },
+          callback: (error: any, response: any) => void
+        ) => void;
+        send?: (
+          request: { method: string; params?: Array<any> },
+          callback: (error: any, response: any) => void
+        ) => void;
+        request: (request: {
+          method: string;
+          params?: Array<any>;
+        }) => Promise<any>;
+      };
   gtag: any;
 }

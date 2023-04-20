@@ -88,8 +88,10 @@ async function updateAuth() {
 }
 
 async function setWallet() {
-  await updateChainId();
-  await updateAuth();
+  if (ethereum !== undefined) {
+    await updateChainId();
+    await updateAuth();
+  }
   store.dispatch(initialize());
 }
 
@@ -103,11 +105,13 @@ console.log("process.env.NODE_ENV", process.env.NODE_ENV);
 window.addEventListener("error", errorHandler);
 window.addEventListener("unhandledrejection", errorHandler);
 
-ethereum.on("connect", onWalletChange.bind(this, "connect"));
-ethereum.on("disconnect", onWalletChange.bind(this, "disconnect"));
-ethereum.on("accountsChanged", onWalletChange.bind(this, "accountsChanged"));
-ethereum.on("chainChanged", onWalletChange.bind(this, "chainChanged"));
-ethereum.on("message", onWalletChange.bind(this, "message"));
+if (ethereum !== undefined) {
+  ethereum.on("connect", onWalletChange.bind(this, "connect"));
+  ethereum.on("disconnect", onWalletChange.bind(this, "disconnect"));
+  ethereum.on("accountsChanged", onWalletChange.bind(this, "accountsChanged"));
+  ethereum.on("chainChanged", onWalletChange.bind(this, "chainChanged"));
+  ethereum.on("message", onWalletChange.bind(this, "message"));
+}
 
 reportWebVitals(sendToGoogleAnalytics);
 

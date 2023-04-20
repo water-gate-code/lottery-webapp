@@ -8,6 +8,7 @@ import { Address } from "./Address";
 import { selectChain } from "../store/slices/chain";
 import { GameType, getGameNameKey } from "../utils/casino";
 import { GameIcon } from "./GameIcon";
+import { selectApp } from "../store/slices/app";
 // import { changeLanguage } from "../initI18next";
 // import { langs } from "../langs";
 
@@ -15,6 +16,7 @@ export function Topbar() {
   const { gameType: gameTypeKey } = useParams();
 
   const { t } = useTranslation();
+  const { metamaskInstalled } = useAppSelector(selectApp);
   const user = useAppSelector(selectUser);
   const chain = useAppSelector(selectChain);
   const supportChain = chain.id !== null && chain.support;
@@ -94,7 +96,7 @@ export function Topbar() {
             </span>
           ))} */}
 
-          {accountInfo}
+          {metamaskInstalled ? accountInfo : null}
 
           {supportChain ? (
             <>

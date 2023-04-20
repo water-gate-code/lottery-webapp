@@ -9,6 +9,7 @@ import { selectChain } from "../store/slices/chain";
 import { GameType, getGameNameKey } from "../utils/casino";
 import { GameIcon } from "./GameIcon";
 import { selectApp } from "../store/slices/app";
+import { InstallMetamaskBtn } from "./InstallMetamaskBtn";
 // import { changeLanguage } from "../initI18next";
 // import { langs } from "../langs";
 
@@ -96,7 +97,7 @@ export function Topbar() {
             </span>
           ))} */}
 
-          {metamaskInstalled ? accountInfo : null}
+          {metamaskInstalled ? accountInfo : <InstallMetamaskBtn />}
 
           {supportChain ? (
             <>

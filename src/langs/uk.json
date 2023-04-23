@@ -1,0 +1,51 @@
+{
+  "appIntro": "Barsino: Новий центр ігор на основі блокчейн!",
+  "appName": "Barsino",
+  "connectWallet": "Підключіть свій гаманець",
+  "needInstallMetamask": "Вам потрібно встановити Metamask перед грою",
+  "installMetamask": "Встановити Metamask",
+  "languageChanged": "Мова змінена!",
+  "wrongNetwork": {
+    "change": "Змінити мережу",
+    "notSupport": "Ми ще не підтримуємо <0>{{networkName}}</0>!",
+    "selected": "Обрана мережа",
+    "pleaseSelect": "Оберіть підтримувану мережу нижче"
+  },
+  "errorPage": {
+    "title": "Ой!",
+    "sorry": "Вибачте, сталася непередбачувана помилка."
+  },
+  "game": {
+    "create": "Створити",
+    "betAmount": "Ставка",
+    "shortGameTitle": "{{wager}} {{currency}} на {{choice}}",
+    "result": "{{result}}",
+    "createTitle": "Створити нову гру {{gameName}}",
+    "gameId": "Ідентифікатор гри",
+    "player": "Гравець",
+    "amount": "Сума",
+    "on": "На",
+    "play": "Грати",
+    "waitingResult": "Очікування результатів гри...",
+    "resultText": {
+      "win": "Перемога",
+      "lose": "Поразка",
+      "draw": "Нічия"
+    },
+    "dice": {
+      "name": "Кісти",
+      "choice": {
+        "small": "Маленький",
+        "big": "Великий"
+      }
+    },
+    "rps": {
+      "name": "Камінь, ножиці, папір",
+      "choice": {
+        "rock": "Камінь",
+        "paper": "Папір",
+        "scissors": "Ножиці"
+      }
+    }
+  }
+}

@@ -1,5 +1,6 @@
 {
-  "appIntro": "Barsino: Це абсолютно новий центр ігор на блокчейні!",
+  "appIntro": "Давайте тут ледарювати!",
+  "appSubIntro": "Barsino - абсолютно новий додаток для гри на web3.",
   "appName": "Barsino",
   "connectWallet": "Підключити Ваш гаманець",
   "needInstallMetamask": "Перш ніж грати, Вам потрібно встановити Metamask",

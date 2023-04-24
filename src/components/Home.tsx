@@ -15,10 +15,9 @@ export function Home() {
           style={{ height: "auto", width: 160 }}
         />
       </div>
-      <div className="d-flex justify-content-center my-3 mb-5">
-        <h6 className="display-6" >
-          {t("appIntro")}
-        </h6>
+      <div className="text-center mb-5">
+        <h6 className="display-6">{t("appIntro")}</h6>
+        <div className="blockquote">{t("appSubIntro")}</div>
       </div>
       <div className="d-flex justify-content-evenly">
         <Link to={`/play/${GameType[GameType.dice]}`}>

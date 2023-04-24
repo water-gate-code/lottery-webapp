@@ -13,6 +13,8 @@ import { InstallMetamaskBtn } from "./InstallMetamaskBtn";
 // import { changeLanguage } from "../initI18next";
 // import { langs } from "../langs";
 
+const DISCORD_INVITE_LINK = "https://discord.gg/S2q73aMh6M";
+
 export function Topbar() {
   const { gameType: gameTypeKey } = useParams();
 
@@ -25,20 +27,20 @@ export function Topbar() {
   const accountInfo = user.authed ? (
     <>
       {user.balance !== undefined ? (
-        <div className="navbar-text me-3" title={user.balance}>
-          <i className="bi bi-wallet-fill me-2"></i>
+        <span className="nav-link" title={user.balance}>
+          <i className="bi bi-wallet-fill me-1"></i>
           <span className="text-primary">
             {parseFloat(user.balance).toFixed(4)}
           </span>
-        </div>
+        </span>
       ) : null}
-      <div className="navbar-text me-3" title={user.address}>
-        <i className="bi bi-person-fill me-2"></i>
+      <span className="nav-link" title={user.address}>
+        <i className="bi bi-person-fill me-1"></i>
         <Address address={user.address} />
-      </div>
+      </span>
     </>
   ) : (
-    <div className="navbar-text me-3">
+    <span>
       <button
         type="button"
         className="btn btn-primary button"
@@ -46,7 +48,7 @@ export function Topbar() {
       >
         {t("connectWallet")}
       </button>
-    </div>
+    </span>
   );
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -84,7 +86,7 @@ export function Topbar() {
             </Link>
           </div>
         </div>
-        <div className="d-flex flex-row">
+        <div className="navbar-nav">
           {/* {Object.keys(langs).map((lang) => (
             <span className="navbar-text me-3" key={lang}>
               <button
@@ -100,19 +102,28 @@ export function Topbar() {
           {metamaskInstalled ? accountInfo : <InstallMetamaskBtn />}
 
           {supportChain ? (
-            <>
-              <span className="navbar-brand me-2 pt-1">
-                <img
-                  src={chain.info.icon}
-                  className="rounded"
-                  alt={chain.info.name}
-                  width="20"
-                  height="20"
-                />
-              </span>
-              <span className="navbar-text">{chain.info.name}</span>
-            </>
+            <span className="nav-link" title={chain.info.name}>
+              <img
+                src={chain.info.icon}
+                className="rounded me-1"
+                style={{ marginTop: "-0.2rem" }}
+                alt={chain.info.name}
+                width="20"
+                height="20"
+              />
+              <span>{chain.info.name}</span>
+            </span>
           ) : null}
+          <a
+            className="nav-link"
+            title="Contact Us"
+            href={DISCORD_INVITE_LINK}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <i className="bi bi-chat-dots-fill me-1"></i>
+            <span className="text-primary">Contact Us</span>
+          </a>
         </div>
       </div>
     </nav>

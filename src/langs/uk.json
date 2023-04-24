@@ -1,15 +1,15 @@
 {
-  "appIntro": "Barsino: Новий центр ігор на основі блокчейн!",
+  "appIntro": "Barsino: Це абсолютно новий центр ігор на блокчейні!",
   "appName": "Barsino",
-  "connectWallet": "Підключіть свій гаманець",
-  "needInstallMetamask": "Вам потрібно встановити Metamask перед грою",
+  "connectWallet": "Підключити Ваш гаманець",
+  "needInstallMetamask": "Перш ніж грати, Вам потрібно встановити Metamask",
   "installMetamask": "Встановити Metamask",
   "languageChanged": "Мова змінена!",
   "wrongNetwork": {
     "change": "Змінити мережу",
-    "notSupport": "Ми ще не підтримуємо <0>{{networkName}}</0>!",
+    "notSupport": "Ми ще не підтримуємо мережу <0>{{networkName}}</0>!",
     "selected": "Обрана мережа",
-    "pleaseSelect": "Оберіть підтримувану мережу нижче"
+    "pleaseSelect": "Будь ласка, оберіть підтримувану мережу нижче"
   },
   "errorPage": {
     "title": "Ой!",
@@ -17,30 +17,30 @@
   },
   "game": {
     "create": "Створити",
-    "betAmount": "Ставка",
+    "betAmount": "Сума ставки",
     "shortGameTitle": "{{wager}} {{currency}} на {{choice}}",
-    "result": "{{result}}",
-    "createTitle": "Створити нову гру {{gameName}}",
+    "result": "Ви {{result}}",
+    "createTitle": "Створіть нову гру {{gameName}}",
     "gameId": "Ідентифікатор гри",
     "player": "Гравець",
     "amount": "Сума",
     "on": "На",
-    "play": "Грати",
-    "waitingResult": "Очікування результатів гри...",
+    "play": "Грати з цим",
+    "waitingResult": "Очікування результату гри...",
     "resultText": {
       "win": "Перемога",
       "lose": "Поразка",
       "draw": "Нічия"
     },
     "dice": {
-      "name": "Кісти",
+      "name": "Кубики",
       "choice": {
-        "small": "Маленький",
-        "big": "Великий"
+        "small": "Мало",
+        "big": "Велико"
       }
     },
     "rps": {
-      "name": "Камінь, ножиці, папір",
+      "name": "Камінь-Ножиці-Папір",
       "choice": {
         "rock": "Камінь",
         "paper": "Папір",
